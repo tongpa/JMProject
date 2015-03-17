@@ -67,6 +67,7 @@ class AngularController(BaseController):
         
         
         
+        
         answer.append({'id' : 1 , 'label': 'red','selected': 'checked'});
         answer.append({'id' : 2 , 'label': 'green','selected': ''});
         answer.append({'id' : 3 , 'label': 'blue','selected': ''});
