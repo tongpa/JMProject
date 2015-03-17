@@ -1,0 +1,153 @@
+/* TurboGears flash bootstrap look */
+#flash > div {
+  padding: 8px 35px 8px 14px;
+  margin-bottom: 20px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  background-color: #fcf8e3;
+  border: 1px solid #fbeed5;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  color: #c09853;
+}
+
+#flash > .ok {
+  color: #468847;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+#flash > .error {
+  color: #b94a48;
+  background-color: #f2dede;
+  border-color: #eed3d7;
+}
+
+#flash > .info {
+  color: #3a87ad;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+
+/* Footer styling */
+.footer {
+    margin-top: 45px;
+    padding: 35px 30px 36px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.footer p {
+    margin-bottom: 0;
+    color: #555;
+}
+
+
+/**add **/
+.project-add {
+    background-image: url('../img/survey/image_add.png') !important;
+}
+
+.project-remove {
+    background-image: url('../img/survey/delete.png') !important;
+}
+
+.icon-add {
+    background-image: url('../img/survey/add.png') !important;
+}
+
+.icon-delete {
+    background-image: url('../img/survey/delete.png') !important;
+}
+.icon-edit {
+    background-image: url('../img/survey/edit.png') !important;
+}
+
+/******/
+.app-header .x-panel-body {
+    background-color: #ddd;
+    padding-left: 5px;
+}
+
+.app-header h1 {
+    font-family: verdana,arial,sans-serif;
+    font-size: 20px;
+    color: #15428B;
+}
+
+.hospital-target {
+    border: 1px solid red;
+    margin: 5px;
+    padding: 5px;
+    font-size: small;
+    cursor: default;
+}
+
+.hospital-target.hospital-target-hover {
+    background-color: #C0C0C0;
+}
+
+.patient-source {
+    cursor: pointer;
+}
+
+.patient-view table {
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+
+.patient-view td {
+    font-family: verdana,arial,sans-serif;
+    font-size: 12px;
+}
+
+td.patient-label {
+    background-color: #ddd;
+    border: 1px solid #bbb;
+    font-weight: bold;
+    text-align: right;
+    width: 100px;
+    padding: 0px 3px 0px 0px;
+}
+
+.patient-over {
+    background-color:#EFEFEF;
+    cursor: pointer;
+}
+.patient-selected {
+    background-color: #DFE8F6;
+    cursor: pointer;
+}
+
+.unstyled {
+    list-style: outside none none;
+    
+}
+
+.photo-answer {
+	width: '30%';
+	height: '30%';
+}
+
+.move-down {
+    background-image: url('../img/survey/before_each.png') !important;
+} 
+
+.move-up {
+    background-image: url('../img/survey/after_each.png') !important;
+}
+.icon-invitation {
+    background-image: url('../img/survey/invitation_icon.png') !important;
+}
+.icon-question {
+    background-image: url('../img/survey/question_icon.png') !important;
+}
+.icon-publication {
+    background-image: url('../img/survey/publication_icon.png') !important;
+}
+.icon-survey {
+    background-image: url('../img/survey/survey_icon.png') !important;
+}
+.icon-demographic {
+    background-image: url('../img/survey/demographics_icon.png') !important;
+}
+/******/
