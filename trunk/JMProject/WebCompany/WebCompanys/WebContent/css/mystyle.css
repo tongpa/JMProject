@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+.img-btadd {
+    background-image: url('../images/custom/add.png') !important;
+}
+
+.img-add {
+    background-image: url('../images/custom/image_add.png') !important;
+}
+
+.img-delete {
+    background-image: url('../images/custom/delete.png') !important;
+}
+
+.img-edit {
+    background-image: url('../images/custom/edit.png') !important;
+}
+
+.img-save {
+    background-image: url('../images/custom/save.gif') !important;
+}
