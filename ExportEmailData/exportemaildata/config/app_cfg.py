@@ -6,13 +6,30 @@ This file complements development/deployment.ini.
 
 """
 
-from tg.configuration import AppConfig
+from tg.configuration import AppConfig, config
 
 import exportemaildata
 from exportemaildata import model
 from exportemaildata.lib import app_globals, helpers 
 
-base_config = AppConfig()
+
+class MultiDBAppConfig(AppConfig):
+    def setup_sqlalchemy(self):
+        """Setup SQLAlchemy database engine(s)"""
+        from sqlalchemy import engine_from_config
+        engine1 = engine_from_config(config, 'sqlalchemy.first.')
+        engine2 = engine_from_config(config, 'sqlalchemy.second.')
+        # engine1 should be assigned to sa_engine as well as your first engine's name
+        config['tg.app_globals'].sa_engine = engine1
+        config['tg.app_globals'].sa_engine_first = engine1
+        config['tg.app_globals'].sa_engine_second = engine2
+        # Pass the engines to init_model, to be able to introspect tables
+         
+        model.init_model(engine1, engine2)
+
+base_config = MultiDBAppConfig()
+#base_config = AppConfig()
+
 base_config.renderers = []
 
 # True to prevent dispatcher from striping extensions
