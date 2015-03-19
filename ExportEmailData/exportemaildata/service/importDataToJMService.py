@@ -55,6 +55,12 @@ class ImportDataToJMService(object):
                 muserLang = model.MUserLang();
                 muserLang.saveObject(email); 
                 
+                muserRole = model.MUserMapRole();
+                muserRole.saveObject(email); 
+                
+                muserEmail = model.MUserEmail();
+                muserEmail.saveObject(email); 
+                
             stop  = datetime.now();
             
             print "start : " , start , " to :" , stop

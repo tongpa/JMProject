@@ -68,10 +68,50 @@ class MUserLang(SysMUserLang):
         
 
 class MUserMapRole(SysMUserMapRole):
-    pass;
+    def save(self):
+        try:
+            DBSession2.add(self); 
+            DBSession2.flush() ;
+            print "save project"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+        
+    
+    def saveObject(self,email ):
+        self.ID_USER = email.id_user;
+         
+        self.ID_ROLE = 6
+        
+        self.CREATE_USER ="SYSTEM";
+        self.CREATE_DATE = datetime.now();
+        self.save();
 
 class MUserEmail(JobMUserEmail):
-    pass;
+    def save(self):
+        try:
+            DBSession2.add(self); 
+            DBSession2.flush() ;
+            print "save project"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+        
+    
+    def saveObject(self,email ):
+        self.ID_USER = email.id_user;
+         
+        
+        self.EMAIL = email.email
+        self.IS_LOGIN = '1'
+        self.IS_SUBSCRIBE = '1'
+         
+        
+        self.CREATE_USER ="SYSTEM";
+        self.CREATE_DATE = datetime.now();
+        self.save();
 
 class MUserGeneralSetting(JobMUserGeneralSetting):
     pass;
