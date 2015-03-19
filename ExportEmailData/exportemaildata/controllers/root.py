@@ -24,6 +24,7 @@ from exportemaildata.controllers.importemail.importfromfile_old import importDat
 from exportemaildata.controllers.importemail.importEmailController import ImportEmailController
 
 from  exportemaildata.service.importEmailService import ImportEmailService
+from exportemaildata.service.importDataToJMService import ImportDataToJMService;
 __all__ = ['RootController']
 
 
@@ -48,6 +49,7 @@ class RootController(BaseController):
     
     utility = Utility();
     importEmailService = ImportEmailService();
+    importDataToJMService = ImportDataToJMService();
     
     def _before(self, *args, **kw):
         tmpl_context.project_name = "exportemaildata"
@@ -215,6 +217,33 @@ class RootController(BaseController):
         
         return dict(sucess=True,thred = export.thread_id,id= str(export.id_export_email));
     
+    @expose('json')
+    def sampleBindingDB(self,**kw):
+        reload(sys).setdefaultencoding('utf8')
+        #dayconfig = model.DBSession2.query(model.MUser).all();
+        #for day in dayconfig:
+        #    print day;
+        
+        self.mapprefix = {};
+        size =model.EmailTemp.getSizeForExport();
+        print size;
+        prefix = model.MapPrefix.getAll();
+        #for g in prefix: self.mapprefix[str(g.name).decode('utf-8')] = g.ref_id_prefix_jm;
+        for g in prefix: self.mapprefix[g.name] = g.ref_id_prefix_jm;
+        
+        print self.mapprefix;
+        
+        print str(u'\u0e04\u0e38\u0e13').decode('utf-8');
+        print self.mapprefix[u'\u0e04\u0e38\u0e13'];
+        print self.mapprefix[str(u'\u0e04\u0e38\u0e13').decode('utf-8')];
+        
+        
+        
+        
+        
+        self.importDataToJMService.importData();
+        pass;
+        #print [c.name for c in model.messages.columns]
     
     @expose('json')
     def importData(self,**kw):

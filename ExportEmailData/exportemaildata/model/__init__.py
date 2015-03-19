@@ -85,5 +85,5 @@ def init_model_one(engine):
 # Import your model modules here.
 from exportemaildata.model.auth import User, Group, Permission
 from exportemaildata.model.email import EmailData,ExportEmail,EmailTemp, StatusExport,TypeEmail;
-
-from exportemaildata.model.jm.jmmodel import DayConfig 
+from exportemaildata.model.email import MapGender,MapPrefix,MapProvince,MapCity,MapCounty;
+from exportemaildata.model.jm.jmmodel import MUser ,MUserLang

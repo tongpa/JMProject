@@ -11,14 +11,102 @@ though.
 import os
 from datetime import datetime
 from hashlib import sha256
-__all__ = ['EmailData' ,'ExportEmail' ,'EmailTemp','StatusExport','TypeEmail']
+__all__ = ['EmailData' ,'ExportEmail' ,'EmailTemp','StatusExport','TypeEmail','MapGender'
+           ,'MapPrefix'
+           ,'MapProvince'
+           ,'MapCity'
+           ,'MapCounty' ]
  
 from sqlalchemy import Table, ForeignKey, Column, desc
-from sqlalchemy.types import Unicode, Integer, DateTime
+from sqlalchemy.types import Unicode, Integer, DateTime,BigInteger
 from sqlalchemy.orm import relation, synonym
 from sqlalchemy.dialects.mysql import BIT
 
 from exportemaildata.model import DeclarativeBase, metadata, DBSession
+
+ 
+
+class MapGender(DeclarativeBase):
+    __tablename__ = 'map_gender';
+     
+    id_map_gender = Column(Integer, autoincrement=True, primary_key=True)    
+    name = Column(Unicode(255) );
+    ref_id_gender_jm =  Column(BigInteger );
+    def __repr__(self):
+        return '<User: name=%s >' % (
+                repr(self.name) )
+
+    def __unicode__(self):
+        return self.name 
+    
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).all();
+
+class MapPrefix(DeclarativeBase):
+    __tablename__ = 'map_prefix';
+     
+    id_map_prefix = Column(Integer, autoincrement=True, primary_key=True)    
+    name = Column(Unicode(255) );
+    ref_id_prefix_jm =  Column(BigInteger );
+    def __repr__(self):
+        return '<User: name=%s >' % (
+                repr(self.name) )
+
+    def __unicode__(self):
+        return self.name 
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).all();
+
+class MapProvince(DeclarativeBase):
+    __tablename__ = 'map_province';
+     
+    id_map_province = Column(Integer, autoincrement=True, primary_key=True)    
+    name = Column(Unicode(255) );
+    ref_id_province_jm =  Column(BigInteger );
+    def __repr__(self):
+        return '<User: name=%s >' % (
+                repr(self.name) )
+
+    def __unicode__(self):
+        return self.name
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).all();
+    
+class MapCity(DeclarativeBase):
+    __tablename__ = 'map_city';
+     
+    id_map_city = Column(Integer, autoincrement=True, primary_key=True)    
+    name = Column(Unicode(255) );
+    ref_id_city_jm =  Column(BigInteger );
+    def __repr__(self):
+        return '<User: name=%s >' % (
+                repr(self.name) )
+
+    def __unicode__(self):
+        return self.name
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).all();
+    
+class MapCounty(DeclarativeBase):
+    __tablename__ = 'map_county';
+     
+    id_map_county = Column(Integer, autoincrement=True, primary_key=True)    
+    name = Column(Unicode(255) );
+    ref_id_county_jm =  Column(BigInteger );
+    def __repr__(self):
+        return '<User: name=%s >' % (
+                repr(self.name) )
+
+    def __unicode__(self):
+        return self.name  
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).all();  
+
 
 class TypeEmail(DeclarativeBase):
     __tablename__ = 'type_email';
@@ -235,11 +323,13 @@ class EmailTemp(DeclarativeBase):
     category= Column(Unicode(255) );
     salary= Column(Unicode(255) );
     education= Column(Unicode(255) ); 
-    
+    export_ready= Column(BIT, nullable=True, default=0)
+    export_date =  Column(DateTime, default=datetime.now)
     
     id_export_email = Column(   Integer,ForeignKey('export_email.id_export_email'), nullable=False, index=True) ;
     exportemail = relation('ExportEmail', backref='email_temp_id_export_email');
     
+    id_user = None;
     
     def __repr__(self):
         return '<User: name=%s, email=%s, display=%s>' % (
@@ -280,11 +370,24 @@ class EmailTemp(DeclarativeBase):
             self.salary=  emailData.salary;
             self.education=  emailData.education;
             self.id_export_email =  emailData.id_export_email;
+            
+            self.export_ready = 0;
         
     
     def save(self):
         DBSession.add(self); 
-        
-        
         DBSession.flush() ;
+    
+    @classmethod
+    def getSizeForExport(cls):
+        return DBSession.query(cls).filter(cls.export_ready == str(0).decode('utf-8')).count();
+    
+    @classmethod
+    def getData(cls,  page=0, page_size=None):
+        query = DBSession.query(cls);
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            query = query.offset(page*page_size)
+        return query.all();
            
