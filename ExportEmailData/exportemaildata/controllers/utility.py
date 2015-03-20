@@ -37,11 +37,13 @@ class Utility(object):
         
 u = Utility();
 
-print u.checkPathFile('c:/temp/test1');
-print u.checkFileExist('C:/Temp/upload/14/Data2.xlsx');  
-u.checkFileExist('c:/temp/upload/Data2.xlsx');  
-u.getDic();
+#print u.checkPathFile('c:/temp/test1');
+#print u.checkFileExist('C:/Temp/upload/14/Data2.xlsx');  
+#u.checkFileExist('c:/temp/upload/Data2.xlsx');  
+#u.getDic();
  
-print os.path.dirname('c:/temp/upload/Data2.xlsx');
+#print os.path.dirname('c:/temp/upload/Data2.xlsx');
+
+ 
  
         

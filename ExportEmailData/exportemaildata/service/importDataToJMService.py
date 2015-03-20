@@ -22,14 +22,14 @@ class ImportDataToJMService(object):
         self.mapprefix = {};
         self.mapprovince = {};
         self.mapcity = {};
-        self.mapcountry = {}; 
+        self.mapcounty = {}; 
         for g in gender: self.mapgender[str(g.name).decode('utf-8')] = g.ref_id_gender_jm;
         for g in prefix: self.mapprefix[str(g.name).decode('utf-8')] = g.ref_id_prefix_jm;
         #for g in prefix: self.mapprefix[g.name] = g.ref_id_prefix_jm;
         
         for g in province: self.mapprovince[str(g.name).decode('utf-8')] = g.ref_id_province_jm;
         for g in city: self.mapcity[str(g.name).decode('utf-8')] = g.ref_id_city_jm;
-        for g in county: self.mapcountry[str(g.name).decode('utf-8')] = g.ref_id_county_jm;
+        for g in county: self.mapcounty[str(g.name).decode('utf-8')] = g.ref_id_county_jm;
          
         
         #step 2 load data email 
@@ -39,27 +39,44 @@ class ImportDataToJMService(object):
         from datetime import datetime
         
         startTime  = datetime.now();
-        
+        #step 3 replace name to id ex: prefix, sex, country, city, province, countryname
         for num in range(0,self.totalPage):
             print "%s to %s" ,num , (num*self.page_size);
             start = datetime.now();
             emailtemps = model.EmailTemp.getData(num, self.page_size);
-            
+            #step 4 insert data to table 
             for email in emailtemps:
                 
+                #step 4.1 insert data to table sys_m_user
                 muser = model.MUser();
                 muser.saveObject(email,self.mapprefix); 
                 email.id_user = muser.ID_USER
                 print "ID USER : ",  email.id_user;
                 
+                #step 4.2 insert data to table sys_m_user_lang
                 muserLang = model.MUserLang();
                 muserLang.saveObject(email); 
                 
+                #step 4.3 insert data to table sys_m_user_map_role
                 muserRole = model.MUserMapRole();
                 muserRole.saveObject(email); 
                 
+                #step 4.4 insert data to table job_m_user_email
                 muserEmail = model.MUserEmail();
                 muserEmail.saveObject(email); 
+                
+                #step 4.5 insert data to table job_m_user_general_setting
+                muserGeneral = model.MUserGeneralSetting(muser);
+                muserGeneral.saveObject(email,self.mapprovince); 
+                
+                #step 4.6 insert data to table job_m_user_phone
+                muserPhone = model.MUserPhone();
+                muserPhone.saveObject(email,self.mapprovince); 
+                
+                
+                #step 4.6 insert data to table job_m_user_phone
+                muserAddres = model.MUserAddres();
+                muserAddres.saveObject(email,self.mapprovince,self.mapcity,self.mapcounty); 
                 
             stop  = datetime.now();
             
@@ -71,22 +88,22 @@ class ImportDataToJMService(object):
         stopTime  = datetime.now();
         
         print "finish start : " , startTime , " to :" , stopTime
-        #step 3 replace name to id ex: prefix, sex, country, city, province, countryname
         
         
-        #step 4 insert data to table 
         
-        #step 4.1 insert data to table sys_m_user
         
-        #step 4.2 insert data to table sys_m_user_lang
         
-        #step 4.3 insert data to table sys_m_user_map_role
         
-        #step 4.4 insert data to table job_m_user_email
         
-        #step 4.5 insert data to table job_m_user_general_setting
         
-        #step 4.6 insert data to table job_m_user_phone
+        
+        
+        
+        
+        
+        
+        
+        
         
         #step 4.7 insert data to table job_m_user_address
         
