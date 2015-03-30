@@ -13,7 +13,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.exc import IntegrityError
 from exportemaildata.model import DeclarativeBase2, metadata2, DBSession2 
 
-from exportemaildata.model.jm.jmdatamodel import SysMUser,SysMUserLang,SysMUserMapRole,JobMUserEmail,JobMUserGeneralSetting,JobMUserPhone,JobMUserAddres; 
+from exportemaildata.model.jm.jmdatamodel import SysMUser,SysMUserLang,SysMUserMapRole,JobMUserEmail,JobMUserGeneralSetting,JobMUserPhone,JobMUserAddres,JobAApplicant,JobAApPiPersonalDatum,JobAApplicantCertificate; 
 
 class MUser(SysMUser):
     
@@ -42,7 +42,7 @@ class MUser(SysMUser):
         self.LAST_NAME = email.lastname_eng
         self.CREATE_USER ="SYSTEM";
         self.CREATE_DATE = datetime.now();
-        self.STATUS = "W";
+        self.STATUS = "A";
         
         self.save();
     
@@ -118,8 +118,23 @@ class MUserEmail(JobMUserEmail):
 
 class MUserGeneralSetting(JobMUserGeneralSetting):
     
-    def __init__(self,user):
-        self.super = user;
+    def __init__(self):
+        pass;
+        
+    def setMainUser(self,user):
+        self.ID_USER = user.ID_USER;
+        self.USERNAME = user.USERNAME;
+        self.PASSWORD = user.PASSWORD;
+         
+        self.ID_PREFIX_NAME =  user.ID_PREFIX_NAME;
+         
+        self.FIRST_NAME = user.FIRST_NAME;
+
+        self.LAST_NAME = user.LAST_NAME;
+        self.CREATE_USER =user.CREATE_USER;
+        self.STATUS = user.STATUS;
+        
+        
         
     def save(self):
         try:
@@ -132,8 +147,20 @@ class MUserGeneralSetting(JobMUserGeneralSetting):
             return "Duplicate entry"
         
     
-    def saveObject(self,email,mapprovince ):
+    def saveObject(self,email,mapprefix,mapprovince ):
+        
+        
         self.ID_USER = email.id_user;
+        
+        #self.USERNAME = email.email
+        #self.PASSWORD = "12345678";
+        #self.ID_PREFIX_NAME =  mapprefix.get( email.prefix  );
+        #self.FIRST_NAME = email.firstname_eng
+        #self.LAST_NAME = email.lastname_eng
+        #self.CREATE_USER ="SYSTEM";
+        #self.CREATE_DATE = datetime.now();
+        #self.STATUS = "A";
+        
          
         
         self.ID_LANGUAGE = 1
@@ -160,7 +187,7 @@ class MUserPhone(JobMUserPhone):
             return "Duplicate entry"
         
     
-    def saveObject(self,email,mapcountry,mapprovince ):
+    def saveObject(self,email,  mapprovince ):
         self.ID_USER = email.id_user;
         
         #mobile phone 1
@@ -237,3 +264,77 @@ class MUserAddres(JobMUserAddres):
         self.CREATE_DATE = datetime.now();
         self.save();
 
+
+class MJobAApplicant(JobAApplicant):
+    
+    
+    def save(self):
+        try:
+            DBSession2.add(self); 
+            DBSession2.flush() ;
+            print "save MJobAApplicant"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+        
+    def saveObject(self,email  ):
+        self.ID_APPLICANT = email.id_user;
+        self.ID_USER = email.id_user;
+        
+        self.CREATE_USER ="SYSTEM";
+        self.CREATE_DATE = datetime.now();
+        self.save();
+        
+class MJobAApPiPersonalDatum(JobAApPiPersonalDatum):
+    def save(self):
+        try:
+            DBSession2.add(self); 
+            DBSession2.flush() ;
+            print "save MJobAApplicant"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+        
+    def saveObject(self,email,mapprefix  ):
+        self.ID_APPLICANT = email.id_user;
+        self.ID_USER = email.id_user;
+        
+        
+        self.ID_PREFIX_NAME =  mapprefix.get( email.prefix  );
+         
+        self.FIRST_NAME = email.firstname_eng
+        self.LAST_NAME = email.lastname_eng
+        self.ID_PREFIX_NAME_LOCAL =  mapprefix.get( email.prefix  );
+        self.FIRST_NAME_LOCAL = email.firstname_thai;
+        self.LAST_NAME_LOCAL =  email.lastname_thai;
+        self.DATE_BIRTH = email.birthdate;
+        
+        
+        self.CREATE_USER ="SYSTEM";
+        self.CREATE_DATE = datetime.now();
+        self.save();
+        
+class MJobAApplicantCertificate(JobAApplicantCertificate):
+    def save(self):
+        try:
+            DBSession2.add(self); 
+            DBSession2.flush() ;
+            print "save MJobAApplicant"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+        
+    def saveObject(self,email  ):
+        self.ID_APPLICANT = email.id_user;    
+        
+        
+         
+    
+        self.ID_APPLICANT_CERTIFICATE_TYPE = 7
+        self.CREATE_USER ="SYSTEM";
+        self.CREATE_DATE = datetime.now();
+        self.save();
+    

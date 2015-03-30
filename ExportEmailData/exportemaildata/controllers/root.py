@@ -26,7 +26,8 @@ from exportemaildata.controllers.importemail.importEmailController import Import
 from  exportemaildata.service.importEmailService import ImportEmailService
 from exportemaildata.service.importDataToJMService import ImportDataToJMService;
 __all__ = ['RootController']
-
+import logging;
+log = logging.getLogger(__name__);
 
 class RootController(BaseController):
     """
@@ -205,6 +206,7 @@ class RootController(BaseController):
         
         
         try:
+            log.info("start thread");
             export.thread_id = "Thread-" + str(export.id_export_email);  
             thread1 = importDataThread(export.thread_id, target_file_name,export  );
             #thread1 = importDataThread("Thread-1",'D:/tong/code_py/ExportEmailData/ExportEmailData/sample_data/Data500.xlsx'   );
@@ -212,6 +214,7 @@ class RootController(BaseController):
             thread1.start();
         except Exception as e:
             print e;
+            log.info(e);
             pass;
         
         
@@ -242,6 +245,7 @@ class RootController(BaseController):
         
         
         self.importDataToJMService.importData();
+        #self.importDataToJMService.importDataManual();
         pass;
         #print [c.name for c in model.messages.columns]
     

@@ -11,7 +11,7 @@ from exportemaildata import model
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import update
- 
+from exportemaildata.controllers.utility import Utility; 
 
 import sys
 import logging;
@@ -21,12 +21,13 @@ __all__ = ['importDataThread']
 class importDataThread(threading.Thread):
     
     
-   
+    utility = Utility();
     
     def __init__(self, threadID,   pathFile,importEmail = None):
         reload(sys).setdefaultencoding('utf8')
         threading.Thread.__init__(self)
         
+        log.info("init import Data thread");
         self.threadID = threadID
         self.importEmail = None;
         self.idExport = None;
@@ -39,7 +40,7 @@ class importDataThread(threading.Thread):
             self.importEmail = importEmail;
             self.pathFile = importEmail.path_file;
         
-        self.some_engine = create_engine(config['sqlalchemy.url'] );
+        self.some_engine = create_engine(config['sqlalchemy.first.url'] );
         # create a configured "Session" class
         self.Session = sessionmaker(bind=self.some_engine)
         # create a Session
@@ -50,17 +51,30 @@ class importDataThread(threading.Thread):
     def run(self):
         
         log.info("Starting importData : " + str(self.threadID));
-         
+        
+        import datetime
+
+        start = datetime.datetime.now()
+        print start 
         
         #step : 1 importData
+       
         exportEmail = self.importData(self.threadID ,self.pathFile); 
         
+        finish_export = datetime.datetime.now()
+        print start;
+        print finish_export
        
         #step : 2 checkData Same Old Email
         #exportEmail = model.ExportEmail.getId(5);
+        log.info("start check email Duplicate from database");
         self.checkEmailDuplicate(exportEmail);
         
-         
+        
+        finish_import = datetime.datetime.now() 
+        print start;
+        print finish_export
+        print finish_import
         log.info("Finish importData : " + str(self.threadID));
      
         
@@ -73,11 +87,12 @@ class importDataThread(threading.Thread):
         #worksheets = workbook.get_sheet_names()
         #worksheet = workbook.get_sheet_by_name('Sheet13')    
         worksheet =  workbook.active
-        print str(worksheet.calculate_dimension());
+        log.info( str(worksheet.calculate_dimension()) );
         
         self.email = {};
         self.pid = {};
         self.email_empty=[];
+        self.mobile_empty = [];
         self.same_email = [];
         self.same_pid = [];
         self.used_email = [];
@@ -112,11 +127,12 @@ class importDataThread(threading.Thread):
             
             exportEmail = self.session.query(model.ExportEmail).get(self.idExport);
             path = exportEmail.error_path_file;
-            print 'get export data ' + str(exportEmail.id_export_email);
-            print 'error path file' + path;
+            log.info( 'get export data id ' + str(exportEmail.id_export_email) );
+            log.info( 'error path file' + str(path) );
         
         total = 0;
         exportEmail.id_status_export = 3 ;
+        log.info( 'start insert table email data');
         for row in worksheet.iter_rows():
             total = total +1;
             emaildata = model.EmailData();
@@ -144,14 +160,20 @@ class importDataThread(threading.Thread):
             emaildata.postcode=  row[18].value;
             emaildata.mobile=  row[19].value;
             emaildata.telephone=   row[20].value;
-            emaildata.email=   row[21].value.lower();
+            
+            if(row[21].value and self.utility.checkEmail(row[21].value)):
+                emaildata.email=   self.utility.lastReplace(row[21].value.lower(),'.')    ;
+            else:
+                emaildata.email = None;
+                log.info("row : " + str(total) + "  : " +str(row[21].value) );
+            
             emaildata.housing_type=   row[22].value;
             emaildata.category=   row[23].value;
             emaildata.salary=  row[24].value;
             emaildata.education=   row[25].value;
             
             #check email is not empty
-            if(emaildata.email is not None or str(emaildata.email).strip() != ''  ):
+            if(emaildata.email is not None and str(emaildata.email).strip() != ''  ):
                 #check email is same
                 if (self.email.get(emaildata.email) is None) :
                     self.email[emaildata.email] = emaildata;
@@ -159,42 +181,60 @@ class importDataThread(threading.Thread):
                 else:
                     self.same_email.append(emaildata);
             else:
+                emaildata.email=   row[21].value    ;
                 self.email_empty.append(emaildata);
                 
-                
+            
+            if(total % 500 ) == 0 :
+                log.info( total );   
             
             
-                 
+        log.info("success check data : ");         
         
         log.info( "same email before " + str( len(self.same_email)));
         log.info( "used email before " + str( len(self.email)) );
         #remove same email
         for email in self.same_email:
             sameemail = self.email.get(email.email);
-            log.info( "same email : " + email.email);
+            log.info( "same email : " + str(email.email));
             if(sameemail):
                 del self.email[email.email];
                 self.same_email.append(sameemail);     
              
+        
+        log.info("check mobile is empty");
+        log.info("leng email : " + str(len(self.email)));
+        for key_email in self.email.keys():
+            email_value = self.email.get(key_email);
+            
+            if(email_value.mobile is None or str(email_value.mobile).strip() == '' ):
+                del self.email[key_email];
+                self.mobile_empty.append(email_value);     
         
         
         row =1000;
         count = 0;
         log.info( "start insert");
         exportEmail.id_status_export = 4 ;
-        for key_email in self.email:
+        for key_email in self.email.keys():
             useEmail = self.email[key_email];
+            
             try:
+                
                 self.session.add(useEmail);
                 self.session.flush() ;
                 
                 if(count % row == 0):
+                    log.info(".....commit");
+                    #log.info("commit at : " + str(count));
                     self.session.commit();
                     #print "commit ";
                     
             except Exception as e:
+                 
                 log.info( "---error---");
-                log.info( "email :" + useEmail.email);
+                log.info(useEmail);
+                #log.info( "email :" + str(useEmail.email ));
                 print e;
             
             count = count + 1;
@@ -211,7 +251,11 @@ class importDataThread(threading.Thread):
         log.info( "same email " + str( len(self.same_email)));
         log.info( "same ipd   " + str( len(self.same_pid)));
         
-        
+        log.info("---------------------");
+        log.info("------same_email---------------" + str(len(self.same_email)));
+        log.info("------same_pid---------------" + str(len(self.same_pid)));
+        log.info("------email_empty---------------" + str(len(self.email_empty)));        
+        log.info("------mobile_empty---------------" + str(len(self.mobile_empty)));
         
         workbook = openpyxl.Workbook();
         
@@ -226,6 +270,9 @@ class importDataThread(threading.Thread):
         
         if(len(self.email_empty) > 0):
             self.writeToExcel(workbook,self.email_empty,path,'email empty');
+            
+        if(len(self.mobile_empty) > 0):
+            self.writeToExcel(workbook,self.mobile_empty,path,'mobile empty');
         
         exportEmail.id_status_export = 5 ;    
         return exportEmail;
@@ -242,7 +289,7 @@ class importDataThread(threading.Thread):
         sheet = wb.create_sheet()
         sheet.title = sheedName;
         
-        log.info("add sheed : " + sheedName);
+        log.info("add sheed : " + str(sheedName));
         
         i =1;
         for v in data:
@@ -341,10 +388,13 @@ class importDataThread(threading.Thread):
         
         
         #check duplicate
+        log.info("step one");
         self.dupEmail =  model.EmailData.checkDuplicateEmail(idexport);
+        log.info("size of duplicate : " + str(len(self.dupEmail))  );
         #check not duplicate
+        log.info("step two");
         self.noDupEmail =  model.EmailData.checkNotDuplicateEmail(idexport);
-        
+        log.info("size of not duplicate : " + str(len(self.dupEmail)) );
        
         #print len(self.dupEmail);
         
@@ -353,6 +403,7 @@ class importDataThread(threading.Thread):
         
        
         #update value
+        log.info("step three : update export email");
         u = update(model.ExportEmail).where( model.ExportEmail.id_export_email==idexport).\
         values(same_old_row= len(self.dupEmail),insert_real_row= len(self.noDupEmail) , id_status_export= 6)
 

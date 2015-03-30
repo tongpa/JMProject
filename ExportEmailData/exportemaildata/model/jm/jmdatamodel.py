@@ -1039,7 +1039,7 @@ class JobAApPiPersonalStatu(JobAApplicant):
     job_n_military_statu = relationship(u'JobNMilitaryStatu')
 
 
-class JobAApPiPersonalDatum(JobAApplicant):
+class JobAApPiPersonalDatum( DeclarativeBase2):
     __tablename__ = 'job_a_ap_pi_personal_data'
 
     ID_APPLICANT = Column(ForeignKey(u'job_a_applicant.ID_APPLICANT'), primary_key=True, server_default=text("'0'"))
@@ -8947,7 +8947,7 @@ class SysMUser(DeclarativeBase2):
     UPDATE_USER = Column(String(255))
 
 
-class JobMUserInvite(SysMUser):
+class JobMUserInvite(DeclarativeBase2):
     __tablename__ = 'job_m_user_invite'
 
     ID_USER = Column(ForeignKey(u'sys_m_user.ID_USER'), primary_key=True)
@@ -8959,7 +8959,7 @@ class JobMUserInvite(SysMUser):
     UPDATE_USER = Column(String(255))
 
 
-class JobMUserGeneralSetting(SysMUser):
+class JobMUserGeneralSetting(DeclarativeBase2):
     __tablename__ = 'job_m_user_general_setting'
 
     ID_USER = Column(ForeignKey(u'sys_m_user.ID_USER'), primary_key=True, server_default=text("'0'"))

@@ -8,6 +8,52 @@ class ImportDataToJMService(object):
     def __init__(self):
         self.page =0;
         self.page_size = 2;
+    
+    
+    def importDataManual(self):
+        
+        from datetime import datetime;
+        muser = model.MUser();
+        #muserGeneral = model.MUserGeneralSetting();
+ 
+        muser.USERNAME = "test@123.com"
+        muser.PASSWORD = "12345678";
+         
+        muser.ID_PREFIX_NAME =  1;
+         
+        muser.FIRST_NAME = 'Test';
+
+        muser.LAST_NAME = 'Test';
+        muser.CREATE_USER ="SYSTEM";
+        muser.STATUS = "W";
+        
+        muser.save();
+        #muserGeneral.USERNAME = "test@123.com"
+        #muserGeneral.PASSWORD = "12345678";
+         
+        #muserGeneral.ID_PREFIX_NAME =  1;
+         
+        #muserGeneral.FIRST_NAME = 'Test';
+
+        #muserGeneral.LAST_NAME = 'Test';
+        #muserGeneral.CREATE_USER ="SYSTEM";
+        #muserGeneral.STATUS = "W";
+        
+        muserGeneral = model.MUserGeneralSetting();
+        muserGeneral.setMainUser(muser);
+        muserGeneral.ID_LANGUAGE = 1
+        muserGeneral.ID_TIME_ZONE = 1
+        muserGeneral.ID_COUNTRY = 221
+        muserGeneral.ID_PROVINCE =  2 
+        muserGeneral.ID_CURRENCY = 3 #Baht
+        muserGeneral.MANY_POSITION = '1'
+        muserGeneral.IS_USE_SERVICE = 'Y'
+        muserGeneral.CREATE_DATE = datetime.now();
+        muserGeneral.CREATE_USER ="SYSTEM";
+        
+        muserGeneral.save(); 
+        
+        pass;
         
     def importData(self):
         #step 1 load data map
@@ -47,7 +93,13 @@ class ImportDataToJMService(object):
             #step 4 insert data to table 
             for email in emailtemps:
                 
-                #step 4.1 insert data to table sys_m_user
+                #step 4.1 insert data to table sys_m_user not use
+                
+                #step 4.5 insert data to table job_m_user_general_setting
+                #muserGeneral = model.MUserGeneralSetting();
+                #muserGeneral.saveObject(email,self.mapprefix,self.mapprovince); 
+                
+                #email.id_user = muserGeneral.ID_USER;
                 muser = model.MUser();
                 muser.saveObject(email,self.mapprefix); 
                 email.id_user = muser.ID_USER
@@ -66,17 +118,33 @@ class ImportDataToJMService(object):
                 muserEmail.saveObject(email); 
                 
                 #step 4.5 insert data to table job_m_user_general_setting
-                muserGeneral = model.MUserGeneralSetting(muser);
-                muserGeneral.saveObject(email,self.mapprovince); 
+                muserGeneral = model.MUserGeneralSetting();
+                muserGeneral.saveObject(email,self.mapprefix,self.mapprovince); 
+                
+                #email.id_user = muserGeneral.ID_USER;
+                
                 
                 #step 4.6 insert data to table job_m_user_phone
-                muserPhone = model.MUserPhone();
-                muserPhone.saveObject(email,self.mapprovince); 
+                muserPhone = model.MUserPhone(); 
+                muserPhone.saveObject(email, self.mapprovince); 
                 
                 
                 #step 4.6 insert data to table job_m_user_phone
                 muserAddres = model.MUserAddres();
                 muserAddres.saveObject(email,self.mapprovince,self.mapcity,self.mapcounty); 
+                
+                mjobAApplicant = model.MJobAApplicant();
+                mjobAApplicant.saveObject(email  );
+                
+                
+                
+                mjobAApPiPersonalDatum = model.MJobAApPiPersonalDatum();
+                mjobAApPiPersonalDatum.saveObject(email,self.mapprefix );
+                
+                
+                mjobAApplicantCertificate = model.MJobAApplicantCertificate();
+                mjobAApplicantCertificate.saveObject(email );
+                
                 
             stop  = datetime.now();
             
