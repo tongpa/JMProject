@@ -16,6 +16,32 @@ Ext.define('survey.view.list.Project.Option.optionName',{
 	allowBlank: false 
 });
 
+Ext.define('survey.view.list.Project.Option.ShowNavigator',{
+	extend : 'Ext.form.FieldContainer',
+	name : 'navigator',
+	defaultType: 'radiofield',
+	defaults: {
+        flex: 1
+    },
+    layout: 'hbox',
+	fieldLabel : survey.label.show_navigator,
+	allowBlank : false,
+	items: [
+             {
+                boxLabel  : survey.label.show_navigator_yes,
+                name      : 'show_navigator',
+                inputValue: '1' 
+                 
+            },
+            {
+                boxLabel  : survey.label.show_navigator_no,
+                name      : 'show_navigator',
+                inputValue: '0' 
+            }
+     ]
+
+});
+
 Ext.define('survey.view.list.Project.Option.startDate',{
 	extend : 'Ext.form.field.Date',
 	name: 'activate_date',
@@ -104,6 +130,7 @@ Ext.define('survey.view.list.Project.Option',{
 		main.finishDate = Ext.create('survey.view.list.Project.Option.finishDate');
 		main.redirectURL = Ext.create('survey.view.list.Project.Option.redirectURL');
 		
+		main.showNavigator = Ext.create('survey.view.list.Project.Option.ShowNavigator');
 		
 		
 		main.welcome_msg = Ext.create('survey.view.list.Project.Option.HtmlEditor',{name:'welcome_message'});
@@ -138,7 +165,7 @@ Ext.define('survey.view.list.Project.Option',{
 		});
 		
 		
-		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.startDate,main.finishDate,main.redirectURL,main.tabMessage]
+		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator ,main.startDate,main.finishDate,main.redirectURL,main.tabMessage]
 		
 		
 		

@@ -27,7 +27,7 @@
  	<div class="row">
 	 	<div class="col-md-12">
 	 	
-	 		<center> ${Markup(header)}</center>
+	 		<center> ${Markup(header)} </center>
 	 		<br/>
 	 	</div>
  	</div>
@@ -61,7 +61,7 @@
 	                
 						<div id="container" ng-controller="pollController" ng-init="init('${urldata}', '${idproject}','${idresp}')">
 							 
-							 <div class="highlight text-center">
+							<div class="highlight text-center" py:if="shownavigator">
 					 			<pagination 
 								total-items="bigTotalItems" 
 								ng-model="bigCurrentPage" 
@@ -79,7 +79,7 @@
 										No. of questions attempted :  <span ng-model="numberQuestion" > {{numberQuestion}}</span> / <span ng-model="bigTotalItems" > {{bigTotalItems}}</span>
 									</div>
 								</div>
-				 			 </div>
+				 			 </div> 
 											 
 							<form name="myForm" action="/ang/saveQuestion" method ="POST">
 							 <content-item ng-repeat="item in contentQuestion" content="item"></content-item>			 

@@ -93,7 +93,7 @@ class AnswerController(BaseController):#RestController): #
             
             
             if(self.template is not None and len(self.template) > 0):    
-                print self.template; 
+                log.info("template used : %s",  self.template );     
                 
                 override_template(AnswerController.reply, self.template) 
                 
@@ -268,6 +268,7 @@ class AnswerController(BaseController):#RestController): #
     
     
     def __checkExpire(self,id):
+        #sprint 10.2.1.0.html     idproject.idpublic.idvoter.
         self.value = self.utility.spritValue(id,'.');
         print self.value;
         self.idProject =0;

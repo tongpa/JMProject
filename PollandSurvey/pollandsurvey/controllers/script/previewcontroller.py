@@ -83,13 +83,19 @@ class PreviewController(BaseController):
                 
                 
                 if(self.template is not None and len(self.template) > 0):    
-                    print self.template; 
-                    
+                    log.info("template used : %s",  self.template );                     
                     override_template(PreviewController.index, self.template) 
                     
                 
         print 'idproject : ', id;     
-        return dict(page='view',header = self.header, footer = self.footer, action = self.nextQuestion,template= self.template,urldata = self.URL_GETDATAQUESTION.format(id) , idproject = id ); 
+        return dict(page='view',header = self.header, 
+                    footer = self.footer, 
+                    action = self.nextQuestion,
+                    template= self.template,
+                    urldata = self.URL_GETDATAQUESTION.format(id) , 
+                    idproject = id ,
+                    shownavigator = bool(self.questionOption.show_navigator),
+                    idresp = ""); 
          
         
     

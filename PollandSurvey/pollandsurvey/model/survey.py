@@ -962,7 +962,8 @@ class QuestionOption(DeclarativeBase):
                  "welcome_message": self.welcome_message ,
                  "end_message": self.end_message ,
                  "redirect_url": self.redirect_url ,
-                 "name_publication": self.name_publication
+                 "name_publication": self.name_publication,
+                 "show_navigator" : self.show_navigator
                  };
                  
         return dict;

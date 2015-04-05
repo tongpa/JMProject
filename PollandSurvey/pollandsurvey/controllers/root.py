@@ -25,7 +25,9 @@ from pollandsurvey.controllers.answercontroller import AnswerController;
 
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
+import time
 import sys
+
 import logging;
 log = logging.getLogger(__name__);
 __all__ = ['RootController']
@@ -234,4 +236,25 @@ class RootController(BaseController):
         
         return dict(success=self.success, message = self.message);
     
+    @expose(content_type='application/json')
+    def stream_list(self):
+        def output_pause1():
+            num = 0
+            yield '['
+            while num < 9:
+                num += 1
+                yield '%s, ' % num
+                time.sleep(1)
+            yield '10]'
+        return output_pause1()
+    
+    @expose(content_type='text/css')
+    def stream(self):
+        def output_pause():
+            num = 0
+            while num < 10:
+                num += 1
+                yield '%s/%s\n' % (request.path_info, num)
+                time.sleep(1)
+        return output_pause()
     
