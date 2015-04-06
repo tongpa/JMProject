@@ -54,8 +54,8 @@ class AnswerController(BaseController):#RestController): #
     
     @expose('pollandsurvey.templates.view.multiquestion')
     def reply(self,id=0,ready='no', **kw):
-        reload(sys);
-        sys.setdefaultencoding('utf-8');
+        reload(sys).setdefaultencoding('utf8')
+         
         print id,
         print kw;
          
@@ -115,7 +115,8 @@ class AnswerController(BaseController):#RestController): #
                     action = self.nextQuestion,template= self.template,
                     urldata = self.URL_GETDATAQUESTION.format(self.idPublic), 
                     idproject = self.idPublic ,
-                    idresp = self.respondent.id_respondents ); 
+                    idresp = self.respondent.id_respondents,
+                    shownavigator = bool(self.questionOption.show_navigator) ); 
             
     @expose('pollandsurvey.templates.view.welcome')
     def welcome(self,id=0,came_from=lurl('/')):

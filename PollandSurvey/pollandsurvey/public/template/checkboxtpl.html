@@ -25,9 +25,9 @@
 	 		<div ng-repeat="answer in content.answer">
 	    	<div class="checkbox">
 	    		 <label>
-	    		 	<input type="checkbox" name="checkbox_{{answer.id}}" ng-model="selectedData[content.id][answer.id]" ng-change="selectedScore(content.id,answer.id ,'check')"  ng-checked="{{answer.selected}}" value="{{answer.id}}" />
+	    		 	<input type="checkbox" name="checkbox_{{answer.id}}" ng-model="selectedData[content.id][answer.id]" ng-change="selectedScore(content.id,answer.id ,'check',this)"  ng-checked="{{answer.selected}}" value="{{answer.id}}" />
 			           
-			        <span>{{answer.id}} - {{answer.label}} - {{answer.selected}}</span>
+			        <span>{{answer.id}}</span>  <!--  - {{answer.label}} - {{answer.selected}} -->
 			      </label>
 	    	</div>
     </div>

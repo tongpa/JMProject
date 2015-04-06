@@ -31,7 +31,12 @@ class Utility(object):
             if(not self.createPathFile(path)):
                 os.makedirs(path);
             return False;
-  
+    
+    def convertToBit(self,data):
+        if ( data is not None and data == u'1' ):
+            return 1;
+        else:
+            return 0;
     
     def isNumber(self,data):
         try:
@@ -135,7 +140,8 @@ class Utility(object):
 
 #print ({True: True, False: False}[ answer in 'true'])
 
-u = Utility();
+#u = Utility();
+
 #u.isPartOf('answer_1.png',"""C:\\fakepath\\answer_1.png""");
 #d2 = datetime.datetime.today() - datetime.timedelta(days=2);
 #d3 = datetime.datetime.today() + datetime.timedelta(days=15);
@@ -155,4 +161,5 @@ u = Utility();
 #print dt_obj;
 
  
-
+print bool(1);
+print bool(0);

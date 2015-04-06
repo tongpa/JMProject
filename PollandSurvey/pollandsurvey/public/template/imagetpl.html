@@ -39,7 +39,7 @@
 	 		<div ng-repeat="answer in content.answer">
 		    	<div class="radio media-middle">
 		    		 <label>
-				        <input type="radio" name="image_{{content.id}}" ng-model="$parent.id" ng-change="selectedScore(content.id,answer.id,'image')"  value="{{answer.id}}" required="required"/>
+				        <input type="radio" name="image_{{content.id}}" ng-model="$parent.id" ng-change="selectedScore(content.id,answer.id,'image',this)"  value="{{answer.id}}" required="required"/>
 				 		<span > <img ng-src="/images/getSubImage?id={{answer.id}}" alt="{{answer.label}}"/> </span> 
 				      </label>
 		    	</div>

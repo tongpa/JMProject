@@ -26,7 +26,7 @@
 	 		<div  ng-repeat="answer in content.answer">
 		    	<div class="radio">
 		    		 <label>
-				        <input name="radio_{{content.id}}" value="{{answer.id}}" ng-model="$parent.selected_radio" ng-change="selectedScore(content.id,answer.id,'radio')"  type="radio" checked="checked" />    
+				        <input name="radio_{{content.id}}" value="{{answer.id}}" ng-model="$parent.selected_radio" ng-change="selectedScore(content.id,answer.id,'radio',this)"  type="radio" checked="checked" required="required"/>    
 				        <span> {{answer.label}}</span>
 				      </label>
 		    	</div>

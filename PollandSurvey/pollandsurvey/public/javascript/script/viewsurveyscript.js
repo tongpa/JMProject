@@ -35,6 +35,8 @@ var app = angular.module("poll", ['ui.bootstrap']);
 		
 		$scope.selected_radio = 1;
 		
+		$scope.selectAnswer = false;
+		
 		$scope.init = function(url,idproject,idresp){
 			$scope.url = url;
 			$scope.idProject = idproject;
@@ -54,22 +56,28 @@ var app = angular.module("poll", ['ui.bootstrap']);
 		
 		/**function for this controller for next Question **/
 		$scope.setNextQuestion = function (){
+			//next Question 
 			
-			
-			
-			
-			//$log.log('Page changed to : ' + ($scope.bigCurrentPage ) );
-			//$log.log('Page total to : ' + ($scope.bigTotalItems ) );
-			$scope.numberQuestion = $scope.numberQuestion +1;
-			if( $scope.bigCurrentPage < $scope.bigTotalItems)
-			{	$scope.bigCurrentPage = $scope.bigCurrentPage +1;
-			 	$scope.pageChanged();
-			}
-			else{
-				if ($scope.bigCurrentPage == $scope.bigTotalItems){
-					$scope.pageChanged();
+			//check Validate before next Question
+			$log.log('selected_radio : ' + ($scope.selectAnswer ) );
+			if ($scope.selectAnswer){
+			 
+				
+				$log.log('Page changed to : ' + ($scope.bigCurrentPage ) );
+				$log.log('Page total to : ' + ($scope.bigTotalItems ) );
+				$scope.numberQuestion = $scope.numberQuestion +1;
+				if( $scope.bigCurrentPage < $scope.bigTotalItems)
+				{	$scope.bigCurrentPage = $scope.bigCurrentPage +1;
+				 	$scope.pageChanged();
+				}
+				else{
+					if ($scope.bigCurrentPage == $scope.bigTotalItems){
+						$scope.pageChanged();
+					}
+					
 				}
 				
+				$scope.selectAnswer = false;
 			}
 		}
 		
@@ -122,8 +130,11 @@ var app = angular.module("poll", ['ui.bootstrap']);
 		    
 		   // debugger;
 		  };
-
-		  
+		/**function validate answer */
+		$scope.chooseAnswer = function(value) {
+			    $scope.selectAnswer = value;
+			     
+	    }; 
 		  
 	
 		/**Paging**/
@@ -150,10 +161,10 @@ var app = angular.module("poll", ['ui.bootstrap']);
 	        });
 		};
 	
-		$scope.selectedScore  = function(idQuestion){
-		//	$log.log('Page changed to: ' + id);
+	/*	$scope.selectedScore  = function(idQuestion){
+			$log.log('Page changed to: ' + idQuestion);
 		};
-		
+		*/
 
 	    
 	    
@@ -209,9 +220,11 @@ var app = angular.module("poll", ['ui.bootstrap']);
 	     directive.link =    function($scope, $element, $attrs) {
 	    	 var same = false;
 	    	 var qnaObj = new Object();
-	    	 $scope.selectedScore = function(id,value, type){
-	    		    
-	    		// 	console.log("id : " + id + ", value : " + value + ", type : " + type  );
+	    	 $scope.selectedScore = function(id, value, type, object){
+	    		    //Click answer
+	    		 	$scope.$parent.chooseAnswer(true); 
+	    		 	
+	    		 	
 	    		 	qnaObj = new Object();
 	    		 	qnaObj.id = id;
 	    		 	qnaObj.idproject = $scope.$parent.idProject;
@@ -219,6 +232,7 @@ var app = angular.module("poll", ['ui.bootstrap']);
 	    		 	qnaObj.value = [];
 	    		 	qnaObj.value.push(value);
 	    		 	qnaObj.type = type;
+	    		 	
 	    		 	console.log(qnaObj);
 	    		 	
 	    		 	 
@@ -234,9 +248,10 @@ var app = angular.module("poll", ['ui.bootstrap']);
 	    			            	 	break;
 	    			             case 'check':
 	    			            	 	var s = false;
-	    			            	 	
+	    			            	 	 console.log("check box");
 	    			            	 	 for(var i in qna.value){
 	    			            	         if(qna.value[i]==value){
+	    			            	        	 console.log("same value and remove " + value);
 	    			            	        	 qna.value.splice(i,1);
 	    			            	        	 s =true;
 	    			            	             break;
