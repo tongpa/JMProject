@@ -65,13 +65,15 @@ var app = angular.module("poll", ['ui.bootstrap']);
 				
 				$log.log('Page changed to : ' + ($scope.bigCurrentPage ) );
 				$log.log('Page total to : ' + ($scope.bigTotalItems ) );
+				
 				$scope.numberQuestion = $scope.numberQuestion +1;
 				if( $scope.bigCurrentPage < $scope.bigTotalItems)
 				{	$scope.bigCurrentPage = $scope.bigCurrentPage +1;
 				 	$scope.pageChanged();
 				}
 				else{
-					if ($scope.bigCurrentPage == $scope.bigTotalItems){
+					if ($scope.bigCurrentPage >= $scope.bigTotalItems){
+						$scope.bigCurrentPage = $scope.bigCurrentPage +1;
 						$scope.pageChanged();
 					}
 					
@@ -105,17 +107,19 @@ var app = angular.module("poll", ['ui.bootstrap']);
 		    if( $scope.lastQuestion.length > 0 ){
 		    
 			    var data = {value : $scope.lastQuestion[0]  };
-			    data.finished =  ($scope.bigCurrentPage == $scope.bigTotalItems);
+			    data.finished =  ($scope.bigCurrentPage > $scope.bigTotalItems);
+			    
+			   
 			    $http.post("/ans/saveQuestion",data).success(function(data,status,heafers, config){
-			    //	console.log(data);
+			   
 			    	if (status == 200 && data.success == true){
 			    		value = $scope.lastQuestion.pop(); //remove data;
-			    	//	console.log('finished : ' + data.finished);
+			    		
+			    	
 			    		if(data.finished){
-			    	//		$log.log('redirect : ' + data.redirect);
-			    			//$location.path('http://www.google.com');
+			    			//$scope.bigCurrentPage = $scope.bigCurrentPage - 1;
 			    			$window.location.href = data.redirect;
-			    			//$location.url('http://www.google.com');
+			    			
 			    		}
 			    	}
 			    	 
