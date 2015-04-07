@@ -202,7 +202,7 @@ Ext.define('survey.view.list.Project.PManagePublication',{
 			
 		});
 		main.tbar =  [{
-            xtype:'splitbutton',
+            xtype:'button',
             text: survey.label.create_publication ,
             iconCls: 'project-add',
             //iconCls: 'add16',
