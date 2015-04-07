@@ -178,11 +178,11 @@ Ext.application({
     	 
  
     	
-    	
     	 Ext.create('Ext.panel.Panel', {
     	// Ext.create('Ext.container.Container', {
     		 renderTo : 'maintenance-app' ,
     		 width : '100%',
+    		 
     		 height : 1000,
     		 layout:'fit',
              defaults: {
@@ -192,18 +192,7 @@ Ext.application({
              },
               
              items: [ 
-               /*       
-                      {
-                // title: 'Menu',
-                 region:'west',
-                 margins: '5 0 0 0',
-                 cmargins: '5 5 0 0',
-                 width: 175,
-                 minSize: 100,
-                 maxSize: 250  ,
-                 xtype:'panel'
-             //    items : [viewmenu]
-             } ,*/ 
+               
              {
                 // title: 'Center Region',
                  region: 'center',
@@ -218,23 +207,7 @@ Ext.application({
              ]
      	});
       
-    	 
-    	 /*
-    	 =  Ext.create('Ext.grid.Panel', {
-    			store: survey.listProject,
-    			columns: [
-    			    {header: 'risk id', dataIndex: 'id_question_project',width : 200  },      
-    			    {header: 'name', dataIndex: 'name',width : 100  }  
-    		     
-    		        
-    		    ] ,
-    		    viewConfig: {
-                    emptyText: 'No images to display'
-                },
-                collapsible:true,
-    	 		renderTo : 'maintenance-app' 
-    		});
-    	*/
+  
     	 
 	  
     }

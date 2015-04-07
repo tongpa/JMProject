@@ -11,7 +11,15 @@ Ext.define('survey.view.list.OptionProject', {
 	forceFit: true,
 	//frame: true,
 	viewConfig: {
-        emptyText: 'No images to display'
+        emptyText: 'No images to display',
+        listeners : {
+        	refresh : function(dataview){
+        		Ext.each(dataview.panel.columns, function (column) {
+        		       if (column.autoSizeColumn === true)
+        		        column.autoSize();
+        		      })
+        	}
+        }
     },
     collapsible:false ,
     
@@ -49,8 +57,9 @@ Ext.define('survey.view.list.OptionProject', {
     	Ext.defer(function () {
             Ext.widget('button', {
                 renderTo: id,
+                iconCls : 'project-remove',
                 text: survey.label.delete    ,// + r.get('name'),
-                width: 75,
+               // width: 75,
                 handler: function () {
                 	    
                 	  
@@ -105,7 +114,7 @@ Ext.define('survey.view.list.OptionProject', {
             Ext.widget('button', {
                 renderTo: id,
                 text: survey.label.edit ,// + r.get('name'),
-                width: 75,
+               // width: 75,
                 handler: function () {
                 	//Ext.Msg.alert('Info', r.get('name'));  
                 	//main.showManage(r);
@@ -125,7 +134,7 @@ Ext.define('survey.view.list.OptionProject', {
             Ext.widget('button', {
                 renderTo: id,
                 text: survey.label.view ,// + r.get('name'),
-                width: 75,
+               // width: 75,
                 handler: function () {
                 //	debugger;
                 	main.openUrl =  window.location.origin +"/";// window.location.protocol + window.location.host + "/"; 

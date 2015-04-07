@@ -24,7 +24,15 @@ Ext.define('survey.view.list.Project', {
 	//title : 'Project poll and survey',
 	viewConfig: {
         emptyText: 'No images to display',
-        forceFit: true 
+        forceFit: true ,
+        listeners : {
+        	refresh : function(dataview){
+        		Ext.each(dataview.panel.columns, function (column) {
+        		       if (column.autoSizeColumn === true)
+        		        column.autoSize();
+        		      })
+        	}
+        }
     },
     collapsible:false ,
     initComponent: function() {
@@ -33,9 +41,9 @@ Ext.define('survey.view.list.Project', {
     	main.store = survey.listProject; 
     	main.columns = [
     	       	       
-    	    	    {header: survey.label.name, dataIndex: 'name',width : '30%' , sortable: false }  ,
+    	    	    {header: survey.label.name, dataIndex: 'name' ,autoSizeColumn : true, sortable: false }  ,
     	    	    {header: survey.label.project_type, dataIndex: 'question_project_type',width : '15%', renderer :main.showprojecttype , sortable: false }  ,
-    	    	    {header: survey.label.start_date , dataIndex: 'start_date',width : '15%' , sortable: false }   ,
+    	    	    {header: survey.label.start_date , dataIndex: 'start_date',width : '15%' ,renderer :main.convertDate, sortable: false }   ,
     	    	    {header: survey.label.delete,  width : '10%', renderer :main.deleteButton, sortable: false  } ,
     	    	    {header: survey.label.edit,  width : '10%',  renderer :main.showbuttonManage,  sortable: false  }       	    	     
     	            
@@ -74,6 +82,10 @@ Ext.define('survey.view.list.Project', {
     	 
     	return value.description;
     },
+    convertDate : function(value,m,r){
+    	 
+    	return Ext.Date.format(Ext.Date.parse(value, 'Y-m-d G:i:s'), 'd/m/Y G:i')
+    },
     showbuttonManage : function (value,m,r){
     	var main = this;
     	var id = Ext.id();
@@ -81,7 +93,8 @@ Ext.define('survey.view.list.Project', {
             Ext.widget('button', {
                 renderTo: id,
                 text: survey.label.edit,// + r.get('name'),
-                width: 75,
+                autoWidth : true,
+             //   width: 75,
                 handler: function () {
                 	//Ext.Msg.alert('Info', r.get('name'));  
                 	main.showManage(r);
@@ -101,7 +114,7 @@ Ext.define('survey.view.list.Project', {
                 renderTo: id,
                 iconCls : 'project-remove',
                 text: survey.label.delete,// + r.get('name'),
-                width: 75,
+               // width: 75,
                 record : r,
                 
                 handler: function (bt,ev) { 

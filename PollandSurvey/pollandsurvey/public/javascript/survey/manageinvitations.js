@@ -45,8 +45,9 @@ Ext.define('survey.view.list.InvitaionsProject', {
     	Ext.defer(function () {
             Ext.widget('button', {
                 renderTo: id,
+                iconCls : 'project-remove',
                 text: survey.label.delete    ,// + r.get('name'),
-                width: 75,
+              //  width: 75,
                 handler: function () {
                 	    
                 	  
@@ -101,7 +102,7 @@ Ext.define('survey.view.list.InvitaionsProject', {
             Ext.widget('button', {
                 renderTo: id,
                 text: survey.label.edit ,// + r.get('name'),
-                width: 75,
+              //  width: 75,
                 handler: function () {
                 	//Ext.Msg.alert('Info', r.get('name'));  
                 	//main.showManage(r);

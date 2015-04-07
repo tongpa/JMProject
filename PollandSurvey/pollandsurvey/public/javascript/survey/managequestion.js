@@ -103,6 +103,12 @@ Ext.define ('survey.view.list.GridQuestions',{
 			    },
 		           
 	             listeners: {
+	            	 refresh : function(dataview){
+	             		Ext.each(dataview.panel.columns, function (column) {
+	             		       if (column.autoSizeColumn === true)
+	             		        column.autoSize();
+	             		      })
+	             	},
 	                 drop: function(node, data, overModel, dropPosition, eOpts) {
 	                	 //console.log('drop');
 	                	
@@ -142,7 +148,8 @@ Ext.define ('survey.view.list.GridQuestions',{
 							 
 		    	            {
 		    	            	xtype: 'templatecolumn',
-		    	            	width: '87%',
+		    	            	//width: '87%',
+		    	            	
 		    	                tpl: '<tpl for=".">' +
 				    	                '<div class="patient-source"><table><tbody>' +
 					                    '<tr><td class="patient-label">'+ survey.label.question +'</td><td class="patient-name">{question}</td></tr>' +
@@ -177,7 +184,7 @@ Ext.define ('survey.view.list.GridQuestions',{
 		    	            },
 							{
 					            xtype: 'actioncolumn', 
-					            width: '12%',
+					            autoSizeColumn : true,
 					            menuDisabled:true,
 							    sortable: false,
 							    renderer: function(a,css,row,d,f,d){}, 
