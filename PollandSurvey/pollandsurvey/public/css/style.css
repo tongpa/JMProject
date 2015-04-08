@@ -150,4 +150,10 @@ td.patient-label {
 .icon-demographic {
     background-image: url('../img/survey/demographics_icon.png') !important;
 }
+
+/*fontsize*/
+.head_question{
+	font-size: 24px;
+}
+ 
 /******/
