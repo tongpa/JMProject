@@ -160,6 +160,12 @@ class Utility(object):
 #dt_obj = datetime.strptime(dt_str, '%d/%m/%Y %H:%M:%S')
 #print dt_obj;
 
+from decimal import Decimal
+import math
+d = 173623;
+r = 500;
+print math.floor  (d/Decimal(r));
+print   (d/Decimal(r));
  
 print bool(1);
 print bool(0);

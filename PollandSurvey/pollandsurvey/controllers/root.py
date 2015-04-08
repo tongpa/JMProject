@@ -67,6 +67,18 @@ class RootController(BaseController):
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
     
+    @expose('pollandsurvey.templates.metronic')
+    def metronic(self, came_from=lurl('/')):
+        return dict(page='metronic') 
+    
+    @expose('pollandsurvey.templates.loginform')
+    def login(self, came_from=lurl('/')):
+        login_counter = request.environ.get('repoze.who.logins', 0)
+        if login_counter > 0:
+            flash(_('Wrong credentials'), 'warning')
+        return dict(page='login', login_counter=str(login_counter),
+                    came_from=came_from)
+    
     @expose('pollandsurvey.templates.about')
     def about(self, came_from=lurl('/')):
         return dict(page='about') 
@@ -120,7 +132,7 @@ class RootController(BaseController):
         return dict(page='editor stuff')
 
     @expose('pollandsurvey.templates.login')
-    def login(self, came_from=lurl('/')):
+    def login_old(self, came_from=lurl('/')):
         """Start the user login."""
         login_counter = request.environ.get('repoze.who.logins', 0)
         if login_counter > 0:
