@@ -83,6 +83,8 @@ def init_model_one(engine):
     #mapper(Reflected, t_reflected)
 
 # Import your model modules here.
+import transaction ;
+
 from exportemaildata.model.auth import User, Group, Permission
 from exportemaildata.model.email import EmailData,ExportEmail,EmailTemp, StatusExport,TypeEmail;
 from exportemaildata.model.email import MapGender,MapPrefix,MapProvince,MapCity,MapCounty;

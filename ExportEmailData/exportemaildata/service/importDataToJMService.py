@@ -1,14 +1,31 @@
 from exportemaildata import model
 
+import threading
+import sys
 from exportemaildata.controllers.utility import Utility
+import logging;
+log = logging.getLogger(__name__);
 
-class ImportDataToJMService(object):
+class ImportDataToJMService(threading.Thread):
     
     utility = Utility();
-    def __init__(self):
+    def __init__(self,threadID):
+        
+        reload(sys).setdefaultencoding('utf8')
+        threading.Thread.__init__(self)
+        
+        self.threadID = threadID;
         self.page =0;
-        self.page_size = 2;
+        self.page_size = 10000;
     
+    def run(self):
+        
+        log.info("Starting importData : " + str(self.threadID));
+        
+        self.importData();
+        
+    def sampleRunThread(self):
+        log.info("Start run Thread");
     
     def importDataManual(self):
         
@@ -87,12 +104,13 @@ class ImportDataToJMService(object):
         startTime  = datetime.now();
         #step 3 replace name to id ex: prefix, sex, country, city, province, countryname
         for num in range(0,self.totalPage):
-            print "%s to %s" ,num , (num*self.page_size);
+            log.info( "%s to %s" ,num , (num*self.page_size));
             start = datetime.now();
             emailtemps = model.EmailTemp.getData(num, self.page_size);
             #step 4 insert data to table 
             for email in emailtemps:
                 
+                model.transaction.begin();
                 #step 4.1 insert data to table sys_m_user not use
                 
                 #step 4.5 insert data to table job_m_user_general_setting
@@ -103,8 +121,8 @@ class ImportDataToJMService(object):
                 muser = model.MUser();
                 muser.saveObject(email,self.mapprefix); 
                 email.id_user = muser.ID_USER
-                print "ID USER : ",  email.id_user;
-                
+                log.info( "ID USER : " +  str(email.id_user));
+                log.info(email.email);
                 #step 4.2 insert data to table sys_m_user_lang
                 muserLang = model.MUserLang();
                 muserLang.saveObject(email); 
@@ -146,16 +164,19 @@ class ImportDataToJMService(object):
                 mjobAApplicantCertificate.saveObject(email );
                 
                 
+                email.updateExported();
+                
+                model.transaction.commit();
             stop  = datetime.now();
             
-            print "start : " , start , " to :" , stop
+            log.info( "start : %s to : %s " , start  , stop);
             
-            if num > 1:
-                break;
+            #if num > 1:
+            #    break;
         
         stopTime  = datetime.now();
         
-        print "finish start : " , startTime , " to :" , stopTime
+        log.info( "finish start : %s to %s" , startTime   , stopTime)
         
         
         

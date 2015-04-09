@@ -14,7 +14,8 @@ from sqlalchemy.exc import IntegrityError
 from exportemaildata.model import DeclarativeBase2, metadata2, DBSession2 
 
 from exportemaildata.model.jm.jmdatamodel import SysMUser,SysMUserLang,SysMUserMapRole,JobMUserEmail,JobMUserGeneralSetting,JobMUserPhone,JobMUserAddres,JobAApplicant,JobAApPiPersonalDatum,JobAApplicantCertificate; 
-
+import logging;
+log = logging.getLogger(__name__);
 class MUser(SysMUser):
     
    
@@ -22,7 +23,7 @@ class MUser(SysMUser):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -30,7 +31,7 @@ class MUser(SysMUser):
     
     def saveObject(self,email,mapprefix):
         
-        print "email : " + email.email;
+        
         
         self.USERNAME = email.email
         self.PASSWORD = "12345678";
@@ -52,7 +53,7 @@ class MUserLang(SysMUserLang):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -75,7 +76,7 @@ class MUserMapRole(SysMUserMapRole):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -96,7 +97,7 @@ class MUserEmail(JobMUserEmail):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -140,7 +141,7 @@ class MUserGeneralSetting(JobMUserGeneralSetting):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -180,7 +181,7 @@ class MUserPhone(JobMUserPhone):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -192,7 +193,7 @@ class MUserPhone(JobMUserPhone):
         
         #mobile phone 1
         if email.mobile and    len(str(email.mobile).strip()) >0    :
-            print 'save mobile : ',email.mobile;
+             
             self.ID_PHONE_TYPE = 1
             self.PHONE_PREFIX = '+66'
             self.PHONE_NO = email.mobile[1:]    
@@ -205,7 +206,7 @@ class MUserPhone(JobMUserPhone):
             self.save();
         #telephone   3
         if email.telephone and    len(str(email.telephone).strip()) >0 :
-            print 'save telephone : ',email.telephone;
+             
             self.ID_PHONE_TYPE = 3
             self.PHONE_PREFIX = '+66'
             self.PHONE_NO = email.telephone[1:]    
@@ -223,7 +224,7 @@ class MUserAddres(JobMUserAddres):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save project"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -237,32 +238,35 @@ class MUserAddres(JobMUserAddres):
         #PRESENT  
         self.ID_USER_ADDRESS_TYPE = 2
    
-        
-        self.HOUSING_NO = email.house_no
-        self.STREET_ADDRESS1 = email.building_village   + ' ' + email.moo
-        self.STREET_ADDRESS2 = email.soi + ' '  + email.road
-        self.ID_COUNTRY = 221
-        self.ID_PROVINCE =  mapprovince.get(email.province);
-        self.ID_CITY = mapcity.get(email.city);
-        self.ID_COUNTY =mapcounty.get(email.county);
-        self.ZIPCODE = email.postcode
-        
-        if email.telephone and    len(str(email.telephone).strip()) >0 :
-            self.TEL_PREFIX_NO = '+66'
-            self.TEL_NO = email.telephone[0:]
+        try:
+            self.HOUSING_NO = email.house_no
+            self.STREET_ADDRESS1 = str(email.building_village)   + ' ' + str(email.moo)
+            self.STREET_ADDRESS2 = str(email.soi) + ' '  + str(email.road)
+            self.ID_COUNTRY = 221
+            self.ID_PROVINCE =  mapprovince.get(email.province);
+            self.ID_CITY = mapcity.get(email.city);
+            self.ID_COUNTY =mapcounty.get(email.county);
+            self.ZIPCODE = email.postcode
             
-        if email.mobile and    len(str(email.mobile).strip()) >0    :
-            self.MOBILE_PREFIX_NO = '+66'
-            self.MOBILE_NO = email.mobile[0:]
-        #self.FAX_PREFIX_NO = Column(String(255))
-        #self.FAX_NO = Column(String(255))
-        #self.FAX_EXT_NO = Column(String(255))
-        
-        
-        
-        self.CREATE_USER ="SYSTEM";
-        self.CREATE_DATE = datetime.now();
-        self.save();
+            if email.telephone and    len(str(email.telephone).strip()) >0 :
+                self.TEL_PREFIX_NO = '+66'
+                self.TEL_NO = email.telephone[0:]
+                
+            if email.mobile and    len(str(email.mobile).strip()) >0    :
+                self.MOBILE_PREFIX_NO = '+66'
+                self.MOBILE_NO = email.mobile[0:]
+            #self.FAX_PREFIX_NO = Column(String(255))
+            #self.FAX_NO = Column(String(255))
+            #self.FAX_EXT_NO = Column(String(255))
+            
+            
+            
+            self.CREATE_USER ="SYSTEM";
+            self.CREATE_DATE = datetime.now();
+            self.save();
+        except Exception as e:
+            log.info( "---error---");
+            log.info(email.email);
 
 
 class MJobAApplicant(JobAApplicant):
@@ -272,7 +276,7 @@ class MJobAApplicant(JobAApplicant):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save MJobAApplicant"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -291,7 +295,7 @@ class MJobAApPiPersonalDatum(JobAApPiPersonalDatum):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save MJobAApplicant"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
@@ -321,7 +325,7 @@ class MJobAApplicantCertificate(JobAApplicantCertificate):
         try:
             DBSession2.add(self); 
             DBSession2.flush() ;
-            print "save MJobAApplicant"
+             
             return None;
         except  IntegrityError:
             print "Duplicate entry" 

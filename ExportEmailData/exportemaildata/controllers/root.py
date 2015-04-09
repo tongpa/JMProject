@@ -50,7 +50,7 @@ class RootController(BaseController):
     
     utility = Utility();
     importEmailService = ImportEmailService();
-    importDataToJMService = ImportDataToJMService();
+    
     
     def _before(self, *args, **kw):
         tmpl_context.project_name = "exportemaildata"
@@ -103,8 +103,7 @@ class RootController(BaseController):
     @expose('json')
     def feedback(self, data, **kw):
         import json
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding('utf8')
         
         df = json.loads(data, encoding=request.charset);
         
@@ -226,7 +225,7 @@ class RootController(BaseController):
         #dayconfig = model.DBSession2.query(model.MUser).all();
         #for day in dayconfig:
         #    print day;
-        
+        """
         self.mapprefix = {};
         size =model.EmailTemp.getSizeForExport();
         print size;
@@ -240,13 +239,15 @@ class RootController(BaseController):
         print self.mapprefix[u'\u0e04\u0e38\u0e13'];
         print self.mapprefix[str(u'\u0e04\u0e38\u0e13').decode('utf-8')];
         
+        """
         
+         
         
+        self.importDataToJMService = ImportDataToJMService("Thread-export" );
         
-        
-        self.importDataToJMService.importData();
+        self.importDataToJMService.start();
         #self.importDataToJMService.importDataManual();
-        pass;
+        
         #print [c.name for c in model.messages.columns]
     
     @expose('json')

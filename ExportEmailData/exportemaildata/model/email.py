@@ -17,14 +17,14 @@ __all__ = ['EmailData' ,'ExportEmail' ,'EmailTemp','StatusExport','TypeEmail','M
            ,'MapCity'
            ,'MapCounty' ]
  
-from sqlalchemy import Table, ForeignKey, Column, desc
+from sqlalchemy import Table, ForeignKey, Column, desc, update
 from sqlalchemy.types import Unicode, Integer, DateTime,BigInteger
 from sqlalchemy.orm import relation, synonym
 from sqlalchemy.dialects.mysql import BIT
 
 from exportemaildata.model import DeclarativeBase, metadata, DBSession
 
- 
+import transaction 
 
 class MapGender(DeclarativeBase):
     __tablename__ = 'map_gender';
@@ -329,6 +329,7 @@ class EmailTemp(DeclarativeBase):
     id_export_email = Column(   Integer,ForeignKey('export_email.id_export_email'), nullable=False, index=True) ;
     exportemail = relation('ExportEmail', backref='email_temp_id_export_email');
     
+    
     id_user = None;
     
     def __repr__(self):
@@ -338,6 +339,12 @@ class EmailTemp(DeclarativeBase):
     def __unicode__(self):
         return self.firstname_thai or self.email
     
+    def updateExported(self):
+        
+        email = DBSession.query(EmailTemp).filter(EmailTemp.id == self.id).first();
+        email.export_ready = 1;
+        email.export_date = datetime.now();
+           
     
     def copyData(self, emailData):
         if(emailData):
@@ -384,7 +391,7 @@ class EmailTemp(DeclarativeBase):
     
     @classmethod
     def getData(cls,  page=0, page_size=None):
-        query = DBSession.query(cls);
+        query = DBSession.query(cls).filter(cls.export_ready == str(0).decode('utf-8'));
         if page_size:
             query = query.limit(page_size)
         if page: 
