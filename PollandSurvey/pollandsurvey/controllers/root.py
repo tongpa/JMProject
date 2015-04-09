@@ -14,6 +14,10 @@ from tgext.admin.controller import AdminController
 from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
+
+from pollandsurvey.controllers.service import SendMailService
+from pollandsurvey.controllers.utility import Utility
+
 from pollandsurvey.controllers.register.registercontrol import RegisterController;
 from pollandsurvey.controllers.surveycontroller import SurveyController;
 from pollandsurvey.controllers.script.loadscriptcontroller import  ScriptController;
@@ -64,11 +68,14 @@ class RootController(BaseController):
     
     ang = AngularController();
     
+    def __init__(self):
+        self.sendMailService = SendMailService();
+        self.utility = Utility();
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
     
     @expose('pollandsurvey.templates.metronic')
-    def metronic(self, came_from=lurl('/')):
+    def index(self, came_from=lurl('/')):
         return dict(page='metronic') 
     
     @expose('pollandsurvey.templates.loginform')
@@ -78,34 +85,15 @@ class RootController(BaseController):
             flash(_('Wrong credentials'), 'warning')
         return dict(page='login', login_counter=str(login_counter),
                     came_from=came_from)
+        
+   
     
     @expose('pollandsurvey.templates.about')
     def about(self, came_from=lurl('/')):
-        return dict(page='about') 
+        return dict(page='about', login_counter=str(1),
+                    came_from=came_from) 
         
-    @expose('pollandsurvey.templates.index')
-    def index(self, came_from=lurl('/')):
-        """Handle the front-page."""
-        
-        
-        
-        if not request.identity:
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
-        
-        userid = request.identity['repoze.who.userid']
-        flash(_('Welcome back, %s!') % userid)
-        
-        groups = request.identity['groups'] 
-        
-        self.location = '/about';
-        if 'voter' in groups:            
-            log.info('voter');
-            self.location = '/survey';
-        log.info('other');
-        
-        return  HTTPFound(location=self.location)
-        #return dict(page='index')
+    
 
     
  
@@ -131,15 +119,7 @@ class RootController(BaseController):
         """Illustrate how a page exclusive for the editor works."""
         return dict(page='editor stuff')
 
-    @expose('pollandsurvey.templates.login')
-    def login_old(self, came_from=lurl('/')):
-        """Start the user login."""
-        login_counter = request.environ.get('repoze.who.logins', 0)
-        if login_counter > 0:
-            flash(_('Wrong credentials'), 'warning')
-        return dict(page='login', login_counter=str(login_counter),
-                    came_from=came_from)
-
+    
     @expose()
     def post_login(self, came_from=lurl('/')):
         """
@@ -147,7 +127,10 @@ class RootController(BaseController):
         authentication or redirect her back to the login page if login failed.
 
         """
+        print "Post login";
+        
         if not request.identity:
+            print "Redirect to login";
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
             redirect('/login',
                 params=dict(came_from=came_from, __logins=login_counter))
@@ -156,6 +139,7 @@ class RootController(BaseController):
         
         groups = request.identity['groups'] 
         
+        print "login success redirect to %s ", came_from;
         #identity = request.environ.get('repoze.who.identity') 
         
         
@@ -233,8 +217,7 @@ class RootController(BaseController):
     
     @expose('json',content_type="text/plain"  )
     def addQuestion(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding('utf8')
         self.success = True;
         self.message = "success";
         log.info('---------1--------------');
@@ -242,9 +225,6 @@ class RootController(BaseController):
      
         print kw;
         print args;
-        
-        
-          
         
         return dict(success=self.success, message = self.message);
     
@@ -269,4 +249,63 @@ class RootController(BaseController):
                 yield '%s/%s\n' % (request.path_info, num)
                 time.sleep(1)
         return output_pause()
+    
+    @expose('json'  )
+    def fogotPassword(self,**kw):
+        
+        self.email = kw.get('email');
+        
+        self.user = model.User.by_email_address(self.email);
+        if(self.user):
+            newPassword = self.utility.id_generator(8);
+            self.user._set_password(newPassword);
+            
+            self.emailValues={};
+            self.emailValues['user_name'] = self.user.user_name;
+            self.emailValues['email'] = self.user.email_address;
+            self.emailValues['password'] = newPassword;
+             
+            
+            self.sendMailService.sendForgotPassword(self.emailValues);
+            self.sendMailService.start();
+             
+        else:
+            log.info('forget password email : %s can not access',self.email);
+        redirect("/")
+        
+    
+    """
+    @expose('pollandsurvey.templates.login')
+    def login_old(self, came_from=lurl('/')):
+        #Start the user login. 
+        login_counter = request.environ.get('repoze.who.logins', 0)
+        if login_counter > 0:
+            flash(_('Wrong credentials'), 'warning')
+        return dict(page='login', login_counter=str(login_counter),
+                    came_from=came_from)
+    
+    @expose('pollandsurvey.templates.index')
+    def index_old(self, came_from=lurl('/')):
+        #Handle the front-page. 
+        
+        
+        
+        if not request.identity:
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1
+            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+        
+        userid = request.identity['repoze.who.userid']
+        flash(_('Welcome back, %s!') % userid)
+        
+        groups = request.identity['groups'] 
+        
+        self.location = '/about';
+        if 'voter' in groups:            
+            log.info('voter');
+            self.location = '/survey';
+        log.info('other');
+        
+        return  HTTPFound(location=self.location)
+        #return dict(page='index') 
+    """ 
     

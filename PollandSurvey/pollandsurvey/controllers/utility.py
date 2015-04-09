@@ -6,11 +6,24 @@ import logging;
 import types;
 import datetime;
 import os.path
+import string
+import random
+import uuid
 log = logging.getLogger(__name__); 
 class Utility(object):
 
     def __init__(self):
         pass;
+    
+    def my_random_string(self,string_length=10):
+        """Returns a random string of length string_length."""
+        random = str(uuid.uuid4()) # Convert UUID format to a Python string.
+        random = random.upper() # Make all characters uppercase.
+        random = random.replace("-","") # Remove the UUID '-'.
+        return random[0:string_length] # Return the random string.
+
+    def id_generator(self, size=8, chars=string.ascii_uppercase + string.digits):
+        return ''.join(random.choice(chars) for _ in range(size));
     
     def getDefaultImagePath(self):
         path = os.getcwd();
@@ -160,12 +173,14 @@ class Utility(object):
 #dt_obj = datetime.strptime(dt_str, '%d/%m/%Y %H:%M:%S')
 #print dt_obj;
 
-from decimal import Decimal
-import math
-d = 173623;
-r = 500;
-print math.floor  (d/Decimal(r));
-print   (d/Decimal(r));
  
-print bool(1);
-print bool(0);
+
+#from decimal import Decimal
+#import math
+#d = 173623;
+#r = 500;
+#print math.floor  (d/Decimal(r));
+#print   (d/Decimal(r));
+ 
+#print bool(1);
+#print bool(0);

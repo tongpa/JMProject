@@ -41,13 +41,13 @@ class RegisterController(BaseController):
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
 
-    @expose('pollandsurvey.templates.register.index')
-    def index1(self):
+    @expose('pollandsurvey.templates.registerform')
+    def index(self):
         """Handle the front-page."""
         return dict(page='index')
 
     @expose('pollandsurvey.templates.widget')
-    def index(self, *args, **kw):
+    def index2(self, *args, **kw):
         w = RegisterForm(redirect='/register/',validate= passwordValidator).req()
         w.child.action ="/register/create";
          
