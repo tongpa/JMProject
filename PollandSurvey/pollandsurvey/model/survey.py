@@ -22,9 +22,74 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
-__all__ = ['GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
+__all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
            ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme']
 
+
+class SysConfig(DeclarativeBase):
+    __tablename__ = 'sur_sys_config'
+
+    id_sys_config =  Column(Integer, autoincrement=True, primary_key=True);
+    default_sender_name = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime );
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+
+class EmailTemplate(DeclarativeBase):
+    __tablename__ = 'sur_m_email_template'
+
+    id_email_template =  Column(Integer, autoincrement=True, primary_key=True);
+    id_email_template_type =   Column( Integer,ForeignKey('sur_fix_email_template_type.id_email_template_type'), nullable=False, index=True) ;
+    email_template_type = relation('EmailTemplateType', backref='sur_m_email_template_id_email_template_type');
+    
+    sender = Column(String(255), nullable=True);
+    subject = Column(String(255), nullable=True);
+    content_template = Column(Text, nullable=True);
+    language = Column(String(2), nullable=True);
+    
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime );
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+        
+    @classmethod
+    def getTemplateBy(cls,idTemplate):
+        return DBSession.query(cls).filter(cls.active == str('1').decode('utf-8'),cls.id_email_template_type == str(idTemplate).decode('utf-8')).first();
+
+class EmailTemplateType(DeclarativeBase):
+    __tablename__ = 'sur_fix_email_template_type'
+
+    id_email_template_type =  Column(Integer, autoincrement=True, primary_key=True);
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime );
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+    
+    def delete(self):
+        DBSession.delete(self); 
+        DBSession.flush() ;
+        
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+        
+    def insertValue(self):
+        template = EmailTemplateType();
+        template.id_email_template_type = 1;
+        template.description = 'forgot password';
+        template.active = 1;
+        template.create_date = datetime.now();
 
 class LanguageLabel(DeclarativeBase):
     __tablename__ = 'sur_m_language_label'
