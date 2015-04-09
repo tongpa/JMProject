@@ -20,7 +20,7 @@ class MultiDBAppConfig(AppConfig):
         engine1 = engine_from_config(config, 'sqlalchemy.first.')
         engine2 = engine_from_config(config, 'sqlalchemy.second.')
         # engine1 should be assigned to sa_engine as well as your first engine's name
-        config['tg.app_globals'].sa_engine = engine1
+        #config['tg.app_globals'].sa_engine = engine1
         config['tg.app_globals'].sa_engine_first = engine1
         config['tg.app_globals'].sa_engine_second = engine2
         # Pass the engines to init_model, to be able to introspect tables
@@ -65,7 +65,7 @@ base_config.DBSession = exportemaildata.model.DBSession
 base_config.sa_auth.cookie_secret = "7552e6fd-ab23-409e-8e86-02482ed69591"
 
 base_config.auth_backend = 'sqlalchemy'
-
+#base_config.use_transaction_manager = False
 # what is the class you want to use to search for users in the database
 base_config.sa_auth.user_class = model.User
 
