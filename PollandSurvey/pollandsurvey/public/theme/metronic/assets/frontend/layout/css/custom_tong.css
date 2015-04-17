@@ -1,0 +1,50 @@
+/* here you can put your own css to customize and override the theme */
+
+main {
+	margin: 0 50px 0 50px;
+}
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+}
+
+footer {
+    margin: 50px 0;
+}
+
+.row {
+  margin-right:  15px;
+  margin-left:  15px;
+  margin-top: 20px;
+}
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.well-box {
+  min-height: 20px;
+  padding: 19px;
+  
+  margin-bottom: 20px;
+  background-color: #f5ff5;
+  border: 1px solid #e3e3e3;
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+}
+.well-box blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, .15);
+}
+.well-box-lg {
+  padding: 24px;
+  border-radius: 6px;
+}
+.well-box-sm {
+  padding: 9px;
+  border-radius: 3px;
+}
