@@ -100,6 +100,11 @@ class ScriptModelController(BaseController):
         
         return dict(survey=question , total = len(question));
     
+    @expose('json')
+    def getLanguages(self,*args, **kw):
+        languages = model.Languages.getAll();
+        return dict(survey=languages,total=len(languages));
+    
     
     
     

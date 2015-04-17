@@ -78,6 +78,11 @@ class RootController(BaseController):
     def index(self, came_from=lurl('/')):
         return dict(page='metronic') 
     
+    
+    @expose('pollandsurvey.templates.metronic')
+    def home(self, came_from=lurl('/')):
+        return dict(page='metronic') 
+    
     @expose('pollandsurvey.templates.loginform')
     def login(self, came_from=lurl('/')):
         login_counter = request.environ.get('repoze.who.logins', 0)
