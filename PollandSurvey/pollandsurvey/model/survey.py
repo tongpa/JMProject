@@ -13,8 +13,9 @@ from datetime import datetime
 from hashlib import sha256
 
 
-from sqlalchemy import Table, ForeignKey, Column,and_
-from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger
+#from sqlalchemy.sql import func; 
+from sqlalchemy import Table, ForeignKey, Column,and_ ,sql
+from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger,SmallInteger,CHAR,TIMESTAMP
 
 from sqlalchemy.util import KeyedTuple;
 from sqlalchemy.orm import relation, synonym, Bundle
@@ -26,6 +27,9 @@ __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'Qu
            ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme']
 
 
+
+
+
 class SysConfig(DeclarativeBase):
     __tablename__ = 'sur_sys_config'
 
@@ -33,11 +37,13 @@ class SysConfig(DeclarativeBase):
     default_sender_name = Column(String(255), nullable=True);
     active  = Column(BIT, nullable=True, default=1);
     create_date = Column(DateTime, default=datetime.now);
-    update_date = Column(DateTime );
+    update_date = Column(DateTime ,onupdate=sql.func.utc_timestamp());
     
     def __init__(self):
         self.active = 1;
         self.create_date =  datetime.now();
+
+
 
 class EmailTemplate(DeclarativeBase):
     __tablename__ = 'sur_m_email_template'
@@ -53,7 +59,7 @@ class EmailTemplate(DeclarativeBase):
     
     active  = Column(BIT, nullable=True, default=1);
     create_date = Column(DateTime, default=datetime.now);
-    update_date = Column(DateTime );
+    update_date = Column(DateTime,onupdate=sql.func.utc_timestamp() );
     
     def __init__(self):
         self.active = 1;
@@ -70,7 +76,7 @@ class EmailTemplateType(DeclarativeBase):
     description = Column(String(255), nullable=True);
     active  = Column(BIT, nullable=True, default=1);
     create_date = Column(DateTime, default=datetime.now);
-    update_date = Column(DateTime );
+    update_date = Column(DateTime,onupdate=sql.func.utc_timestamp() );
     
     def __init__(self):
         self.active = 1;
@@ -90,6 +96,38 @@ class EmailTemplateType(DeclarativeBase):
         template.description = 'forgot password';
         template.active = 1;
         template.create_date = datetime.now();
+
+
+
+class Languages(DeclarativeBase):
+    __tablename__ = 'sur_m_language'
+
+    id_language =  Column(BigInteger, autoincrement=True, primary_key=True);
+    
+    seq = Column(SmallInteger, nullable=True);
+    code2 = Column(CHAR(2), nullable=True);
+    code3 = Column(CHAR(3), nullable=True);
+    
+    
+    
+    name = Column(String(255) , nullable=True);
+    name_local =  Column(String(255) , nullable=True);
+    status =  Column(CHAR(1) , nullable=True, default='A'); 
+    create_date  = Column( TIMESTAMP(timezone=True), nullable=True ,default=sql.func.utc_timestamp());
+    create_user = Column(String(255) , nullable=True, default='SYSTEM');
+    
+    update_date = Column(TIMESTAMP(timezone=True), nullable=True,onupdate=sql.func.utc_timestamp() );
+    update_user = Column(String(255) , nullable=True );
+    
+    
+    def __init__(self):
+        self.active = 1;
+    def __str__(self):
+        return '"%s"' % (self.default_label )
+    
+    @classmethod
+    def getAll(cls):
+        return DBSession.query(cls).filter(cls.status == str('A').decode('utf-8')).all();
 
 class LanguageLabel(DeclarativeBase):
     __tablename__ = 'sur_m_language_label'
