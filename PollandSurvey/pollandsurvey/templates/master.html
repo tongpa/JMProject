@@ -63,10 +63,13 @@
         <li class="${('', 'active')[value_of('page') == 'environ']}"><a href="${tg.url('/environ')}">WSGI Environment</a></li>
       </ul>
  -->
+ 
+ 
       <ul py:if="tg.auth_stack_enabled" class="nav navbar-nav navbar-right">
+      <li py:if="request.identity"><a href="${tg.url('/account')}">Account</a></li>
         <li py:if="not request.identity"><a href="${tg.url('/login')}">Login</a></li>
         <li py:if="request.identity"><a href="${tg.url('/logout_handler')}">Logout</a></li>
-        <li py:if="request.identity"><a href="${tg.url('/admin')}">Admin</a></li>
+       <!--  <li py:if="request.identity"><a href="${tg.url('/admin')}">Admin</a></li>  -->
       </ul>
     </div>
   </nav>
