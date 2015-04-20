@@ -21,7 +21,9 @@ from sqlalchemy.orm import relation, synonym
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
 from trackproblems.model.configfield import __tablename__
  
-__all__ = ['UserService' ] 
+__all__ = ['UserService','UserGenCode' ] 
+
+ 
 
 class UserService(User):
     """
@@ -31,7 +33,7 @@ class UserService(User):
     least the ``user_name`` column.
 
     """
-    __tablename__ = 'sur_m_user'
+    __tablename__ = 'sur_user'
 
     user_id =  Column(Integer, ForeignKey(u'tg_user.user_id'), primary_key=True)  
     first_name = Column(String(255), nullable=True);
@@ -65,10 +67,11 @@ class UserService(User):
         DBSession.flush() ;
         
 class UserGenCode(DeclarativeBase):
-    __tablename__ = 'sur_m_user_gen_code';
+    __tablename__ = 'sur_user_gen_code';
     
     id_user_gen_code =   Column(BigInteger, autoincrement=True, primary_key=True);
-    user_id =  Column(Integer, ForeignKey(u'tg_user.user_id') )  
+    user_id =  Column(Integer, ForeignKey(u'tg_user.user_id') );
+    id_gen_code_type =  Column(Integer, ForeignKey(u'sur_fix_email_template_type.id_email_template_type'))
     code = Column(String(255), nullable=True);
     success = Column(BIT, nullable=True, default=0);
     active =  Column(BIT, nullable=True, default=1);
