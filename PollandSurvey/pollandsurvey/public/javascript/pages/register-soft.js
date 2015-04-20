@@ -37,9 +37,16 @@ var Register = function () {
 	                fullname: {
 	                    required: true
 	                },
+	                fulllastname: {
+	                    required: true
+	                },
 	                email: {
 	                    required: true,
-	                    email: true
+	                    email: true,
+	                    remote : {
+	                    	url : '/register/checkUserEmail',
+	                    	type : 'post'
+	                    }
 	                },
 	                address: {
 	                    required: true
@@ -51,9 +58,7 @@ var Register = function () {
 	                    required: true
 	                },
 
-	                username: {
-	                    required: true
-	                },
+	                 
 	                password: {
 	                    required: true
 	                },
@@ -69,6 +74,14 @@ var Register = function () {
 	            messages: { // custom messages for radio buttons and checkboxes
 	                tnc: {
 	                    required: "Please accept TNC first."
+	                },
+	                fullname : {
+	                	 required: "Please Enter Your Name."
+	                },
+	                email :{
+	                	required : "Please Enter Email!",
+	                    email: "This is not a valid email!",
+	                    remote: "Email already in use!"
 	                }
 	            },
 
@@ -97,7 +110,32 @@ var Register = function () {
 	            },
 
 	            submitHandler: function (form) {
-	                form.submit();
+	            	 
+	            	
+	            	            	 
+	            	 
+	            	
+	            	$.ajax({
+	   			     type     : "POST",
+	   			     cache    : false,
+	   			     url      : '/register/create',//form.attr('action'),
+	   			     data     : $(form).serialize(),//form.serializeArray(),
+	   			     success  : function(data) {
+	   			    	 if(data.success == true){
+	   			    		 
+	   			    		 $(location).attr('href',"/register/registerSuccess"); 
+	   			    	 }
+	   			    	 else {
+	   			    		 
+	   			    		 
+	   			    		 return false;
+	   			    	 }
+	   			     },
+	   			    error: function (responseData) {
+	                    console.log('Ajax request not recieved!');
+	                }
+	   			    });
+	            	//form.submit();
 	            }
 	        });
 
@@ -110,9 +148,40 @@ var Register = function () {
 	            }
 	        });
 			
-			jQuery('#register-btn').click(function () {
-	             
+			/*$('#register-form').submit(function (event ) {
+				alert("test");
+				event.preventDefault();
+				return false;
 	        });
+			
+			$("#register-form").submit(function(){
+			    var $form = $(this);
+			    
+			    if(! $form.valid()) return false;
+			     
+			    $.ajax({
+			     type     : "POST",
+			     cache    : false,
+			     url      : $form.attr('action'),
+			     data     : $form.serializeArray(),
+			     success  : function(data) {
+			    	 if(data.success == true){
+			    		 $(location).attr('href',"/register/registerSuccess"); 
+			    	 }
+			    	 else {
+			    		 return false;
+			    	 }
+			     }
+			    });
+			 });
+			*/
+			/*
+			$('#register-submit-btn').click(function(){
+				alert("test btn");
+				
+				$('#register-form').submit( );
+		 
+			});*/
 
 	        jQuery('#register-back-btn').click(function () {
 	        	console.log('register back');
