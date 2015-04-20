@@ -46,7 +46,7 @@ class Utility(object):
             return False;
     
     def convertToBit(self,data):
-        if ( data is not None and data == u'1' ):
+        if ( data is not None and ( data == u'1' or str(data).lower() == u'on') ):
             return 1;
         else:
             return 0;
