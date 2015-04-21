@@ -36,6 +36,20 @@ class Utility(object):
         self.createPathFile(self.target_file_name);        
         return self.target_file_name;
     
+    def getCurrentDate(self):
+        
+        return datetime.datetime.strptime(datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")  , "%Y-%m-%d %H:%M:%S");
+        
+    
+    def plusDate(self,currentDate,numberDay=0):
+        if(currentDate is None or ( type(currentDate) is not datetime.datetime )     ):
+            currentDate = datetime.datetime.today();
+             
+        self.temp =currentDate + datetime.timedelta(days=numberDay);
+        return datetime.datetime.strptime(self.temp.strftime("%Y-%m-%d") + " 23:59:59", "%Y-%m-%d %H:%M:%S");
+    
+    
+    
     def createPathFile(self,path):         
         if os.path.exists(path):
             return True;
@@ -50,6 +64,11 @@ class Utility(object):
             return 1;
         else:
             return 0;
+    def convertToBool(self,data):
+        if ( data is not None and ( str(data) == u'1' or str(data).lower() == u'on') ):
+            return True;
+        else:
+            return False;
     
     def isNumber(self,data):
         try:
@@ -153,7 +172,13 @@ class Utility(object):
 
 #print ({True: True, False: False}[ answer in 'true'])
 
-#u = Utility();
+u = Utility();
+print u.getCurrentDate();
+#print u.plusDate(datetime.datetime.today(),0);
+
+
+#print u.plusDate(datetime.datetime.today(),30);
+#print u.my_random_string(15);
 
 #u.isPartOf('answer_1.png',"""C:\\fakepath\\answer_1.png""");
 #d2 = datetime.datetime.today() - datetime.timedelta(days=2);
@@ -172,7 +197,6 @@ class Utility(object):
 #dt_str = '01/02/2015'  + ' 00:00:00' ;
 #dt_obj = datetime.strptime(dt_str, '%d/%m/%Y %H:%M:%S')
 #print dt_obj;
-
  
 
 #from decimal import Decimal

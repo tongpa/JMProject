@@ -1,2 +1,2 @@
-from registerservice import RegisterService;
+from registerservice import RegisterService,UserObject;
 from sendmailservice import SendMailService;

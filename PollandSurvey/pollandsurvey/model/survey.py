@@ -34,7 +34,10 @@ class SysConfig(DeclarativeBase):
     __tablename__ = 'sur_sys_config'
 
     id_sys_config =  Column(Integer, autoincrement=True, primary_key=True);
-    default_sender_name = Column(String(255), nullable=True);
+    default_code = Column(String(255), nullable=True);
+    default_value = Column(String(255), nullable=True);
+    default_type_value = Column(String(255), nullable=True);
+    code_country =Column(String(3), nullable=True);
     active  = Column(BIT, nullable=True, default=1);
     create_date = Column(DateTime, default=datetime.now);
     update_date = Column(DateTime ,onupdate=sql.func.utc_timestamp());
@@ -42,6 +45,16 @@ class SysConfig(DeclarativeBase):
     def __init__(self):
         self.active = 1;
         self.create_date =  datetime.now();
+    
+    @classmethod
+    def defaultSystemByCountry(cls,codeCountry='th'):
+        return DBSession.query(cls).filter(cls.active == str('1').decode('utf-8'),cls.code_country == str(codeCountry).decode('utf-8')).first();
+    
+    @classmethod
+    def defaultExpireByCountry(cls,codeCountry):
+        #expired_activate_code
+        pass;
+        
 
 
 

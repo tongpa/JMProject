@@ -22,17 +22,31 @@ class SendMailService(threading.Thread):
     def run(self):
         if self.sendType == 1:
             self._forgotPassword();
-        
+        if self.sendType == 2:
+            self._activateEmail();
         pass;
-            
+    
+    def sendActivate(self,email):
+        self.email = email;
+        self.sendType =2; 
+        
     def sendForgotPassword(self,email):
         self.email = email;
         self.sendType =1;
        
-            
+       
+    def _activateEmail(self):
+        self.__sendEmailByTemplate();
+               
     def _forgotPassword(self):
+        self.__sendEmailByTemplate();
+    
+    
+    
+    def __sendEmailByTemplate(self):
         try:
-            self.forgot_template = model.EmailTemplate.getTemplateBy(1);
+            print "send email";
+            self.forgot_template = model.EmailTemplate.getTemplateBy(self.sendType);
             template = self.forgot_template.content_template;
             for k,v in  self.email.iteritems():
                 template = template.replace('[%s]' % k,v)
@@ -53,8 +67,7 @@ class SendMailService(threading.Thread):
             server.sendmail(self.SMTP_USER, [self.email.get('email')], msg.as_string())
             server.close();
         except Exception as e:
-            log.exception(e.value);
-         
+            log.exception(e.value); 
     
         
         

@@ -16,10 +16,14 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.widget.register.registerwidget import RegisterForm ,passwordValidator
 from pollandsurvey.controllers.utility import Utility
+from pollandsurvey.controllers.service import SendMailService,RegisterService,UserObject
 
 from tg import tmpl_context 
 
 import tw2.core
+import logging;
+from datetime import datetime ;
+log = logging.getLogger(__name__);
 
 __all__ = ['RegisterController']
 
@@ -41,6 +45,8 @@ class RegisterController(BaseController):
     
     def __init__(self):
         self.utility = Utility();  
+        self.sendMailService = SendMailService();
+        self.registerService = RegisterService();
     
 
     def _before(self, *args, **kw):
@@ -62,41 +68,44 @@ class RegisterController(BaseController):
     def create(self,*args,**kw):
         print kw;
         
-        self.fullname = kw.get('fullname');
-        self.fulllastname = kw.get('fulllastname');
         self.email = kw.get('email');
-        self.city = kw.get('city');
-        self.country = kw.get('country');
-        self.address = kw.get('address');
         self.password = kw.get('password');
         self.rpassword = kw.get('rpassword');
-        self.tnc = kw.get('tnc');
-        
-        
-        
-        
-        self.user = model.UserService();
-        self.user.user_name = self.email;
-        self.user.email_address = self.email;
-        self.user.display_name = self.fullname + " " + self.fulllastname;
-        self.user._set_password(self.password); 
-        
-        self.user.first_name = self.fullname
-        self.user.last_name = self.fulllastname
-        self.user.address =self.address
-        self.user.city =self.city
-        self.user.country = self.country
-        self.user.accept_tnc = self.utility.convertToBit(self.tnc);
-        
-        self.user.save();
         
         self.success= True;
         self.message = "create success";
         
         
-        print self.success;
-        #redirect(base_url = '/register/registerSuccess', params={} );
-        
+        u = model.User.by_email_address(self.email);
+        if u is None:
+             
+            if( str(self.password) ==  str(self.rpassword) ):
+                
+                 
+                self.user,self.userGenCode = self.registerService.createUser(kw);
+                
+                self.emailValues={};
+                self.emailValues['user_name'] = self.user.display_name;
+                self.emailValues['email'] = self.user.email_address;
+                self.emailValues['password'] = self.password;
+                self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
+               
+                self.sendMailService.sendActivate(self.emailValues);
+                self.sendMailService.start();
+                    
+                log.info("create user : %s " + self.email);
+                
+                
+            else:
+                self.message ="password not same";
+                self.success= False;
+                log.info("password not same : %s " + self.email);
+             
+        else:
+            self.message = "email have already";
+            self.success= False;
+            log.info("email have already : %s " + self.email);
+        u =None;
         return dict(success=self.success, message = self.message);
     
     @expose('pollandsurvey.templates.register.register_success')

@@ -5,6 +5,7 @@ from tg import expose, flash, require, url, lurl, request, redirect, tmpl_contex
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
+from tg.decorators import override_template; 
 from pollandsurvey import model
 from pollandsurvey.controllers.secure import SecureController
 from pollandsurvey.model import DBSession, metadata
@@ -15,7 +16,7 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
 
-from pollandsurvey.controllers.service import SendMailService
+from pollandsurvey.controllers.service import SendMailService,RegisterService
 from pollandsurvey.controllers.utility import Utility
 
 from pollandsurvey.controllers.register.registercontrol import RegisterController;
@@ -70,6 +71,7 @@ class RootController(BaseController):
     
     def __init__(self):
         self.sendMailService = SendMailService();
+        self.registerService = RegisterService();
         self.utility = Utility();
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
@@ -254,6 +256,60 @@ class RootController(BaseController):
                 yield '%s/%s\n' % (request.path_info, num)
                 time.sleep(1)
         return output_pause()
+    
+    
+    @expose('pollandsurvey.templates.register.register_success')
+    def reactivate(self,*args,**kw):
+        print kw;
+        self.userGenCode =  model.UserGenCode.getByActivateCode(kw.get('activate_code'));
+        self.user = model.UserService.getByUserId(self.userGenCode.user_id);
+        
+        self.userGenCode = self.registerService.createUserGenCode(self.user);
+        
+        self.emailValues={};
+        self.emailValues['user_name'] = self.user.display_name;
+        self.emailValues['email'] = self.user.email_address;
+        # self.emailValues['password'] = self.password;
+        self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
+       
+        self.sendMailService.sendActivate(self.emailValues);
+        self.sendMailService.start();
+        
+        
+        return dict(page='register_success')
+    
+    @expose('genshi:pollandsurvey.templates.register.activate_success')
+    def activate(self,*args, **kw):
+        print kw;
+        print args[0];
+        
+        self.userGenCode =  model.UserGenCode.getByActivateCode(args[0]);
+        self.message = "";
+        
+        if (self.userGenCode ):
+            if ( not self.utility.convertToBool(self.userGenCode.success) ):
+                
+                if (self.utility.isActiveFromDate(self.utility.getCurrentDate() , self.userGenCode.create_date ,self.userGenCode.expire_date   ) ):
+                    self.userGenCode.success = 1;
+                    self.message = "activate success";
+                    
+                else : 
+                    self.message = "link activate expired ";
+                      
+                    override_template(RootController.activate, 'genshi:pollandsurvey.templates.register.reactivate') 
+                     
+            else:
+                self.message = "activate already";
+                
+        
+        else:
+            self.message = "find not found";
+         
+        print self.message;
+        #for key in request.environ:   print "%s --- %s"   %(  key, request.environ[key]);
+         
+        return dict(page='activate_success',message = self.message) 
+    
     
     @expose('json'  )
     def fogotPassword(self,**kw):

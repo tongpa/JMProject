@@ -71,7 +71,7 @@ class User(DeclarativeBase):
     __tablename__ = 'tg_user'
 
     user_id = Column(Integer, autoincrement=True, primary_key=True)
-    user_name = Column(Unicode(16), unique=True, nullable=False)
+    user_name = Column(Unicode(30), unique=True, nullable=False)
     email_address = Column(Unicode(255), unique=True, nullable=False)
     display_name = Column(Unicode(255))
     _password = Column('password', Unicode(128))

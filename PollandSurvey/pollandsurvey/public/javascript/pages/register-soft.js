@@ -132,6 +132,7 @@ var Register = function () {
 	   			    	 }
 	   			     },
 	   			    error: function (responseData) {
+	   			    	alert("server not response. please try again");
 	                    console.log('Ajax request not recieved!');
 	                }
 	   			    });
