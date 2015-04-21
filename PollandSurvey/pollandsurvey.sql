@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2015-04-20 18:41:19
+Date: 2015-04-21 19:00:48
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -343,7 +343,7 @@ CREATE TABLE `sur_m_email_template` (
 -- Records of sur_m_email_template
 -- ----------------------------
 INSERT INTO `sur_m_email_template` VALUES ('1', '1', 'JM team', 'Forgot Password', 'Dear <b>[user_name]</b> <br/>\r\nYou have requested that we email  your PollSurvey Password. <br/>\r\nHere is your complete login information: <br/>\r\n<br/>\r\naccount : [email]  <br/>\r\npassword : [password]  <br/>\r\n<br/><br/>\r\nSincerely', 'en', '', '2015-04-09 12:29:39', null);
-INSERT INTO `sur_m_email_template` VALUES ('2', '2', 'JM Team', 'Activation Your PollSurfvey Account', 'Dear <b>[user_name]</b> <br/>\r\nVerify your email address to complete your Pollsurfvey Account registration. <br/>\r\n[activate_url]\r\n\r\n\r\n<br/>\r\naccount : [email]  <br/>', 'en', '', '2015-04-20 18:07:17', null);
+INSERT INTO `sur_m_email_template` VALUES ('2', '2', 'JM Team', 'Activation Your PollSurfvey Account', 'Dear <b>[user_name]</b> <br/>\r\nVerify your email address to complete your Pollsurfvey Account registration. <br/>\r\n[activate_url]\r\n<br/>\r\naccount : [email]  <br/>\r\npassword : [password] <br/>\r\n<br/>\r\nthank you. <br/>\r\nJM Team', 'en', '', '2015-04-20 18:07:17', null);
 
 -- ----------------------------
 -- Table structure for sur_m_gender
@@ -971,16 +971,21 @@ INSERT INTO `sur_resp_reply` VALUES ('20', '1', '122', '2015-04-07 16:38:06');
 DROP TABLE IF EXISTS `sur_sys_config`;
 CREATE TABLE `sur_sys_config` (
   `id_sys_config` int(11) NOT NULL AUTO_INCREMENT,
-  `default_sender_name` varchar(255) DEFAULT NULL,
+  `default_code` varchar(255) DEFAULT NULL,
+  `default_value` varchar(255) DEFAULT NULL,
+  `default_type_value` varchar(255) DEFAULT NULL,
+  `code_country` varchar(3) DEFAULT NULL,
   `active` bit(1) DEFAULT b'1',
   `create_date` datetime DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id_sys_config`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sur_sys_config
 -- ----------------------------
+INSERT INTO `sur_sys_config` VALUES ('1', 'expired_activate_code', '30', 'date', 'th', '', '2015-04-21 14:37:18', null);
+INSERT INTO `sur_sys_config` VALUES ('2', 'random_activate_code_length', '15', 'int', 'th', '', null, null);
 
 -- ----------------------------
 -- Table structure for sur_telephone
@@ -1083,6 +1088,8 @@ CREATE TABLE `sur_user` (
   `city` varchar(255) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `accept_tnc` bit(1) DEFAULT b'1',
+  `count_send_activate` int(11) DEFAULT '0',
+  `count_send_forgot` int(11) DEFAULT '0',
   `create_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `create_user` varchar(255) DEFAULT NULL,
   `update_date` timestamp NULL DEFAULT NULL,
@@ -1096,7 +1103,7 @@ CREATE TABLE `sur_user` (
 -- ----------------------------
 -- Records of sur_user
 -- ----------------------------
-INSERT INTO `sur_user` VALUES ('7', 'ppp', 'ddd', 'test', 'bangkok', 'TH', '', '2015-04-20 10:51:25', 'SYSTEM', null, null);
+INSERT INTO `sur_user` VALUES ('16', 'tong', 'aaa', '15/58', 'tong', 'TH', '', '0', '0', '2015-04-21 10:09:15', 'SYSTEM', null, null);
 
 -- ----------------------------
 -- Table structure for sur_user_gen_code
@@ -1115,11 +1122,13 @@ CREATE TABLE `sur_user_gen_code` (
   KEY `id_gen_code_type` (`id_gen_code_type`),
   CONSTRAINT `sur_user_gen_code_ibfk_2` FOREIGN KEY (`id_gen_code_type`) REFERENCES `sur_fix_email_template_type` (`id_email_template_type`),
   CONSTRAINT `sur_user_gen_code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tg_user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sur_user_gen_code
 -- ----------------------------
+INSERT INTO `sur_user_gen_code` VALUES ('6', '16', '2', '16C147A01F6BFB4E4', '\0', '2015-04-20 23:59:59', '2015-04-20 17:09:15');
+INSERT INTO `sur_user_gen_code` VALUES ('8', '16', '2', '16E69BEE9A3A9B473', '\0', '2015-05-21 23:59:59', '2015-04-21 18:52:58');
 
 -- ----------------------------
 -- Table structure for sur_voter
@@ -1216,7 +1225,7 @@ INSERT INTO `tg_permission` VALUES ('2', 'User', 'User');
 DROP TABLE IF EXISTS `tg_user`;
 CREATE TABLE `tg_user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(16) NOT NULL,
+  `user_name` varchar(30) NOT NULL,
   `email_address` varchar(255) NOT NULL,
   `display_name` varchar(255) DEFAULT NULL,
   `password` varchar(128) DEFAULT NULL,
@@ -1224,7 +1233,7 @@ CREATE TABLE `tg_user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email_address` (`email_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tg_user
@@ -1235,7 +1244,7 @@ INSERT INTO `tg_user` VALUES ('3', 'tong', 'tong_pa@hotmail.com', 'tong', 'fe378
 INSERT INTO `tg_user` VALUES ('4', 'develop1', 'develop1@test.com', 'develop1', null, '2014-10-13 11:14:01');
 INSERT INTO `tg_user` VALUES ('5', 'develop2', 'develop2@test.com', 'develop2', null, '2014-10-13 11:14:18');
 INSERT INTO `tg_user` VALUES ('6', 'gain', 'gain@jobmatcher.com', 'gain', '20f8fc30065ceb3bdf88705ceadbe469228c4f41427b34cac90915cd6f47379dbd4873a23a721d39fe29b8c0216ec0d2c59db61a8968abf7256bf94126dc04f0', '2015-02-17 11:20:22');
-INSERT INTO `tg_user` VALUES ('7', 'zarazi@gmail.com', 'zarazi@gmail.com', 'ppp ddd', '9a0969b516de48b8bcff26f04f296e213829dadb7221a2c313322a2469953bb54fca854684dd7bb15372e15a690d3b3f84e46cc74abe4d8869dcee70ecfab91e', '2015-04-20 17:51:25');
+INSERT INTO `tg_user` VALUES ('16', 'padungsandy@gmail.com', 'padungsandy@gmail.com', 'tong aaa', '8c65f0213d4730d379c98f9f215ff60b4d3e81e60f53966b09208d6d42f101dd871ff578f0335de799012d849860e598c3af3609f804e4516df51343f441dc6c', '2015-04-21 17:09:15');
 
 -- ----------------------------
 -- Table structure for tg_user_group
