@@ -43,7 +43,8 @@ class UserService(User):
     city  = Column(String(255), nullable=True);
     country  = Column(String(255), nullable=True);
     accept_tnc  = Column(String(255), nullable=True);
-    
+    id_gender =Column(   Integer,ForeignKey('sur_m_gender.id_gender'), nullable=False, index=True) ; 
+       
     #code_activate = Column(String(255), nullable=True);
     
     count_send_activate = Column(Integer,default=0 );
@@ -81,6 +82,7 @@ class UserGenCode(DeclarativeBase):
     id_gen_code_type =  Column(Integer, ForeignKey(u'sur_fix_email_template_type.id_email_template_type'))
     code = Column(String(255), nullable=True);
     success = Column(BIT, nullable=True, default=0);
+    count =  Column(Integer,default=0 );
     #active =  Column(BIT, nullable=True, default=1);
     expire_date = Column(DateTime, nullable=False);
     create_date = Column(DateTime, nullable=False, default=datetime.now);
@@ -88,7 +90,10 @@ class UserGenCode(DeclarativeBase):
     def save (self):
         DBSession.add(self); 
         DBSession.flush() ;
-        
+    
+    @classmethod
+    def getUserActivated(cls,user_id):
+        return DBSession.query(cls).filter(cls.id_gen_code_type == str('2').decode('utf-8'),cls.success == str("1").decode('utf-8'),cls.user_id == str(user_id).decode('utf-8')).order_by(desc( cls.create_date )).first();    
     @classmethod
     def getByActivateCode(cls,code):
         return DBSession.query(cls).filter(cls.id_gen_code_type == str('2').decode('utf-8'),cls.code == str(code).decode('utf-8')).order_by(desc( cls.create_date )).first();

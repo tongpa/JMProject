@@ -43,6 +43,7 @@ class RegisterService(object):
         self.password = kw.get('password');
         self.rpassword = kw.get('rpassword');
         self.tnc = kw.get('tnc');
+        self.id_gender = kw.get('gender');
         
         
         
@@ -56,6 +57,7 @@ class RegisterService(object):
         self.user.address =self.address
         self.user.city =self.city
         self.user.country = self.country
+        self.user.id_gender = self.id_gender;
         self.user.accept_tnc = self.utility.convertToBit(self.tnc);
         self.user.save();
         
@@ -73,5 +75,16 @@ class RegisterService(object):
         self.userGenCode.save();
         
         return self.userGenCode;
+    
+    def reActivateUserGenCode(self,userGenCode,user):
+        if(userGenCode):
+            self.userGenCode = userGenCode;
+            
+            self.userGenCode.code = str(self.userGenCode.user_id)+ self.utility.my_random_string(15);
+            self.userGenCode.expire_date =  self.utility.plusDate(datetime.today(),30);
+            self.userGenCode.create_date = datetime.today();
+            self.userGenCode.count = self.userGenCode.count +1;
+            self.userGenCode.success = 0;
+            return self.userGenCode;
         
-        
+        return userGenCode;

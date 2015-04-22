@@ -88,6 +88,7 @@ class RootController(BaseController):
     @expose('pollandsurvey.templates.loginform')
     def login(self, came_from=lurl('/')):
         login_counter = request.environ.get('repoze.who.logins', 0)
+         
         if login_counter > 0:
             flash(_('Wrong credentials'), 'warning')
         return dict(page='login', login_counter=str(login_counter),
@@ -134,14 +135,24 @@ class RootController(BaseController):
         authentication or redirect her back to the login page if login failed.
 
         """
-        print "Post login";
+        
         
         if not request.identity:
-            print "Redirect to login";
+            log.warning("user cannot login, redirect to login");
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
-                params=dict(came_from=came_from, __logins=login_counter))
-        userid = request.identity['repoze.who.userid']
+            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+            
+        userid = request.identity['repoze.who.userid'];
+        user =  request.identity['user'];
+       
+        userActive = model.UserGenCode.getUserActivated(user.user_id);
+        
+        if(userActive is None):
+            log.warning("user cannot login, redirect to login");
+            flash(_('Please activate in your email'), 'warning') 
+            login_counter = request.environ.get('repoze.who.logins', 0) ;
+            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+            
         flash(_('Welcome back, %s!') % userid)
         
         groups = request.identity['groups'] 
@@ -264,7 +275,7 @@ class RootController(BaseController):
         self.userGenCode =  model.UserGenCode.getByActivateCode(kw.get('activate_code'));
         self.user = model.UserService.getByUserId(self.userGenCode.user_id);
         
-        self.userGenCode = self.registerService.createUserGenCode(self.user);
+        self.userGenCode = self.registerService.reActivateUserGenCode(self.userGenCode,self.user);
         
         self.emailValues={};
         self.emailValues['user_name'] = self.user.display_name;
@@ -280,9 +291,7 @@ class RootController(BaseController):
     
     @expose('genshi:pollandsurvey.templates.register.activate_success')
     def activate(self,*args, **kw):
-        print kw;
-        print args[0];
-        
+         
         self.userGenCode =  model.UserGenCode.getByActivateCode(args[0]);
         self.message = "";
         
@@ -291,7 +300,7 @@ class RootController(BaseController):
                 
                 if (self.utility.isActiveFromDate(self.utility.getCurrentDate() , self.userGenCode.create_date ,self.userGenCode.expire_date   ) ):
                     self.userGenCode.success = 1;
-                    self.message = "activate success";
+                    self.message = "Thank you. activate success.";
                     
                 else : 
                     self.message = "link activate expired ";
@@ -303,9 +312,9 @@ class RootController(BaseController):
                 
         
         else:
-            self.message = "find not found";
+            self.message = "Find not found activate code.";
          
-        print self.message;
+        
         #for key in request.environ:   print "%s --- %s"   %(  key, request.environ[key]);
          
         return dict(page='activate_success',message = self.message) 
