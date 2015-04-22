@@ -6,10 +6,60 @@
 
 <head>
   <title>Activate Success </title>
+  
+    <!-- BEGIN GLOBAL MANDATORY STYLES -->
+<link href="${tg.url('/theme/metronic/assets/global/plugins/simple-line-icons/simple-line-icons.min.css')}" rel="stylesheet" type="text/css"/>
+<link href="${tg.url('/theme/metronic/assets/global/plugins/uniform/css/uniform.default.css')}" rel="stylesheet" type="text/css"/>
+<link href="${tg.url('/theme/metronic/assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css')}" rel="stylesheet" type="text/css"/>
+<!-- END GLOBAL MANDATORY STYLES -->
+<!-- BEGIN PAGE LEVEL STYLES -->
+<link href="${tg.url('/theme/metronic/assets/global/plugins/select2/select2.css')}" rel="stylesheet" type="text/css"/>
+<link href="${tg.url('/theme/metronic/assets/admin/pages/css/login-soft.css')}" rel="stylesheet" type="text/css"/>
+<!-- END PAGE LEVEL SCRIPTS -->
+<!-- BEGIN THEME STYLES -->
+
+<link href="${tg.url('/theme/metronic/assets/global/css/plugins.css')}" rel="stylesheet" type="text/css"/>
+<link href="${tg.url('/theme/metronic/assets/admin/layout/css/layout.css')}" rel="stylesheet" type="text/css"/>
+<link id="style_color" href="${tg.url('/theme/metronic/assets/admin/layout/css/themes/default.css')}" rel="stylesheet" type="text/css"/>
 </head>
 
-<body>
-  <h1>Thank you. activate success.</h1>
+<body class="login">
+  
+<div class="content">
+<form class="activate-form" action="" method="post" id="activate-form">  
+		<h3>${message}</h3>
+ 	   
+ 	    
+</form>	 
+</div>
+ 
+<script src="${tg.url('/theme/metronic/assets/global/plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/jquery.blockui.min.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/jquery.cokie.min.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/uniform/jquery.uniform.min.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/bootstrap-switch/js/bootstrap-switch.min.js')}" type="text/javascript"></script>
+<!-- END CORE PLUGINS -->
+<!-- BEGIN PAGE LEVEL PLUGINS -->
+<script src="${tg.url('/theme/metronic/assets/global/plugins/jquery-validation/js/jquery.validate.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/global/plugins/backstretch/jquery.backstretch.min.js')}" type="text/javascript"></script>
+<script type="text/javascript" src="${tg.url('/theme/metronic/assets/global/plugins/select2/select2.min.js')}"></script>
+<!-- END PAGE LEVEL PLUGINS -->
+<script src="${tg.url('/theme/metronic/assets/global/plugins/bootbox/bootbox.min.js')}" type="text/javascript"></script>
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<script src="${tg.url('/theme/metronic/assets/global/scripts/metronic.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/admin/layout/scripts/layout.js')}" type="text/javascript"></script>
+<script src="${tg.url('/theme/metronic/assets/admin/layout/scripts/quick-sidebar.js')}" type="text/javascript"></script>
+<script src="${tg.url('/javascript/pages/activate-soft.js')}" type="text/javascript"></script>
+<!-- END PAGE LEVEL SCRIPTS -->
+<script>
+		jQuery(document).ready(function() {     
+		  Metronic.init(); // init metronic core components
+Layout.init(); // init current layout
+QuickSidebar.init() // init quick sidebar
+Activate.init();
+		});
+	</script>
 
  
 </body>
