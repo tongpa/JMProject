@@ -49,7 +49,7 @@ class SurveyController(BaseController):
     
         
     @expose('pollandsurvey.templates.survey.index')
-    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    @require(predicates.in_any_group('creator','managers', msg=l_('Only for creator')))
     def index(self, *args, **kw):
         """Handle the front-page."""
         reload(sys);

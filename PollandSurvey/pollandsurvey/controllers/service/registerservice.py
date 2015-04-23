@@ -60,6 +60,7 @@ class RegisterService(object):
         self.user.id_gender = self.id_gender;
         self.user.accept_tnc = self.utility.convertToBit(self.tnc);
         self.user.save();
+        self.user.updateGroupUserVoter();
         
         
         self.userGenCode = self.createUserGenCode(self.user);

@@ -4,7 +4,7 @@
 from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate  
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
-from tg import predicates
+from tg import predicates,controllers;
 from tg.decorators import override_template; 
 from pollandsurvey import model
 from pollandsurvey.controllers.secure import SecureController
@@ -144,20 +144,31 @@ class RootController(BaseController):
             
         userid = request.identity['repoze.who.userid'];
         user =  request.identity['user'];
-       
+        groups = request.identity['groups'] 
+        print groups;
+        
         userActive = model.UserGenCode.getUserActivated(user.user_id);
         
-        if(userActive is None):
+        
+    
+        if(userActive is None and ('managers' not in groups  )):
             log.warning("user cannot login, redirect to login");
             flash(_('Please activate in your email'), 'warning') 
+            #request.identity.current.logout();
             login_counter = request.environ.get('repoze.who.logins', 0) ;
-            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+            redirect('/logout_handler')#, params=dict(came_from=came_from, __logins=login_counter))
             
-        flash(_('Welcome back, %s!') % userid)
+        #flash(_('Welcome back, %s!') % userid)
         
-        groups = request.identity['groups'] 
+        
+        
         
         print "login success redirect to %s ", came_from;
+        if('/' == came_from):
+            if ('voter' in groups):
+                redirect('/home');
+            if ('creator' in groups):
+                redirect('/survey');
         #identity = request.environ.get('repoze.who.identity') 
         
         
@@ -175,7 +186,7 @@ class RootController(BaseController):
         #print "User id "  ;
         #user =  request.identity['user'];
         #print user.user_id;
-        print 'came_from : ' + came_from;
+        
         """
         
         if 'voter' in groups:
@@ -268,56 +279,78 @@ class RootController(BaseController):
                 time.sleep(1)
         return output_pause()
     
+    @expose('pollandsurvey.templates.register.register_success')
+    def sample(self):
+        from webob.exc import HTTPFound, HTTPUnauthorized
+         
+        app = request.environ['repoze.who.api'];# = HTTPUnauthorized()
+         
+        
+        del request.environ['repoze.who.identity']
+        #identify = request.environ['repoze.who.plugins']['main_identifier'].identify(request.environ);
+        #print request.environ['repoze.who.plugins']['main_identifier'].forget(request.environ,identify);  
+        #repoze_api.logout();
+        #for key in request.environ:   print "%s --- %s"   %(  key, request.environ[key]);
+        return dict(page='register_success')
     
     @expose('pollandsurvey.templates.register.register_success')
     def reactivate(self,*args,**kw):
         print kw;
-        self.userGenCode =  model.UserGenCode.getByActivateCode(kw.get('activate_code'));
-        self.user = model.UserService.getByUserId(self.userGenCode.user_id);
-        
-        self.userGenCode = self.registerService.reActivateUserGenCode(self.userGenCode,self.user);
-        
-        self.emailValues={};
-        self.emailValues['user_name'] = self.user.display_name;
-        self.emailValues['email'] = self.user.email_address;
-        # self.emailValues['password'] = self.password;
-        self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
-       
-        self.sendMailService.sendActivate(self.emailValues);
-        self.sendMailService.start();
-        
+        if(kw.get('activate_code')):
+            self.userGenCode =  model.UserGenCode.getByActivateCode(kw.get('activate_code'));
+            self.user = model.UserService.getByUserId(self.userGenCode.user_id);
+            
+            self.userGenCode = self.registerService.reActivateUserGenCode(self.userGenCode,self.user);
+            
+            self.emailValues={};
+            self.emailValues['user_name'] = self.user.display_name;
+            self.emailValues['email'] = self.user.email_address;
+            # self.emailValues['password'] = self.password;
+            self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
+           
+            self.sendMailService.sendActivate(self.emailValues);
+            self.sendMailService.start();
+            
         
         return dict(page='register_success')
     
     @expose('genshi:pollandsurvey.templates.register.activate_success')
     def activate(self,*args, **kw):
-         
-        self.userGenCode =  model.UserGenCode.getByActivateCode(args[0]);
-        self.message = "";
         
-        if (self.userGenCode ):
-            if ( not self.utility.convertToBool(self.userGenCode.success) ):
-                
-                if (self.utility.isActiveFromDate(self.utility.getCurrentDate() , self.userGenCode.create_date ,self.userGenCode.expire_date   ) ):
-                    self.userGenCode.success = 1;
-                    self.message = "Thank you. activate success.";
+        self.activate_code = args;
+        if(len(self.activate_code) > 0): 
+            self.userGenCode =  model.UserGenCode.getByActivateCode(self.activate_code[0]);
+            self.message = "";
+            
+            if (self.userGenCode ):
+                if ( not self.utility.convertToBool(self.userGenCode.success) ):
                     
-                else : 
-                    self.message = "link activate expired ";
-                      
-                    override_template(RootController.activate, 'genshi:pollandsurvey.templates.register.reactivate') 
-                     
+                    if (self.utility.isActiveFromDate(self.utility.getCurrentDate() , self.userGenCode.create_date ,self.userGenCode.expire_date   ) ):
+                        self.userGenCode.success = 1;
+                        self.message = "Thank you. activate success.";
+                        
+                    else : 
+                        self.message = "link activate expired ";
+                          
+                        override_template(RootController.activate, 'genshi:pollandsurvey.templates.register.reactivate') ;
+                         
+                else:
+                    self.message = "activate already";
+                    
+            
             else:
-                self.message = "activate already";
-                
-        
+                self.message = "Find not found activate code.";
+                log.warning("Find not found activate code  %s", self.activate_code );
         else:
-            self.message = "Find not found activate code.";
+            #self.message = "Thank you!";
+            log.warning("User income is wrong,have not activate code");
+            redirect("/");
          
         
         #for key in request.environ:   print "%s --- %s"   %(  key, request.environ[key]);
          
         return dict(page='activate_success',message = self.message) 
+    
     
     
     @expose('json'  )

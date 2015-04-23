@@ -13,7 +13,7 @@ from datetime import datetime
 from hashlib import sha256
 
 
-
+from sqlalchemy.sql import text
 from sqlalchemy import Table, ForeignKey, Column,sql,desc
 from sqlalchemy.types import Unicode, Integer, DateTime, String,TIMESTAMP,BigInteger
 from sqlalchemy.dialects.mysql import BIT
@@ -68,11 +68,20 @@ class UserService(User):
     def save (self):
         DBSession.add(self); 
         DBSession.flush() ;
+        
     
     @classmethod
     def getByUserId(cls,user_id):
         return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
- 
+    
+    def updateGroupUserVoter(self):
+        sql = "insert into  tg_user_group values ()";
+        s = text("insert into tg_user_group values(:user_id,2)");
+        
+        
+        result = DBSession.execute('insert into tg_user_group values(:user_id,:group_id)', {'user_id': self.user_id,'group_id':2})
+        #DBSession.execute(s, user_id= self.user_id ).fetchall() 
+        DBSession.flush() ;
         
 class UserGenCode(DeclarativeBase):
     __tablename__ = 'sur_user_gen_code';

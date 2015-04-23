@@ -93,18 +93,18 @@ class RegisterController(BaseController):
                 self.sendMailService.sendActivate(self.emailValues);
                 self.sendMailService.start();
                     
-                log.info("create user : %s " + self.email);
+                log.info("create user : %s " , self.email);
                 
                 
             else:
                 self.message ="password not same";
                 self.success= False;
-                log.info("password not same : %s " + self.email);
+                log.info("password not same : %s " , self.email);
              
         else:
             self.message = "email have already";
             self.success= False;
-            log.info("email have already : %s " + self.email);
+            log.info("email have already : %s " , self.email);
         u =None;
         return dict(success=self.success, message = self.message);
     
