@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2015-04-21 19:00:48
+Date: 2015-04-22 18:49:47
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -217,7 +217,7 @@ CREATE TABLE `sur_fix_email_template_type` (
 -- Records of sur_fix_email_template_type
 -- ----------------------------
 INSERT INTO `sur_fix_email_template_type` VALUES ('1', 'forgot password', '', '2015-04-09 12:16:54', null);
-INSERT INTO `sur_fix_email_template_type` VALUES ('2', 'activate user', '', null, null);
+INSERT INTO `sur_fix_email_template_type` VALUES ('2', 'activate user', '', '2015-04-21 14:14:00', null);
 
 -- ----------------------------
 -- Table structure for sur_invitation
@@ -1086,6 +1086,7 @@ CREATE TABLE `sur_user` (
   `last_name` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
+  `id_gender` int(11) DEFAULT NULL,
   `country` varchar(255) DEFAULT NULL,
   `accept_tnc` bit(1) DEFAULT b'1',
   `count_send_activate` int(11) DEFAULT '0',
@@ -1103,7 +1104,7 @@ CREATE TABLE `sur_user` (
 -- ----------------------------
 -- Records of sur_user
 -- ----------------------------
-INSERT INTO `sur_user` VALUES ('16', 'tong', 'aaa', '15/58', 'tong', 'TH', '', '0', '0', '2015-04-21 10:09:15', 'SYSTEM', null, null);
+INSERT INTO `sur_user` VALUES ('16', 'tong', 'aaa', '15/58', 'tong', null, 'TH', '', '0', '0', '2015-04-21 10:09:15', 'SYSTEM', null, null);
 
 -- ----------------------------
 -- Table structure for sur_user_gen_code
@@ -1114,21 +1115,21 @@ CREATE TABLE `sur_user_gen_code` (
   `user_id` int(11) DEFAULT NULL,
   `id_gen_code_type` int(11) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
+  `count` int(11) DEFAULT '0',
   `success` bit(1) DEFAULT b'0',
   `expire_date` datetime DEFAULT NULL,
   `create_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id_user_gen_code`),
   KEY `user_id` (`user_id`),
   KEY `id_gen_code_type` (`id_gen_code_type`),
-  CONSTRAINT `sur_user_gen_code_ibfk_2` FOREIGN KEY (`id_gen_code_type`) REFERENCES `sur_fix_email_template_type` (`id_email_template_type`),
-  CONSTRAINT `sur_user_gen_code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tg_user` (`user_id`)
+  CONSTRAINT `sur_user_gen_code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tg_user` (`user_id`),
+  CONSTRAINT `sur_user_gen_code_ibfk_2` FOREIGN KEY (`id_gen_code_type`) REFERENCES `sur_fix_email_template_type` (`id_email_template_type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sur_user_gen_code
 -- ----------------------------
-INSERT INTO `sur_user_gen_code` VALUES ('6', '16', '2', '16C147A01F6BFB4E4', '\0', '2015-04-20 23:59:59', '2015-04-20 17:09:15');
-INSERT INTO `sur_user_gen_code` VALUES ('8', '16', '2', '16E69BEE9A3A9B473', '\0', '2015-05-21 23:59:59', '2015-04-21 18:52:58');
+INSERT INTO `sur_user_gen_code` VALUES ('6', '16', '2', '16663438CB3D2C460', '1', '', '2015-05-22 23:59:59', '2015-04-22 10:10:22');
 
 -- ----------------------------
 -- Table structure for sur_voter
