@@ -19,14 +19,14 @@ from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.controllers.service import SendMailService,RegisterService
 from pollandsurvey.controllers.utility import Utility
 
-from pollandsurvey.controllers.register.registercontrol import RegisterController;
+from pollandsurvey.controllers.register import RegisterController;
 from pollandsurvey.controllers.surveycontroller import SurveyController;
-from pollandsurvey.controllers.script.loadscriptcontroller import  ScriptController;
-from pollandsurvey.controllers.script.loadmodelcontroller import  ScriptModelController;
-from pollandsurvey.controllers.script.previewcontroller import  PreviewController;
-from pollandsurvey.controllers.script.imagescontroller import ImagesController;
+from pollandsurvey.controllers.script import  ScriptController, ScriptModelController, PreviewController, ImagesController;
+ 
 from pollandsurvey.controllers.angularcontroller import AngularController;
 from pollandsurvey.controllers.answercontroller import AnswerController;
+
+from pollandsurvey.controllers.listsurvey import ListSurveyController
 
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
@@ -69,6 +69,8 @@ class RootController(BaseController):
     
     ang = AngularController();
     
+    home = ListSurveyController();
+    
     def __init__(self):
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
@@ -81,9 +83,7 @@ class RootController(BaseController):
         return dict(page='metronic') 
     
     
-    @expose('pollandsurvey.templates.metronic')
-    def home(self, came_from=lurl('/')):
-        return dict(page='metronic') 
+     
     
     @expose('pollandsurvey.templates.loginform')
     def login(self, came_from=lurl('/')):
@@ -130,22 +130,17 @@ class RootController(BaseController):
     
     @expose()
     def post_login(self, came_from=lurl('/')):
-        """
-        Redirect the user to the initially requested page on successful
-        authentication or redirect her back to the login page if login failed.
 
-        """
-        
-        
         if not request.identity:
             log.warning("user cannot login, redirect to login");
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
             redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
             
-        userid = request.identity['repoze.who.userid'];
+        #userid = request.identity['repoze.who.userid'];
         user =  request.identity['user'];
-        groups = request.identity['groups'] 
-        print groups;
+        groups = request.identity['groups'] ;
+        
+        log.info("user in group : %s " %groups );
         
         userActive = model.UserGenCode.getUserActivated(user.user_id);
         
@@ -160,15 +155,16 @@ class RootController(BaseController):
             
         #flash(_('Welcome back, %s!') % userid)
         
-        
-        
-        
-        print "login success redirect to %s ", came_from;
         if('/' == came_from):
             if ('voter' in groups):
+                log.info("redirect to home page");
                 redirect('/home');
             if ('creator' in groups):
+                log.info("redirect to create survey page");
                 redirect('/survey');
+        
+        
+        
         #identity = request.environ.get('repoze.who.identity') 
         
         
@@ -352,6 +348,21 @@ class RootController(BaseController):
         return dict(page='activate_success',message = self.message) 
     
     
+    @expose('json')
+    def getHistoryEmail(self, **kw):
+        historys = [];
+        
+        historys.append({'id_export_email': "1",
+                'total_row': '2',
+                'insert_row': '3',
+                'error_row': '4',
+                'same_old_row': '5',
+                'insert_real_row': '6',
+                'import_date' : '7',
+                'status' :  '8',
+                'file_name' : '7' 
+                });
+        return dict(historys = historys);
     
     @expose('json'  )
     def fogotPassword(self,**kw):
