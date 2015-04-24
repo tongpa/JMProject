@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2015-04-22 18:49:47
+Date: 2015-04-24 19:24:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -1104,7 +1104,7 @@ CREATE TABLE `sur_user` (
 -- ----------------------------
 -- Records of sur_user
 -- ----------------------------
-INSERT INTO `sur_user` VALUES ('16', 'tong', 'aaa', '15/58', 'tong', null, 'TH', '', '0', '0', '2015-04-21 10:09:15', 'SYSTEM', null, null);
+INSERT INTO `sur_user` VALUES ('21', 'aaaaa', 'sssss', '15/58', 'manager', '1', 'TH', '', '0', '0', '2015-04-23 05:33:57', 'SYSTEM', null, null);
 
 -- ----------------------------
 -- Table structure for sur_user_gen_code
@@ -1124,12 +1124,12 @@ CREATE TABLE `sur_user_gen_code` (
   KEY `id_gen_code_type` (`id_gen_code_type`),
   CONSTRAINT `sur_user_gen_code_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tg_user` (`user_id`),
   CONSTRAINT `sur_user_gen_code_ibfk_2` FOREIGN KEY (`id_gen_code_type`) REFERENCES `sur_fix_email_template_type` (`id_email_template_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sur_user_gen_code
 -- ----------------------------
-INSERT INTO `sur_user_gen_code` VALUES ('6', '16', '2', '16663438CB3D2C460', '1', '', '2015-05-22 23:59:59', '2015-04-22 10:10:22');
+INSERT INTO `sur_user_gen_code` VALUES ('11', '21', '2', '212DB9F36D05E84E2', '0', '', '2015-05-23 23:59:59', '2015-04-23 12:33:57');
 
 -- ----------------------------
 -- Table structure for sur_voter
@@ -1173,7 +1173,7 @@ CREATE TABLE `tg_group` (
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`group_id`),
   UNIQUE KEY `group_name` (`group_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tg_group
@@ -1181,6 +1181,7 @@ CREATE TABLE `tg_group` (
 INSERT INTO `tg_group` VALUES ('1', 'managers', 'Managers Group', '2014-10-13 09:46:21');
 INSERT INTO `tg_group` VALUES ('2', 'voter', 'Voter Group', '2014-10-13 11:12:42');
 INSERT INTO `tg_group` VALUES ('3', 'System Analysis', null, '2014-10-13 11:12:57');
+INSERT INTO `tg_group` VALUES ('4', 'creator', 'Creator Group', '2015-04-23 12:14:33');
 
 -- ----------------------------
 -- Table structure for tg_group_permission
@@ -1201,6 +1202,7 @@ CREATE TABLE `tg_group_permission` (
 INSERT INTO `tg_group_permission` VALUES ('1', '1');
 INSERT INTO `tg_group_permission` VALUES ('2', '2');
 INSERT INTO `tg_group_permission` VALUES ('3', '2');
+INSERT INTO `tg_group_permission` VALUES ('4', '2');
 
 -- ----------------------------
 -- Table structure for tg_permission
@@ -1234,7 +1236,7 @@ CREATE TABLE `tg_user` (
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `user_name` (`user_name`),
   UNIQUE KEY `email_address` (`email_address`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of tg_user
@@ -1245,7 +1247,7 @@ INSERT INTO `tg_user` VALUES ('3', 'tong', 'tong_pa@hotmail.com', 'tong', 'fe378
 INSERT INTO `tg_user` VALUES ('4', 'develop1', 'develop1@test.com', 'develop1', null, '2014-10-13 11:14:01');
 INSERT INTO `tg_user` VALUES ('5', 'develop2', 'develop2@test.com', 'develop2', null, '2014-10-13 11:14:18');
 INSERT INTO `tg_user` VALUES ('6', 'gain', 'gain@jobmatcher.com', 'gain', '20f8fc30065ceb3bdf88705ceadbe469228c4f41427b34cac90915cd6f47379dbd4873a23a721d39fe29b8c0216ec0d2c59db61a8968abf7256bf94126dc04f0', '2015-02-17 11:20:22');
-INSERT INTO `tg_user` VALUES ('16', 'padungsandy@gmail.com', 'padungsandy@gmail.com', 'tong aaa', '8c65f0213d4730d379c98f9f215ff60b4d3e81e60f53966b09208d6d42f101dd871ff578f0335de799012d849860e598c3af3609f804e4516df51343f441dc6c', '2015-04-21 17:09:15');
+INSERT INTO `tg_user` VALUES ('21', 'padungsandy@gmail.com', 'padungsandy@gmail.com', 'aaaaa sssss', '21c210b93f7868c713915eb4f15cf0dc8da5f28488e94b4c1725ba98216caf4b4e18d97857474b91197da72804792d9292ce28942da415d32cfe607f15236b8c', '2015-04-23 12:33:57');
 
 -- ----------------------------
 -- Table structure for tg_user_group
@@ -1265,7 +1267,8 @@ CREATE TABLE `tg_user_group` (
 -- ----------------------------
 INSERT INTO `tg_user_group` VALUES ('1', '1');
 INSERT INTO `tg_user_group` VALUES ('3', '1');
-INSERT INTO `tg_user_group` VALUES ('3', '2');
+INSERT INTO `tg_user_group` VALUES ('3', '4');
 INSERT INTO `tg_user_group` VALUES ('4', '2');
 INSERT INTO `tg_user_group` VALUES ('5', '2');
 INSERT INTO `tg_user_group` VALUES ('6', '2');
+INSERT INTO `tg_user_group` VALUES ('21', '2');
