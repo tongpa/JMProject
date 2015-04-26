@@ -51,11 +51,12 @@ var app = angular.module('listsurvey',['ui.bootstrap', 'ngGrid']);
 				jqueryUITheme: true,
 				multiSelect: false,
 				//keepLastSelected: false, 
-				columnDefs: [{field:'id_export_email', displayName:'id',width :'10%'},
-				             {field:'import_date', displayName:'date',width :'25%'},
-				             {field:'total_row', displayName:'total',width :'20%'},
-				             {field:'insert_real_row', displayName:'import',width :'20%'},
-				             {field:'status', displayName:'status',width :'20%'}
+				columnDefs: [ 
+				             
+				             {field:'duration_date', displayName:'date',width :'25%'},
+				             {field:'survey_name', displayName:'Name',width :'25%'},
+				             {field:'survey_type', displayName:'Type',width :'25%'},
+				             {field:'status', displayName:'Status',width :'25%'} 
 							],
 				/*beforeSelectionChange: function(row) {
 					  row.changed = true;
