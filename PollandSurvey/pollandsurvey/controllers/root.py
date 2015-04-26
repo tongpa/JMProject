@@ -352,15 +352,22 @@ class RootController(BaseController):
     def getHistoryEmail(self, **kw):
         historys = [];
         
-        historys.append({'id_export_email': "1",
-                'total_row': '2',
-                'insert_row': '3',
-                'error_row': '4',
-                'same_old_row': '5',
-                'insert_real_row': '6',
-                'import_date' : '7',
-                'status' :  '8',
-                'file_name' : '7' 
+        historys.append({'duration_date': "01/04/2015-30/04/2015",
+                'survey_name': 'survey study1',
+                'survey_type': 'survey',
+                'status': '1' 
+                });
+        
+        historys.append({'duration_date': "01/04/2015-30/04/2015",
+                'survey_name': 'survey study2',
+                'survey_type': 'survey',
+                'status': '1' 
+                });
+        
+        historys.append({'duration_date': "01/04/2015-30/04/2015",
+                'survey_name': 'survey study3',
+                'survey_type': 'survey',
+                'status': '1' 
                 });
         return dict(historys = historys);
     
