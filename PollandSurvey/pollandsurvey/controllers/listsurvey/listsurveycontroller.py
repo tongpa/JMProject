@@ -54,7 +54,15 @@ class ListSurveyController(BaseController):
 
     @expose('pollandsurvey.templates.listsurvey.index')
     def index(self, came_from=lurl('/')):
+        
+        if not request.identity:
+            log.warning("user cannot login, redirect to login");
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1 
+            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+            
+        
         groups = request.identity['groups'] ;
+         
         if ('creator' in groups):
             log.info("redirect to create survey page");
             groups = None;

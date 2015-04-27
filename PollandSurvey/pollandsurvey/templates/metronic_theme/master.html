@@ -34,8 +34,10 @@
    
 
   <!-- Fonts START -->
-  <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css"/>
+  <!-- <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700|PT+Sans+Narrow|Source+Sans+Pro:200,300,400,600,700,900&amp;subset=all" rel="stylesheet" type="text/css"/> -->
+  <link href="${tg.url('/css/fonts.google.css')}" rel="stylesheet" type="text/css"/>
   <!-- Fonts END -->
+  
 
   <!-- Global styles START -->          
   <link href="${tg.url('/theme/metronic/assets/global/plugins/font-awesome/css/font-awesome.min.css')}" rel="stylesheet" type="text/css"/>
@@ -106,7 +108,7 @@
 
 <body py:match="body" py:attrs="select('@*')">
   <!-- Navbar -->
-   <div id="langChanger"><a href="#" onclick="window.lang.change('en'); return false;">Switch to English</a> | <a  href="#" onclick="window.lang.change('th'); return false;">Switch to Thai</a></div>
+ <!--   <div id="langChanger"><a href="#" onclick="window.lang.change('en'); return false;">Switch to English</a> | <a  href="#" onclick="window.lang.change('th'); return false;">Switch to Thai</a></div> -->
    
    
   <!-- BEGIN STYLE CUSTOMIZER -->

@@ -65,5 +65,5 @@ from authuser import UserService,UserGenCode;
 from survey import EmailTemplateType,EmailTemplate,SysConfig
 from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData,BasicTextData,Question,QuestionValidation
 from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages
-from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser
-from respondent import  Respondents,RespondentReply,ReplyBasicQuestion
+from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion
+

@@ -20,9 +20,9 @@ from sqlalchemy.util import KeyedTuple;
 from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+from pollandsurvey.model import DeclarativeBase, metadata, DBSession ,QuestionOption,QuestionProject,QuestionProjectType
 import transaction
-__all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser']
+__all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
 
 class VoterType(DeclarativeBase):
 
@@ -348,6 +348,33 @@ class Voter(DeclarativeBase):
                 , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status , "id_voter_type": self.id_voter_type, "birthdate": self.birthdate
                 , "id_gender": self.id_gender, "create_date": self.create_date};
                 
+    @classmethod
+    def getListSurveyByMember(cls,user_id,  page=0, page_size=None):
+        query = DBSession.query(cls.id_voter,QuestionProject.id_question_project,QuestionProject.name,QuestionOption.id_question_option,QuestionOption.activate_date ,QuestionOption.expire_date ,Respondents.finished,QuestionProjectType.description).\
+        join(MemberUser).join(Respondents).join(Respondents).join(QuestionOption).join(QuestionOption).join(QuestionProject).join(QuestionProjectType).filter(MemberUser.user_id  == str(user_id).decode('utf-8')) ;
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            query = query.offset(page*page_size)
+        
+        values = query.all();
+        data = [];
+        for v in values:
+            data.append({'id_voter':v.id_voter, 
+                         'survey_name':v.name, 
+                         'id_question_project': v.id_question_project,
+                         'id_question_option':v.id_question_option, 
+                         'activate_date':v.activate_date.strftime("%d/%m/%Y"),
+                         'expire_date':v.expire_date.strftime("%d/%m/%Y"),
+                         'duration_date' : str(v.activate_date.strftime("%d/%m/%Y")) + ' - ' + str(v.expire_date.strftime("%d/%m/%Y")),
+                         'survey_type' : v.description,
+                         'status':v.finished});
+        values = None;
+        return data;
+         
+    
+    
+                
 class MemberUser(DeclarativeBase):
 
     __tablename__ = 'sur_member_user'
@@ -388,4 +415,191 @@ class MemberUser(DeclarativeBase):
         return {"id_member_user": self.id_member_user, "user_id": self.user_id, "id_voter": self.id_voter
                 , "create_date": self.create_date
                 , "update_date": self.update_date };
+
+
+class Respondents(DeclarativeBase):
+
+    __tablename__ = 'sur_respondents'
+
+    id_respondents =  Column(BigInteger, autoincrement=True, primary_key=True)
+    
+    id_voter = Column(   BigInteger,ForeignKey('sur_voter.id_voter'), nullable=False, index=True) ;
+    voter = relation('Voter', backref='sur_respondents_id_voter');
+    
+    response_ip = Column(String(255) ) 
+    respondent_data =  Column(DateTime, nullable=False, default=datetime.now); 
+    
+    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    question_project = relation('QuestionProject', backref='sur_respondents_id_question_project');
+    
+    id_question_option = Column(   BigInteger,ForeignKey('sur_question_option.id_question_option'), nullable=False, index=True) ;
+    question_option = relation('QuestionOption', backref='sur_respondents_id_question_option');
+    
+    finished  = Column(BIT, nullable=True, default=0);
+     
+    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.position )
+    def save(self):
+        try:
+            DBSession.add(self); 
+            DBSession.flush() ;
+            print "save project"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+    
+    @classmethod
+    def getId(cls,act):
+        return DBSession.query(cls).get(act);     
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
+                , "create_date": self.timezone };
+    def to_dict(self):
+        return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
+                , "create_date": self.timezone };
+    @classmethod
+    def getByVoterIdAndPublicId(cls,idvoter,idpublic):
+        return DBSession.query(cls).filter(cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
+    
+    @classmethod
+    def getByVoterAndPublicId(cls,idvoter,idpublic):
+        
+        return DBSession.query(cls).outerjoin(Voter, Voter.id_voter == cls.id_voter).filter( cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
+
+class RespondentReply(DeclarativeBase):
+
+    __tablename__ = 'sur_resp_reply'
+
+    id_resp_reply =  Column(BigInteger, autoincrement=True, primary_key=True)
+    
+    id_respondents = Column(   BigInteger,ForeignKey('sur_respondents.id_respondents'), nullable=False, index=True) ;
+    respondents = relation('Respondents', backref='sur_resp_reply_id_respondents');
+    
+    id_question = Column(   BigInteger,ForeignKey('sur_question.id_question'), nullable=False, index=True) ;
+    question = relation('Question', backref='sur_resp_reply_id_question');
+    
+     
+     
+    response_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.position )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+    
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+            
+    def to_json(self):
+        return {"id_resp_reply": self.id_resp_reply, "id_respondents": self.id_respondents, "id_question": self.id_question, "response_date": self.response_date  };
+    def to_dict(self):
+        return {"id_resp_reply": self.id_resp_reply, "id_respondents": self.id_respondents, "id_question": self.id_question, "response_date": self.response_date  };
+       
+    
+    @classmethod
+    def getByRespondentAndQuestion(cls,idResp,idQuestion):
+        return DBSession.query(cls).filter(cls.id_respondents == str(idResp), cls.id_question == str(idQuestion) ).first();
+                
+class ReplyBasicQuestion(DeclarativeBase):
+
+    __tablename__ = 'sur_reply_basic_question'
+
+    id_resp_reply =  Column(BigInteger,ForeignKey('sur_resp_reply.id_resp_reply'), index=True, primary_key=True);
+    respondentreply = relation('RespondentReply', backref='sur_reply_basic_question_id_resp_reply');
+    
+    id_basic_data = Column(   BigInteger,ForeignKey('sur_basic_data.id_basic_data') , index=True, primary_key=True) ;
+    question_project_type = relation('BasicData', backref='sur_reply_basic_question_id_basic_data');
+     
+    answer_text =  Column(String(255) )  
+    
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.position )
+    
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+         
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_resp_reply": self.id_resp_reply, "id_basic_data": self.id_basic_data, "answer_text": self.answer_text  };
+    def to_dict(self):
+        return {"id_resp_reply": self.id_resp_reply, "id_basic_data": self.id_basic_data, "answer_text": self.answer_text  };
+                
+class Invitation(DeclarativeBase):
+
+    __tablename__ = 'sur_invitation'
+
+    id_invitation =  Column(BigInteger, autoincrement=True, primary_key=True)
+    from_name = Column(String(255) )
+    subject = Column(String(255) )
+    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    question_project = relation('QuestionProject', backref='sur_invitation_id_question_project');
+    
+    content = Column(Text )
+ 
+    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    update_date =  Column(DateTime, nullable=False );
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.position )
+    def save(self):
+        try:
+            DBSession.add(self); 
+            DBSession.flush() ;
+            print "save project"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+    
+    @classmethod
+    def getId(cls,act):
+        return DBSession.query(cls).get(act);    
+    
+    def to_json(self):
+        return {"id_invitation": self.id_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date   };
+    def to_dict(self):
+        return {"id_invitation": self.id_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date   };
+       
+         
       

@@ -349,27 +349,34 @@ class RootController(BaseController):
     
     
     @expose('json')
-    def getHistoryEmail(self, **kw):
-        historys = [];
+    def getHistoryEmail(self,*arg, **kw):
+         
+        self.page = kw.get('page');
+        self.pagesize = kw.get('pagesize');
         
-        historys.append({'duration_date': "01/04/2015-30/04/2015",
-                'survey_name': 'survey study1',
-                'survey_type': 'survey',
-                'status': '1' 
-                });
+        print "page : %s " %self.page;
+        print "page size : %s " %self.pagesize;
+    
         
-        historys.append({'duration_date': "01/04/2015-30/04/2015",
-                'survey_name': 'survey study2',
-                'survey_type': 'survey',
-                'status': '1' 
-                });
+        if not request.identity:
+            log.warning("user cannot login, redirect to login");
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1
+            redirect('/login');
         
-        historys.append({'duration_date': "01/04/2015-30/04/2015",
-                'survey_name': 'survey study3',
-                'survey_type': 'survey',
-                'status': '1' 
-                });
-        return dict(historys = historys);
+        
+        user =  request.identity['user'];
+        
+        
+        print "user_id : %s" %user.user_id;
+        
+        listSurvey = model.Voter.getListSurveyByMember(user.user_id,int(self.page) -1 ,int(self.pagesize));
+        
+        
+        print listSurvey; 
+            
+        
+                
+        return dict(historys = listSurvey);
     
     @expose('json'  )
     def fogotPassword(self,**kw):
