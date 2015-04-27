@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50525
 File Encoding         : 65001
 
-Date: 2015-04-24 19:24:17
+Date: 2015-04-27 19:26:34
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -255,11 +255,12 @@ CREATE TABLE `sur_member_user` (
   KEY `ix_sur_member_user_id_voter` (`id_voter`),
   CONSTRAINT `sur_member_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `tg_user` (`user_id`),
   CONSTRAINT `sur_member_user_ibfk_2` FOREIGN KEY (`id_voter`) REFERENCES `sur_voter` (`id_voter`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of sur_member_user
 -- ----------------------------
+INSERT INTO `sur_member_user` VALUES ('1', '21', '4', '2015-04-27 14:09:52', '0000-00-00 00:00:00');
 
 -- ----------------------------
 -- Table structure for sur_multimedia_data
@@ -922,7 +923,7 @@ CREATE TABLE `sur_respondents` (
 -- ----------------------------
 -- Records of sur_respondents
 -- ----------------------------
-INSERT INTO `sur_respondents` VALUES ('1', '1', '127.0.0.1', '2015-02-25 18:53:14', '10', '2', '', '2015-02-25 18:53:14');
+INSERT INTO `sur_respondents` VALUES ('1', '1', '127.0.0.1', '2015-02-25 18:53:14', '10', '2', '\0', '2015-02-25 18:53:14');
 INSERT INTO `sur_respondents` VALUES ('2', '4', '127.0.0.1', '2015-02-26 15:02:28', '10', '2', '\0', '2015-02-26 15:02:28');
 
 -- ----------------------------
