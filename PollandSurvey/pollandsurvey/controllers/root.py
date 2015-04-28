@@ -19,7 +19,7 @@ from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.controllers.service import SendMailService,RegisterService
 from pollandsurvey.controllers.utility import Utility
 
-from pollandsurvey.controllers.register import RegisterController;
+from pollandsurvey.controllers.register import RegisterController,AccountController;
 from pollandsurvey.controllers.surveycontroller import SurveyController;
 from pollandsurvey.controllers.script import  ScriptController, ScriptModelController, PreviewController, ImagesController;
  
@@ -58,6 +58,7 @@ class RootController(BaseController):
     error = ErrorController()
     
     register = RegisterController();
+    account = AccountController();
     survey = SurveyController();
     script = ScriptController();
     model = ScriptModelController();

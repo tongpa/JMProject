@@ -119,9 +119,7 @@ var Register = function () {
 	            },
 
 	            errorPlacement: function (error, element) {
-	                if (element.attr("name") == "tnc") { // insert checkbox errors after the container                  
-	                    error.insertAfter($('#register_tnc_error'));
-	                } else if (element.closest('.input-icon').size() === 1) {
+	                if (element.closest('.input-icon').size() === 1) {
 	                    error.insertAfter(element.closest('.input-icon'));
 	                } else {
 	                	error.insertAfter(element);

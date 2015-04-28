@@ -1,1 +1,2 @@
-from registercontrol import RegisterController
+from registercontroller import RegisterController
+from accountcontroller import AccountController
