@@ -3,18 +3,44 @@ var Account = function () {
 	
 
 	var handleAccount = function () {
-		$('a[data-toggle="tab"]').click( function (e) {
+		function format(state) {
+            if (!state.id) return state.text; // optgroup
+            return "<img class='flag' src='/theme/metronic/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+        }
+		$("#select2_sample4").select2({
+		  	placeholder: '<i class="fa fa-map-marker"></i>&nbsp;Select a Country',
+            allowClear: true,
+            formatResult: format,
+            formatSelection: format,
+            escapeMarkup: function (m) {
+                return m;
+            }
+        });
+		$('#select2_sample4').change(function () {
+            $('.register-form').validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
+        });
+		
+		
+		function formatGender(state) {
+            if (!state.id) return state.text; // optgroup
+            return "<img class='flag' src='/img/survey/register-gender/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+        }
+		$("#select2_sample5").select2({
+		  	placeholder: '<i class="fa fa-user"></i>&nbsp;Select a Gender',
+            allowClear: true,
+            formatResult: formatGender,
+            formatSelection: formatGender,
+            escapeMarkup: function (m) {
+                return m;
+            }
+        });
+		$('#select2_sample5').change(function () {
+            $('.register-form').validate().element($(this)); //revalidate the chosen dropdown value and show error or success message for the input
+        });
+		
+		
 			
-	    	 
-			console.log(e);
-			console.log(e.currentTarget.attributes[0].data);
-			url = $(e.currentTarget).attr('data');
-			console.log(url);
-			window.location.href = url;
-			 
-			
-			
-		});
+
 		 
 	}
     

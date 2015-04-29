@@ -60,6 +60,7 @@ var ChangePassword = function () {
 	   			     url      : '/account/rechangepass',//form.attr('action'),
 	   			     data     : $(form).serialize(),//form.serializeArray(),
 	   			     success  : function(data) {
+	   			    	 console.log('success');
 	   			    	 console.log(data);
 	   			    	 if(data.success == true){
 	   			    		 

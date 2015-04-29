@@ -226,8 +226,8 @@ var Register = function () {
 	       
             
 	       	$.backstretch([
-		        
-    		    "/theme/metronic/assets/admin/pages/media/bg/2.jpg" 
+	       	               "/img/survey/assets/bg/violett_flowers.jpg"
+    		    //"/theme/metronic/assets/admin/pages/media/bg/2.jpg" 
 		        ] );
         }
 
