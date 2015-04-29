@@ -103,6 +103,22 @@ Ext.application({
 				    	});
 				    	
 				    	
+				    	var manage_voter = Ext.create('survey.view.list.Project.PManageInvitations',{
+				    		width: '100%',   		
+				    		title : 'Voter',
+				    		iconMask: true,
+			        		iconCls: "icon-list-voter"
+				    	});
+				    	
+				    	var manage_sendInvitation = Ext.create('survey.view.list.Project.PManageInvitations',{
+				    		width: '100%',   		
+				    		title : 'send Invitation',
+				    		iconMask: true,
+			        		iconCls: "icon-send-invitation"
+				    	});
+				    	
+				    	
+				    	
 				    	var tab_manage = Ext.create('Ext.tab.Panel', {
 				    	    width: '100%',   
 				    	    
@@ -112,7 +128,7 @@ Ext.application({
 					            anchor: '100%',
 					            layout: {   type: 'fix' }
 					        },
-				    	    items: [manage_question,manage_variable,manage_option,manage_invitation ]
+				    	    items: [manage_question,manage_variable,manage_option,manage_invitation,manage_voter,manage_sendInvitation ]
 				    	});
 				    	
 				    	var panel_manage = Ext.create('Ext.panel.Panel',{

@@ -565,8 +565,9 @@ class SurveyController(BaseController):
     
     @expose('json')
     def deleteOptions(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+         
+        reload(sys).setdefaultencoding('utf8')
+        
         
         self.success = True;
         self.message = "Save Success";
@@ -582,5 +583,16 @@ class SurveyController(BaseController):
         self.success, self.message = model.QuestionOption.deleteById(idQuestion);
 
         
+        return dict(success=self.success, message = self.message);
+    
+    
+    @expose('json')
+    def addInvitation(self,**kw):
+        reload(sys).setdefaultencoding('utf8')
+        
+        print kw;
+        
+        self.success = True;
+        self.message = "Save Success";
         return dict(success=self.success, message = self.message);
     

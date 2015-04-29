@@ -82,7 +82,7 @@ class User(DeclarativeBase):
                 repr(self.user_name), repr(self.email_address), repr(self.display_name))
 
     def __unicode__(self):
-        return self.display_name or self.user_name
+        return self.user_name or self.display_name
 
     @property
     def permissions(self):

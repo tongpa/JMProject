@@ -151,6 +151,14 @@ td.patient-label {
     background-image: url('../img/survey/demographics_icon.png') !important;
 }
 
+.icon-list-voter {
+    background-image: url('../img/survey/demographics_icon.png') !important;
+}
+
+.icon-send-invitation {
+    background-image: url('../img/survey/demographics_icon.png') !important;
+}
+
 /*fontsize*/
 .head_question{
 	font-size: 24px;

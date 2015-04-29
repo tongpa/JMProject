@@ -52,7 +52,7 @@ class AccountController(BaseController):
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
 
-    @expose('pollandsurvey.templates.account.index')
+    @expose('pollandsurvey.templates.account.generalsetting')
     @require(predicates.not_anonymous())
     def index(self, *args, **kw):
         """Handle the front-page."""
@@ -77,6 +77,8 @@ class AccountController(BaseController):
         return dict(page='cancellation')
     
     @expose('json')
+    #@expose('json',content_type="text/plain"  )
+    
     @require(predicates.not_anonymous())
     def rechangepass(self, *args, **kw):
         
@@ -106,6 +108,7 @@ class AccountController(BaseController):
         else:
             self.message = 'user is not login.';
         print self.message;
+        
         dict(success=self.success, message = self.message);
     
     
