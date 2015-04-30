@@ -48,7 +48,8 @@ install_requires=[
     "tw2.jqplugins.jqgrid",
     "tw2.bootstrap.forms",
     "webhelpers",
-    "python-memcached"
+    "python-memcached",
+    "Flask-Social"
     #"tw2.captcha",
     ]
 
