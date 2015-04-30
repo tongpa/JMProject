@@ -22,7 +22,7 @@ from sqlalchemy.orm import relation, synonym
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
 
  
-__all__ = ['UserService','UserGenCode' ] 
+__all__ = ['UserService','UserGenCode' ,'UserSocialNetwork'] 
 
  
 
@@ -106,4 +106,19 @@ class UserGenCode(DeclarativeBase):
     @classmethod
     def getByActivateCode(cls,code):
         return DBSession.query(cls).filter(cls.id_gen_code_type == str('2').decode('utf-8'),cls.code == str(code).decode('utf-8')).order_by(desc( cls.create_date )).first();
- 
+
+
+class UserSocialNetwork(DeclarativeBase): 
+    __tablename__ = 'sur_user_social_network';
+    
+    id_user_social_network = Column(Integer, autoincrement=True, primary_key=True)
+    user_id = Column(Integer, ForeignKey(u'tg_user.user_id'))
+    provider_id = Column(String(255))
+    provider_user_id = Column(String(255))
+    access_token = Column(String(255))
+    secret = Column(String(255))
+    display_name = Column(String(255))
+    profile_url = Column(String(512))
+    image_url = Column(String(512))
+    rank = Column(Integer)
+    

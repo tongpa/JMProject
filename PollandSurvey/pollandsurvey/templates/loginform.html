@@ -52,7 +52,30 @@
 	 
 	<form action="${tg.url('/login_handler', params=dict(came_from=came_from, __logins=login_counter))}"
             method="post" accept-charset="UTF-8" class="login-form">
-		<h3 class="form-title">Login to your account</h3>
+            
+        <div class="login-options">
+			<h3>login with</h3>
+			<ul class="social-icons">
+				<li>
+					<a class="facebook" data-original-title="facebook" href="#">
+					</a>
+				</li>
+				<li>
+					<a class="twitter" data-original-title="Twitter" href="#">
+					</a>
+				</li>
+				<li>
+					<a class="googleplus" data-original-title="Goole Plus" href="#">
+					</a>
+				</li>
+				<li>
+					<a class="linkedin" data-original-title="Linkedin" href="#">
+					</a>
+				</li>
+			</ul>
+		</div>    
+            
+		<h3 class="form-title">Or Login to your account</h3>
 		<!-- Flash messages -->
 		 
 	    <py:with vars="flash=tg.flash_obj.render('flash', use_js=False)">
@@ -88,29 +111,9 @@
 			Login <i class="m-icon-swapright m-icon-white"></i>
 			</button>
 		</div>
-		<div class="login-options">
-			<h4>Or login with</h4>
-			<ul class="social-icons">
-				<li>
-					<a class="facebook" data-original-title="facebook" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="twitter" data-original-title="Twitter" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="googleplus" data-original-title="Goole Plus" href="#">
-					</a>
-				</li>
-				<li>
-					<a class="linkedin" data-original-title="Linkedin" href="#">
-					</a>
-				</li>
-			</ul>
-		</div>
+		
 		<div class="forget-password">
-			<h4>Forgot your password ?</h4>
+			<h3>Forgot your password ?</h3>
 			<p>
 				 no worries, click <a href="javascript:;" id="forget-password">
 				here </a>

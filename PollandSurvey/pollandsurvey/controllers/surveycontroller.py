@@ -47,6 +47,47 @@ class SurveyController(BaseController):
         sys.setdefaultencoding("utf-8");
         return dict(page='index')
     
+    @expose('pollandsurvey.templates.survey.index_new')
+    def sampleMVC(self,*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        log.info( "survey controller index");
+        
+        return dict(page='index')
+     
+    @expose('json')
+    def readstudent(self,*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        log.info( "survey controller index");
+        
+        self.message = "message from server";
+        self.success = True;
+        self.data = [];
+        
+        self.data.append({"Id":1,"address1":"","address2":"","birthDate":None,"city":"","firstName":"","lastName":"","middleName":"","state":""});
+        
+        
+        return dict(message = self.message, success = self.success, data =self.data)
+    @expose('json')
+    def createstudent(self,*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        log.info( "survey controller index");
+        
+        return dict(page='index')
+    @expose('json')
+    def updatestudent(self,*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        log.info( "survey controller index");
+        
+        return dict(page='index')
+    @expose('json')
+    def deletestudent(self,*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        log.info( "survey controller index");
+        
+        return dict(page='index')
+    
+     
+     
         
     @expose('pollandsurvey.templates.survey.index')
     @require(predicates.in_any_group('creator','managers', msg=l_('Only for creator')))
