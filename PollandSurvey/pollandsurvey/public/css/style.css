@@ -163,5 +163,9 @@ td.patient-label {
 .head_question{
 	font-size: 24px;
 }
- 
+  
+.answer_img{
+	width: '50%';
+	height: '50%';
+} 
 /******/

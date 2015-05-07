@@ -10,12 +10,13 @@
  	
  	<span class="head_question">{{content.seq}}.{{content.question}} </span> 
 	 
- 	<div class="row">
+ 	<div class="row" ng-if="content.image == 1">
 	 	<div class="col-md-1">
 	 		 
 	 	</div>
-	 	<div class="col-md-11">
-	 		<img ng-src="/images/getImage?id={{content.id}}" alt=""/>
+	 	
+	 	<div class="col-md-11" >
+	 		<img  ng-src="/images/getImage?id={{content.id}}" alt=""  height="70%" width="70%"/>
 	 	</div>
  	</div>
 	    
@@ -34,7 +35,7 @@
 		    	<div class="radio media-middle">
 		    		 <label>
 				        <input type="radio" name="image_{{content.id}}" ng-model="$parent.id" ng-change="selectedScore(content.id,answer.id,'image',this)"  value="{{answer.id}}" required="required"/>
-				 		<span > <img ng-src="/images/getSubImage?id={{answer.id}}" alt="{{answer.label}}"/> </span> 
+				 		<span > <img  ng-src="/images/getSubImage?id={{answer.id}}" alt="{{answer.label}}" height="15%" width="15%"/> </span> 
 				      </label>
 		    	</div>
 		    </div>

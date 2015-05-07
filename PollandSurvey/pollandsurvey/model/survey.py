@@ -401,6 +401,7 @@ class Question(DeclarativeBase):
     """ relation   """
     child = relation('BasicQuestion');
     validate = relation('QuestionValidation');
+    media = relation('QuestionMedia');
     
     active  = Column(BIT, nullable=True, default=1);
     
@@ -414,6 +415,10 @@ class Question(DeclarativeBase):
     def to_json(self):
         
         #{'id':1 ,'seq':1,'question': 'What do you like a color?','type': 'radio', 'answer': answer};
+        checkMedia = 0;
+        if( self.media):
+            checkMedia = 1;
+        
         dict  = {"id": self.id_question, 
                  "question": self.question,
                  "help_message": self.help_message,
@@ -421,6 +426,7 @@ class Question(DeclarativeBase):
                 "seq": self.order ,
                 'type': self.question_type.type,
                 "answer": [],
+                "image" : checkMedia,
                 "active": self.active };
                 
         child =[];
