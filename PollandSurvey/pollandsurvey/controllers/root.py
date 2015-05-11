@@ -21,6 +21,7 @@ from pollandsurvey.controllers.utility import Utility
 
 from pollandsurvey.controllers.register import RegisterController,AccountController;
 from pollandsurvey.controllers.surveycontroller import SurveyController;
+from pollandsurvey.controllers.votercontroller import VoterController
 from pollandsurvey.controllers.script import  ScriptController, ScriptModelController, PreviewController, ImagesController;
  
 from pollandsurvey.controllers.angularcontroller import AngularController;
@@ -71,6 +72,7 @@ class RootController(BaseController):
     ang = AngularController();
     
     home = ListSurveyController();
+    voter = VoterController();
     
     def __init__(self):
         self.sendMailService = SendMailService();

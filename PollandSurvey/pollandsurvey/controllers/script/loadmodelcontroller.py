@@ -105,6 +105,23 @@ class ScriptModelController(BaseController):
         languages = model.Languages.getAll();
         return dict(survey=languages,total=len(languages));
     
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getVotersData(self, *args, **kw):
+        
+        user =  request.identity['user'];
+        
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit');        
+        print args;
+        print kw;
+        
+        question,total = model.Voter.getListVoterByOwner(user.user_id,page=int(self.start) ,  page_size=int(self.limit));
+   
+        
+        return dict(survey=question , total = total);
+    
     
     
     
