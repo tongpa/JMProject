@@ -305,6 +305,10 @@ class Voter(DeclarativeBase):
     lastname = Column(String(255) ) 
     timezone = Column(String(255) ) 
     
+    user_id_owner  = Column(   Integer,ForeignKey('tg_user.user_id'), nullable=False, index=True) ;
+    user = relation('User', backref='sur_voter_user_id_owner');
+    
+    
     id_marriage_status = Column(   BigInteger,ForeignKey('sur_m_marriage_status.id_marriage_status'), nullable=False, index=True) ;
     marriagestatus = relation('MarriageStatus', backref='sur_voter_id_marriage_status');
     
@@ -327,6 +331,10 @@ class Voter(DeclarativeBase):
     def __str__(self):
         return '"%s"' % (self.position )
     
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+        
     @classmethod
     def getId(cls,id):
         return DBSession.query(cls).get(id); 
@@ -347,7 +355,37 @@ class Voter(DeclarativeBase):
         return {"id_voter": self.id_voter, "email": self.email, "prefix": self.prefix, "firstname": self.firstname , "lastname": self.lastname
                 , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status , "id_voter_type": self.id_voter_type, "birthdate": self.birthdate
                 , "id_gender": self.id_gender, "create_date": self.create_date};
-                
+    
+    
+    @classmethod
+    def getVoterByOwnerAndEmail(cls,user_id_owner,email):
+        return DBSession.query(cls).filter(cls.user_id_owner ==  str(user_id_owner).decode('utf-8'), cls.email ==  str(email).decode('utf-8') ).first();
+    
+        
+    @classmethod
+    def getListVoterByOwner(cls,user_id_owner,voter_type=1,search=None,page=0, page_size=None):
+        
+        query = DBSession.query(cls).filter(cls.user_id_owner ==  str(user_id_owner).decode('utf-8'), cls.id_voter_type ==  str(voter_type).decode('utf-8') );#.all();
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+          
+        data = [];
+        for v in values:
+            data.append({
+                         "id_voter": v.id_voter,
+                         "email": v.email,
+                         "name" : "%s (%s %s %s)" %(v.email,  str(v.prefix) , str(v.firstname) , str(v.lastname))
+                          
+                         });
+                         
+        return data,total;
     @classmethod
     def getListSurveyByMember(cls,user_id,  page=0, page_size=None):
         query = DBSession.query(cls.id_voter,QuestionProject.id_question_project,QuestionProject.name,QuestionOption.id_question_option,QuestionOption.activate_date ,QuestionOption.expire_date ,Respondents.finished,QuestionProjectType.description).\
