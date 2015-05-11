@@ -48,11 +48,6 @@ Ext.define('Survey.model.listOptions',{
 });
 
 
-Ext.define('Survey.model.listVoters',{
-	extend: 'Ext.data.Model',
-    idProperty: 'id_voter',    
-    fields: ['id_voter','user_id_owner', 'id_gender','firstname','lastname','prefix','birthdate','email','id_marriage_status' ,'email'] 
-});
 
  
 survey.listProject = new Ext.data.Store({
@@ -221,9 +216,9 @@ survey.listOptions = new Ext.data.Store({
 	proxy : {
 		 
 		type: 'ajax',
-		url : '/model/getOptionsProject',    	
+		url : 'model/getOptionsProject',    	
 		api: {
-            read: '/model/getOptionsProject'
+            read: 'model/getOptionsProject'
             //,create: '/survey/createBasicData'
             //,update: '/model/createBasicData'
             //,destroy: '/model/deleteBasicData'
@@ -298,40 +293,6 @@ survey.listBasicMediaData = new Ext.data.Store({
 	autoSync: false,
 	autoLoad : false
 });
-
-
-survey.listVoterData = new Ext.data.Store({
-	model : 'Survey.model.listVoters',
-	storeId:'listVoterDataInStore',
-	pageSize: 1,
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getVotersData',    	
-		api: {
-            read: '/model/getVotersData' 
-           
-        }, 
-        reader:{
-        	type: 'json',
-    		rootProperty : 'survey',
-    		totalProperty : 'total'
-    	} ,
-        listeners: {
-            exception: function(proxy, response, operation){
-               /* Ext.MessageBox.show({
-                    title: 'REMOTE EXCEPTION',
-                    msg: operation.getError(),
-                    icon: Ext.MessageBox.ERROR,
-                    buttons: Ext.Msg.OK
-                });*/
-            } 
-        }
-	},
-	autoSync: false,
-	autoLoad : false
-});
-
 
 
 /*

@@ -1,6 +1,15 @@
 Ext.namespace("survey");
-Ext.Loader.setConfig({enabled: true});
-Ext.Loader.setPath('survey', '/javascript/survey');
+//Ext.Loader.setConfig({enabled: true});
+//Ext.Loader.setPath('survey', '/javascript/survey');
+
+Ext.Loader.setConfig({
+    enabled: true,
+    paths: {
+    	'Ext.ux': '/javascript/extjs-extend/ux',
+    	'survey': '/javascript/survey'
+        
+    }
+});
 
 //Ext.Loader.setPath('Ext.ux', '/ux');
 
@@ -15,17 +24,20 @@ Ext.require([
              'Ext.data.*',
              'Ext.util.*',
              'Ext.state.*', 
-             'Ext.Msg.*'
+             'Ext.Msg.*', 
+             'Ext.ux.form.ItemSelector', 
+             'survey.view.PVoters.ShowVoters',
+             'survey.view.PVoters.VotersView',
+             'survey.panel.ManageVoters'
+             
          ]);
  
  
- 
-
-
 
 
 Ext.application({
     name: 'survey',
+   
     launch: function() {
     	Ext.tip.QuickTipManager.init();
     	
@@ -103,7 +115,7 @@ Ext.application({
 				    	});
 				    	
 				    	
-				    	var manage_voter = Ext.create('survey.view.list.Project.PManageInvitations',{
+				    	var manage_voter = Ext.create('survey.panel.ManageVoters',{
 				    		width: '100%',   		
 				    		title : 'Voter',
 				    		iconMask: true,
