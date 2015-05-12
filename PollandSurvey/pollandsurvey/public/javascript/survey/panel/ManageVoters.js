@@ -28,7 +28,8 @@ Ext.define('survey.panel.ManageVoters',{
 		survey.listVoterData.load();
 		main.selectVoters = Ext.create(
 				//'Ext.ux.form.ItemSelector' 
-				'survey.view.PVoters.ShowVoters'
+				//'survey.view.PVoters.ShowVoters'
+				'survey.view.PVoters.ListVoters'
 				,{
 			name: 'itemselector',
             id: 'itemselector-field'
