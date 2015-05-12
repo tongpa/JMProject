@@ -55,6 +55,7 @@ Ext.define('survey.view.PVoters.VotersView',{
 	                    	if( action.result.result){
 	                    		Ext.Msg.alert(survey.message.success, action.result.message);
 	                    		main.ownerCt.hide(bt);
+	                    		form.reset();
 	                    		main.refreshOther();
 	                    	}
 	                    	else{

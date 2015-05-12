@@ -1,7 +1,7 @@
 
-Ext.define('survey.view.PVoters.ShowVoters',{
+Ext.define('survey.view.PVoters.SelectVoters',{
 	extend : 'Ext.ux.form.ItemSelector',
-	alias: ['widget.selectShowVoters'],
+	alias: ['widget.SelectVoters'],
      
 	anchor: '100%',
 	imagePath: '../ux/images/',
