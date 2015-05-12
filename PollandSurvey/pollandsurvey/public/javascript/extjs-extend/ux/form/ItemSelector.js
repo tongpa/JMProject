@@ -13,7 +13,8 @@ Ext.define('Ext.ux.form.ItemSelector', {
     alternateClassName: ['Ext.ux.ItemSelector'],
     requires: [
         'Ext.button.Button',
-        'Ext.ux.form.MultiSelect'
+        'Ext.ux.form.MultiSelect',
+        'Ext.ux.toolbar.CustomToolBar'
     ],
 
     /**
@@ -57,7 +58,28 @@ Ext.define('Ext.ux.form.ItemSelector', {
         // it copies records from our configured Store into the fromField's Store
         me.bindStore(me.store);
     },
-
+    
+    createpagingtoolbar : function(){
+    	//create by tong:
+    	var me = this;
+    	 
+         
+        return Ext.create('Ext.toolbar.Paging', //'Ext.ux.toolbar.CustomToolBar',//
+        		{
+        	 store: me.store,
+        	 dock: 'bottom',
+        	 displayInfo: true ,
+        	 listeners : {
+        	    	'beforechange' : function(toolbar,storeCurrent){
+        	    		 
+        	    		me.fromField.store.removeAll();
+        	    		return true;
+        	    	}
+        	    }
+         });
+         
+    	
+    },
     createList: function(title){
         var me = this;
 
@@ -98,7 +120,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
 
         me.fromField = me.createList(me.fromTitle);
         me.toField = me.createList(me.toTitle);
-
+        me.pagingTool = me.createpagingtoolbar();
         return [
            
             {
@@ -111,12 +133,7 @@ Ext.define('Ext.ux.form.ItemSelector', {
                 	 align : 'stretch',
                 	    pack  : 'start'
                 }, 
-                items: [ me.fromField,{ 
-                    xtype: 'pagingtoolbar',
-                   store: me.store,   // same store GridPanel is using
-                    dock: 'bottom',
-                    displayInfo: true
-                }]
+                items: [ me.fromField,me.pagingTool]
             },
             {
                 xtype: 'container',
