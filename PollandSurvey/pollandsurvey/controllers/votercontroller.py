@@ -68,12 +68,17 @@ class VoterController(BaseController):
     
             self.voter.user_id_owner  =  user.user_id;
             self.voter.id_gender =  kw.get('gender'); 
-            self.voter.id_voter_type = 1;
+            #self.voter.id_voter_type = 1;
             self.voter.id_marriage_status = 1;
             
             
             print self.voter.id_marriage_status ;
             self.voter.save();
+            
+            self.voterMaptype = model.VoterMapType();
+            self.voterMaptype.id_voter = self.voter.id_voter;
+            self.voterMaptype.id_voter_type =5;
+            self.voterMaptype.save();
      
             
             self.success = True;

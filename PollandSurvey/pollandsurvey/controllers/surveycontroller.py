@@ -637,3 +637,15 @@ class SurveyController(BaseController):
         self.message = "Save Success";
         return dict(success=self.success, message = self.message);
     
+    
+    @expose('json')
+    def addVoterToInvitation(self,**kw):
+        reload(sys).setdefaultencoding('utf8')
+        
+        print kw;
+        
+        self.success = True;
+        self.message = "Save Success";
+        return dict(success=self.success, message = self.message);
+        
+    
