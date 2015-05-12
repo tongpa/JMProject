@@ -26,7 +26,8 @@ Ext.require([
              'Ext.state.*', 
              'Ext.Msg.*', 
              'Ext.ux.form.ItemSelector', 
-             'survey.view.PVoters.ShowVoters',
+             'survey.view.PVoters.ListVoters',
+             'survey.view.PVoters.SelectVoters',
              'survey.view.PVoters.VotersView',
              'survey.panel.ManageVoters'
              

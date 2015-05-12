@@ -303,7 +303,7 @@ survey.listBasicMediaData = new Ext.data.Store({
 survey.listVoterData = new Ext.data.Store({
 	model : 'Survey.model.listVoters',
 	storeId:'listVoterDataInStore',
-	pageSize: 1,
+	pageSize: 50,
 	proxy : {
 		 
 		type: 'ajax',
@@ -319,12 +319,12 @@ survey.listVoterData = new Ext.data.Store({
     	} ,
         listeners: {
             exception: function(proxy, response, operation){
-               /* Ext.MessageBox.show({
+                Ext.MessageBox.show({
                     title: 'REMOTE EXCEPTION',
                     msg: operation.getError(),
                     icon: Ext.MessageBox.ERROR,
                     buttons: Ext.Msg.OK
-                });*/
+                });
             } 
         }
 	},
