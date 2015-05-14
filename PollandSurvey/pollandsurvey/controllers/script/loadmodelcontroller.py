@@ -122,6 +122,24 @@ class ScriptModelController(BaseController):
         
         return dict(survey=question , total = total);
     
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getInvitationData(self, *args, **kw):
+        
+       
+        
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit');   
+        self.projectid = kw.get('projectid');
+             
+        print args;
+        print kw;
+        
+        question,total = model.Invitation.getByidProject(self.projectid,page=int(self.start) ,  page_size=int(self.limit));
+   
+        
+        return dict(survey=question , total = total);
     
     
     

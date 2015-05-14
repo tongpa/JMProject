@@ -632,10 +632,28 @@ class SurveyController(BaseController):
         reload(sys).setdefaultencoding('utf8')
         
         print kw;
+        print kw.get('id_invitation');
+        #print kw.get('content');
+        print kw.get('title');
+        print kw.get('id_question_project');
+        print kw.get('from_name');
+        
         
         self.success = True;
         self.message = "Save Success";
-        return dict(success=self.success, message = self.message);
+        self.result = True;
+        
+        
+        self.template = model.Invitation();
+        
+        self.template.from_name = kw.get('from_name');
+        self.template.subject = kw.get('title');
+        self.template.id_question_project = kw.get('id_question_project');
+        self.template.content = kw.get('content');
+        
+        self.template.save();
+        
+        return dict(success=self.success, message = self.message,result= self.result);
     
     
     @expose('json')

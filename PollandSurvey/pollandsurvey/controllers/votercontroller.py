@@ -41,7 +41,7 @@ class VoterController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def createVoter(self,*args,**kw):
-        
+        reload(sys).setdefaultencoding('utf8')
         print kw;
        
         
@@ -89,8 +89,22 @@ class VoterController(BaseController):
         
         
         
+        return dict(success=self.success, result = self.result , message = self.message);
+    
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def deleteVoter(self,*args,**kw):
+        reload(sys).setdefaultencoding('utf8')
+        
+        df = json.loads(request.body, encoding=request.charset);
+        
+        print( df);
+        print( df.get('id_voter'));
+        print kw;
+        self.success = True;
+        self.result = True;
+        self.message = '';
         
         
         return dict(success=self.success, result = self.result , message = self.message);
-        
     

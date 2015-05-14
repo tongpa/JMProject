@@ -660,6 +660,28 @@ class Invitation(DeclarativeBase):
     def getId(cls,act):
         return DBSession.query(cls).get(act);    
     
+    @classmethod
+    def getByidProject(cls,idProject,page=0, page_size=None):
+         
+        
+        query = DBSession.query(cls).filter(cls.id_question_project == str(idProject)  );
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+          
+        data = [];
+        for v in values:
+            data.append(v.to_json());
+                         
+        return data,total;
+    
     def to_json(self):
         return {"id_invitation": self.id_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date   };
     def to_dict(self):
