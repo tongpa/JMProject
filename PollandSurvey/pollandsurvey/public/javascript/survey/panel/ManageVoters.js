@@ -32,7 +32,13 @@ Ext.define('survey.panel.ManageVoters',{
 				'survey.view.PVoters.ListVoters'
 				,{
 			name: 'itemselector',
-            id: 'itemselector-field'
+            id: 'itemselector-field',
+            listeners : {
+            	editVoters : function(panel,record){
+            		console.log('editVoters');
+            		main.showAddVoters.show(panel);
+            	}
+            }
             
             
             

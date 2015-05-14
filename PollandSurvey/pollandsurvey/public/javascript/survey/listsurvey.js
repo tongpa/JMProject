@@ -29,7 +29,11 @@ Ext.require([
              'survey.view.PVoters.ListVoters',
              'survey.view.PVoters.SelectVoters',
              'survey.view.PVoters.VotersView',
-             'survey.panel.ManageVoters'
+             'survey.view.PEmailTemplate.ListEmailTemplate',
+             'survey.view.PEmailTemplate.EmailTemplateView',
+             'survey.view.PEmailTemplate.WinEmailTemplateView',
+             'survey.panel.ManageVoters',
+             'survey.panel.ManageEmailTemplate'
              
          ]);
  
@@ -108,13 +112,14 @@ Ext.application({
 				    		iconCls: "icon-publication"
 				    	});
 				    	
-				    	var manage_invitation = Ext.create('survey.view.list.Project.PManageInvitations',{
+				    	var manage_invitation = Ext.create( 'survey.panel.ManageEmailTemplate',{
+				    			//'survey.view.list.Project.PManageInvitations',{
 				    		width: '100%',   		
 				    		title : survey.label.create_invitation,
 				    		iconMask: true,
 			        		iconCls: "icon-invitation"
 				    	});
-				    	
+				    	manage_invitation.loadData(record); 
 				    	
 				    	var manage_voter = Ext.create('survey.panel.ManageVoters',{
 				    		width: '100%',   		
@@ -141,7 +146,12 @@ Ext.application({
 					            anchor: '100%',
 					            layout: {   type: 'fix' }
 					        },
-				    	    items: [manage_question,manage_variable,manage_option,manage_invitation,manage_voter,manage_sendInvitation ]
+				    	    items: [manage_question,
+				    	            manage_variable,
+				    	            manage_voter,
+				    	            manage_invitation,
+				    	            manage_option,
+				    	            manage_sendInvitation ]
 				    	});
 				    	
 				    	var panel_manage = Ext.create('Ext.panel.Panel',{

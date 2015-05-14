@@ -35,7 +35,7 @@ Ext.define('survey.view.list.Project.ManageProject',{
 		            //this.parentForm.refreshOther();
 		        }
 		    }});
-		this.items = main.panelProject ;
+		this.items = [main.panelProject] ;
 		
 		this.callParent();
 	}

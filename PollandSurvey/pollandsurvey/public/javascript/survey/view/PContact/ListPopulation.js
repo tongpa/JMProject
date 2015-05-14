@@ -1,7 +1,7 @@
 
-Ext.define('survey.view.PVoters.ListVoters',{
+Ext.define('survey.view.PVoters.ListPopulation',{
 	extend : 'Ext.grid.Panel',
-	alias: ['widget.ListVoters'],
+	alias: ['widget.ListPopulation'],
      
 	anchor: '100%',
 	viewConfig: {

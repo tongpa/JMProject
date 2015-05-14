@@ -54,6 +54,12 @@ Ext.define('Survey.model.listVoters',{
     fields: ['id_voter','user_id_owner', 'id_gender','firstname','lastname','prefix','birthdate','email','id_marriage_status' ,'email'] 
 });
 
+Ext.define('Survey.model.Invitation',{
+	extend: 'Ext.data.Model',
+    idProperty: 'id_invitation',    
+    fields: ['id_invitation','from_name', 'subject','id_question_project','content','create_date','update_date'] 
+});
+
  
 survey.listProject = new Ext.data.Store({
 	model : 'Survey.model.listProjectid',
@@ -309,7 +315,42 @@ survey.listVoterData = new Ext.data.Store({
 		type: 'ajax',
 		url : '/model/getVotersData',    	
 		api: {
-            read: '/model/getVotersData' 
+            read: '/model/getVotersData',
+            destroy: '/voter/deleteVoter' 
+           
+        }, 
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	} ,
+        listeners: {
+            exception: function(proxy, response, operation){
+                Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : false
+});
+
+
+survey.listInvitationData = new Ext.data.Store({
+	model : 'Survey.model.Invitation',
+	storeId:'listInvitationDataInStore',
+	pageSize: 50,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getInvitationData',    	
+		api: {
+            read: '/model/getInvitationData',
+            destroy: '/voter/deleteInvitation' 
            
         }, 
         reader:{
