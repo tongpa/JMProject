@@ -405,6 +405,7 @@ class RootController(BaseController):
         redirect("/")
         
     
+     
     """
     @expose('pollandsurvey.templates.login')
     def login_old(self, came_from=lurl('/')):

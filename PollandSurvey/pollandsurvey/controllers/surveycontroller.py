@@ -646,6 +646,7 @@ class SurveyController(BaseController):
         
         self.template = model.Invitation();
         
+        self.template.name_content = kw.get('name_content');
         self.template.from_name = kw.get('from_name');
         self.template.subject = kw.get('title');
         self.template.id_question_project = kw.get('id_question_project');
@@ -665,5 +666,30 @@ class SurveyController(BaseController):
         self.success = True;
         self.message = "Save Success";
         return dict(success=self.success, message = self.message);
+    
+    
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def deleteInvitation(self, **kw):
+        reload(sys).setdefaultencoding('utf8')
+        self.success = True;
+        self.result = True;
+        self.message = 'Delete Success';
+        try:
+            df = json.loads(request.body, encoding=request.charset);
+            
+            print( df);
+            print( df.get('id_question_invitation'));
+            print kw;
+            
+            model.Invitation.deleteById(df.get('id_question_invitation'));
+            
+            
+        except Exception as e:
+            self.result = False;
+            self.message = '' + str(e);
+            
+        
+        return dict(success=self.success, result = self.result , message = self.message);
         
     
