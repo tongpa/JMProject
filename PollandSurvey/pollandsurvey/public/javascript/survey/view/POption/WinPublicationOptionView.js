@@ -1,10 +1,10 @@
-Ext.define('survey.view.PEmailTemplate.WinEmailTemplateView',{
+Ext.define('survey.view.POption.WinPublicationOptionView',{
 	extend: 'Ext.window.Window',
-	alias: ['widget.WinEmailTemplateView'],
+	alias: ['widget.WinPublicationOptionView'],
 	requires: [
-	           'survey.view.PEmailTemplate.EmailTemplateView' 
+	           'survey.view.POption.PublicationOptionView' 
 	       ],
-//	text : survey.label.create_invitation ,
+	text : survey.label.create_publication ,
 	layout: 'fit',
 	
 	modal : true,
@@ -31,7 +31,7 @@ Ext.define('survey.view.PEmailTemplate.WinEmailTemplateView',{
 	initComponent: function() {
 		 
 		var main = this;
-		main.panelOption = Ext.create('survey.view.PEmailTemplate.EmailTemplateView' ,{
+		main.panelOption = Ext.create('survey.view.POption.PublicationOptionView' ,{
 			url : main.url,
 			showClose : main.showClose,
 			parentForm : main,
@@ -51,7 +51,7 @@ Ext.define('survey.view.PEmailTemplate.WinEmailTemplateView',{
 	},
 	refreshOther : function( ) {
         //do some stuff here
-		
+
         this.fireEvent('refreshOther', this);
     } 
 });

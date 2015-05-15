@@ -176,7 +176,7 @@ Ext.define('survey.view.list.Project.PManageInvitations',{
 		
 		var main = this;
 		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
-		main.showWindowsOption = Ext.create('survey.view.list.Project.Invitation.winAddInvitation',{
+		main.showWindowsOption = Ext.create('Ext.window.Window',{
 			url : '/survey/addInvitation',
 			title : survey.label.create_invitation ,
 			titleAlign : 'left',

@@ -27,7 +27,7 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
 	        ]
     },
     initComponent: function() {
-    	
+    	 
     	var main = this;
     	main.store = survey.listInvitationData; 
     	main.columns = main.getHeaderColumn();
@@ -35,6 +35,8 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
     	main.dockedItems = main.getPagingToolsBar(); 
     	
     	main.callParent();
+    	
+    	 
      
     } ,
     listeners: {
@@ -76,7 +78,7 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
 	    			                		if(resp.success){
 	    			                			
 	    			                			main.getStore().remove(r);
-	    			                			//main.resetData();
+	    			                			
 	    			                		}
 	    			                		else{
 	    			                			Ext.Msg.alert(survey.message.failed, resp.message);
@@ -139,6 +141,10 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
         }, 50);
         return Ext.String.format('<div id="{0}"></div>', id);
     },
+    refreshOther : function(){
+		this.fireEvent('refreshOther', this);
+		
+	},
     getPagingToolsBar : function(){
     	var main = this;
     	return [{

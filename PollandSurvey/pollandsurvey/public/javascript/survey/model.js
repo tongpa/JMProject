@@ -56,8 +56,8 @@ Ext.define('Survey.model.listVoters',{
 
 Ext.define('Survey.model.Invitation',{
 	extend: 'Ext.data.Model',
-    idProperty: 'id_invitation',    
-    fields: ['id_invitation','from_name', 'subject','id_question_project','content','create_date','update_date'] 
+    idProperty: 'id_question_invitation',    
+    fields: ['id_question_invitation','from_name','name_content', 'subject','id_question_project','content','create_date','update_date'] 
 });
 
  

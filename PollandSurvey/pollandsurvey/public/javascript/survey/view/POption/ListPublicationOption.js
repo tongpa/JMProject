@@ -1,15 +1,9 @@
- 
 
-
-Ext.define('survey.view.list.OptionProject', {	
-	extend: 'Ext.grid.Panel',
-	width : '100%',
-	height :  '100%',
-	//height :  '400',
-	bufferedRenderer: false,
-	disableSelection : true,
-	forceFit: true,
-	//frame: true,
+Ext.define('survey.view.POption.ListPublicationOption',{
+	extend : 'Ext.grid.Panel',
+	alias: ['widget.ListPublicationOption'],
+     
+	anchor: '100%',
 	viewConfig: {
         emptyText: 'No images to display',
         listeners : {
@@ -22,15 +16,17 @@ Ext.define('survey.view.list.OptionProject', {
         }
     },
     collapsible:false ,
-    
-    initComponent: function() {
-    	
+	store: survey.listOptions,
+	 
+	bufferedRenderer: false,
+	disableSelection : true,
+	forceFit: true,
+    getHeaderColumn : function(){
     	var main = this;
-    	main.store = survey.listOptions; 
-    	main.columns = [
-    	       	       
-    	    	   // {header: 'name', dataIndex: 'name',width : '30%' , sortable: false }  ,
-					{header: survey.label.start_date  , dataIndex: 'activate_date',width : '20%' , sortable: false }  ,
+    	return [
+	       	       
+ 	    	   // {header: 'name', dataIndex: 'name',width : '30%' , sortable: false }  ,
+					{header: survey.label.start_date  , dataIndex: 'activate_date',width : '19%' , sortable: false }  ,
 					{header: survey.label.expire_date , dataIndex: 'expire_date',width : '20%' , sortable: false }  ,
 					{header: survey.label.theme , dataIndex: 'theme',width : '30%' , sortable: false }  ,
 					{header: survey.label.view ,  width : '10%',  renderer :main.showbuttonView,  sortable: false  }  ,
@@ -39,13 +35,26 @@ Ext.define('survey.view.list.OptionProject', {
 				//	{header: 'State', dataIndex: 'name',width : '30%' , sortable: false } 
 					//{header: 'view', dataIndex: 'name',width : '30%' , sortable: false }  ,
 					//{header: 'Edit', dataIndex: 'name',width : '30%' , sortable: false }  	
-    	        ]
-      
-    	 
-    	this.callParent(arguments);
-    	
-     
+ 	        ];
     } ,
+    getPagingToolsBar : function(){
+    	var main = this;
+    	return [{
+            xtype: 'pagingtoolbar',
+            store: main.store, // same store GridPanel is using
+            dock: 'bottom',
+            displayInfo: true
+        }]
+    },
+    initComponent : function(){
+    	 
+		var main = this;
+		main.columns = main.getHeaderColumn();
+    	main.dockedItems = main.getPagingToolsBar();
+    	main.callParent();
+    	 
+		
+	},
     listeners: {
         'selectionchange': function(view, records) {
             grid.down('#removeEmployee').setDisabled(!records.length);
@@ -148,87 +157,5 @@ Ext.define('survey.view.list.OptionProject', {
         return Ext.String.format('<div id="{0}"></div>', id);
     }
 });
- 
- 
- 
-Ext.define('survey.view.list.Project.PManagePublication',{
-	//extend : 'Ext.panel.Panel', 	 
-	extend : 'Ext.form.Panel',
-	layout: 'fit',
-	defaults: {
-        anchor: '100%',
-        labelWidth: 120 
-       // layout: {   type: 'fix' }
-    },
-	frame: true,
-	 
-	height : 600,
-	bodyPadding: 10,
-	showClose : true,
-    
-    isCreate : true,
-    parentForm : null,
-    setLoad : function (projectRecord){
-    	
-    	this.projectid = '';
-    	this.record = projectRecord;
-    	if (projectRecord != null && projectRecord.id != null) {
-    		
-    		this.projectid = projectRecord.id;
-	    	survey.listOptions.load({
-				params : {
-	    			projectid : projectRecord.id
-	    		},
-	    		scope : this
-			});
-    	}
-    	
-    },
-    initComponent: function() {
-		
-		var main = this;
-		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
-		main.showWindowsOption = Ext.create('survey.view.list.Project.Option.winAddOption',{
-			url : '/survey/addOptions',
-			title : survey.label.create_publication ,
-			titleAlign : 'left',
-			listeners : {
-				refreshOther : function(cmp) {
-					//survey.listProject.reload();
-					
-					main.setLoad(main.record);
-		        }
-			}
-			
-		});
-		main.tbar =  [{
-            xtype:'button',
-            text: survey.label.create_publication ,
-            iconCls: 'project-add',
-            //iconCls: 'add16',
-            handler: function(bt,ev){
-            	main.showWindowsOption.show();
-				//console.log(record);
-			 	main.showWindowsOption.setLoadData(main.record );
-            }
-            //,            menu: [{text: 'Menu Button 1'}]
-        }];
-		
-		main.showListOption = Ext.create('survey.view.list.OptionProject',{
-			listeners : {
-				showManageOption : function(grid,optionsrecord) {
-					main.showWindowsOption.show();
-				 	main.showWindowsOption.setLoadData(main.record,optionsrecord );
-					 
-		        }
-			}
-		});
-		
-		main.items = [main.showListOption];
-		
-		//main.items = main.add111;
-		
-		this.callParent();
-    }
-    
-});    
+
+   

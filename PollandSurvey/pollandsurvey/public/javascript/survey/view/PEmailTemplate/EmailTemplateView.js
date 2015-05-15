@@ -40,6 +40,7 @@ Ext.define('survey.view.PEmailTemplate.EmailTemplateView',{
 		main.idquestion = Ext.create('Ext.form.field.Hidden',{name : 'id_question_project'} );
 		main.idinvitation = Ext.create('Ext.form.field.Hidden',{name : 'id_invitation'} );
 		
+		main.nameContent = Ext.create('Ext.form.field.Text',{name : 'name_content',fieldLabel : survey.label.name_content, allowBlank : false});
 		main.subjectinvitation = Ext.create('Ext.form.field.Text',{name : 'title',fieldLabel : survey.label.email_title, allowBlank : false});
 		main.fromName = Ext.create('Ext.form.field.Text',{name : 'from_name',fieldLabel : survey.label.from_name, allowBlank : true});
 		
@@ -47,7 +48,7 @@ Ext.define('survey.view.PEmailTemplate.EmailTemplateView',{
 		 
 		
 		
-		main.items = [main.idquestion,main.idinvitation,main.subjectinvitation,main.fromName,main.content];
+		main.items = [main.idquestion,main.idinvitation,main.nameContent,main.subjectinvitation,main.fromName,main.content];
 		
 		main.btsave = Ext.create('Ext.Button',{		 
 			text : survey.label.save,

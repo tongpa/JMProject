@@ -32,8 +32,14 @@ Ext.require([
              'survey.view.PEmailTemplate.ListEmailTemplate',
              'survey.view.PEmailTemplate.EmailTemplateView',
              'survey.view.PEmailTemplate.WinEmailTemplateView',
+             
+             'survey.view.POption.ListPublicationOption',
+             'survey.view.POption.PublicationOptionView',
+             'survey.view.POption.WinPublicationOptionView',
+             
              'survey.panel.ManageVoters',
-             'survey.panel.ManageEmailTemplate'
+             'survey.panel.ManageEmailTemplate',
+             'survey.panel.ManagePublicationOption'
              
          ]);
  
@@ -105,7 +111,7 @@ Ext.application({
 			        		iconCls: "icon-demographic"
 				    	});
 				    	
-				    	var manage_option = Ext.create('survey.view.list.Project.PManagePublication',{
+				    	var manage_option = Ext.create('survey.panel.ManagePublicationOption',{
 				    		width: '100%',   		
 				    		title : survey.label.create_publication,
 				    		iconMask: true,
