@@ -125,7 +125,7 @@
                 <div class="col-md-6 col-sm-6 additional-nav">
                     <ul class="list-unstyled list-inline pull-right">
                         
-                        <li py:if="request.identity"><a href="${tg.url('/account')}"> <span lang="th">Account</span> (${request.identity['user'].user_name}) </a></li>
+                        <li py:if="request.identity"><a href="${tg.url('/account')}"> <span lang="th">Account</span> <span py:if="request.identity"> 	(${request.identity['repoze.who.userid']}) </span>  </a></li>
                         
                         <li py:if="not request.identity"><a href="${tg.url('/login')}"><span lang="th">Login</span></a></li>
         				<li py:if="request.identity"><a href="${tg.url('/logout_handler')}"><span lang="th">Logout</span></a></li>
