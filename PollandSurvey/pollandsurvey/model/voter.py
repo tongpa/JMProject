@@ -20,6 +20,7 @@ from sqlalchemy.util import KeyedTuple;
 from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
+
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession ,QuestionOption,QuestionProject,QuestionProjectType
 import transaction
 __all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
@@ -31,6 +32,7 @@ class VoterType(DeclarativeBase):
     id_voter_type =  Column(BigInteger, autoincrement=True, primary_key=True)
     description = Column(String(255),unique=True, nullable=False)
     active  = Column(BIT, nullable=True, default=1)
+    
     
     def __init__(self):
         self.active = 1;
@@ -626,66 +628,5 @@ class ReplyBasicQuestion(DeclarativeBase):
     def to_dict(self):
         return {"id_resp_reply": self.id_resp_reply, "id_basic_data": self.id_basic_data, "answer_text": self.answer_text  };
                 
-class Invitation(DeclarativeBase):
-
-    __tablename__ = 'sur_invitation'
-
-    id_invitation =  Column(BigInteger, autoincrement=True, primary_key=True)
-    from_name = Column(String(255) )
-    subject = Column(String(255) )
-    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
-    question_project = relation('QuestionProject', backref='sur_invitation_id_question_project');
     
-    content = Column(Text )
- 
-    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
-    update_date =  Column(DateTime, nullable=False );
-    
-    def __init__(self):
-        pass;
-        
-    def __str__(self):
-        return '"%s"' % (self.position )
-    def save(self):
-        try:
-            DBSession.add(self); 
-            DBSession.flush() ;
-            print "save project"
-            return None;
-        except  IntegrityError:
-            print "Duplicate entry" 
-            return "Duplicate entry"
-    
-    @classmethod
-    def getId(cls,act):
-        return DBSession.query(cls).get(act);    
-    
-    @classmethod
-    def getByidProject(cls,idProject,page=0, page_size=None):
-         
-        
-        query = DBSession.query(cls).filter(cls.id_question_project == str(idProject)  );
-        query_total = query;
-        
-        if page_size:
-            query = query.limit(page_size)
-        if page: 
-            page = 0 if page < 0 else page;
-            query = query.offset(page*page_size)
-        
-        values = query.all();  
-        total = query_total.count();
-          
-        data = [];
-        for v in values:
-            data.append(v.to_json());
-                         
-        return data,total;
-    
-    def to_json(self):
-        return {"id_invitation": self.id_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date   };
-    def to_dict(self):
-        return {"id_invitation": self.id_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date   };
-       
-         
       

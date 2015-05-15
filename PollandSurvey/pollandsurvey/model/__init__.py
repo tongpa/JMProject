@@ -62,8 +62,9 @@ def init_model(engine):
 from pollandsurvey.model.auth import User, Group, Permission
 from movie import Movie
 from authuser import UserService,UserGenCode, UserSocialNetwork;
+ 
 from survey import EmailTemplateType,EmailTemplate,SysConfig
 from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData,BasicTextData,Question,QuestionValidation
-from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages
-from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType,Invitation
+from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation
+from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType
 

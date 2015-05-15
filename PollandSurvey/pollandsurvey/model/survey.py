@@ -1040,6 +1040,10 @@ class QuestionOption(DeclarativeBase):
     id_question_theme =   Column(   BigInteger,ForeignKey('sur_m_question_theme.id_question_theme'), nullable=False, index=True) ;
     theme = relation('QuestionTheme', backref='sur_question_option_id_question_theme');
     
+    id_question_invitation=   Column(   BigInteger,ForeignKey('sur_question_invitation.id_question_invitation'), nullable=False, index=True) ;
+    emailTemplate = relation('Invitation', backref='sur_question_option_id_question_invitation');
+    
+    
     name_publication  = Column(String(255),  nullable=True);
     activate_date =  Column(DateTime, nullable=True );
     expire_date =  Column(DateTime, nullable=True );
@@ -1175,5 +1179,72 @@ class BasicMultimediaData(DeclarativeBase):
         DBSession.query(cls).filter(  cls.id_basic_data == str(idBasicData) ).delete();        
         DBSession.flush() ;   
         
-     
+class Invitation(DeclarativeBase):
+
+    __tablename__ = 'sur_question_invitation'
+
+    id_question_invitation =  Column(BigInteger, autoincrement=True, primary_key=True)
+    name_content = Column(String(255) )
+    from_name = Column(String(255) )
+    subject = Column(String(255) )
+    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    question_project = relation('QuestionProject', backref='sur_invitation_id_question_project');
+    
+    content = Column(Text )
+ 
+    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    update_date =  Column(DateTime, nullable=False );
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.position )
+    def save(self):
+        try:
+            DBSession.add(self); 
+            DBSession.flush() ;
+            print "save project"
+            return None;
+        except  IntegrityError:
+            print "Duplicate entry" 
+            return "Duplicate entry"
+    
+    @classmethod
+    def getId(cls,act):
+        return DBSession.query(cls).get(act);    
+    
+    @classmethod
+    def deleteById(cls,id):
+        DBSession.query(cls).filter(  cls.id_question_invitation == str(id) ).delete();        
+        DBSession.flush() ;   
+    
+    @classmethod
+    def getByidProject(cls,idProject,page=0, page_size=None):
+         
+        
+        query = DBSession.query(cls).filter(cls.id_question_project == str(idProject)  );
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+          
+        data = [];
+        for v in values:
+            data.append(v.to_json());
+                         
+        return data,total;
+    
+    def to_json(self):
+        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
+    def to_dict(self):
+        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
+       
+          
     
