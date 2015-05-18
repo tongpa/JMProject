@@ -42,6 +42,28 @@ class SendMailService(threading.Thread):
         self.__sendEmailByTemplate();
     
     
+    def sentEmail(self,email,template):
+        try:
+            print "send email";
+             
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = email.get('subject');
+            msg['From'] = email.get('from');
+            msg['To'] = email.get('email');
+            
+            
+            part1 = MIMEText(template, 'html');
+            msg.attach(part1)
+            
+            
+            server = smtplib.SMTP(self.SMTP_SERVER) 
+            server.ehlo()
+            server.starttls()
+            server.login(self.SMTP_USER, self.SMTP_PASSWORD)
+            server.sendmail(self.SMTP_USER, [email.get('email')], msg.as_string())
+            server.close();
+        except Exception as e:
+            log.exception(str(e)); 
     
     def __sendEmailByTemplate(self):
         try:

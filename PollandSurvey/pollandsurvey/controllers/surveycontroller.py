@@ -15,6 +15,7 @@ from tgext.admin.controller import AdminController
 from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.controllers.utility import Utility
+from pollandsurvey.controllers.service import SendSurveyService,SendMailService;
 
 import sys
 import json 
@@ -553,6 +554,7 @@ class SurveyController(BaseController):
         sys.setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
+        self.result = True;
         log.info('---------1--------------');
          
      
@@ -579,6 +581,7 @@ class SurveyController(BaseController):
             self.option.expire_date =  datetime.strptime(  kw.get('expire_date')  + ' 23:59:59' , '%d/%m/%Y %H:%M:%S') ;
        
         
+        self.option.id_question_invitation = kw.get("id_question_invitation");
         self.option.header_message =kw.get('header_message');
         self.option.footer_message = kw.get('footer_message');
         self.option.welcome_message = kw.get('welcome_message');
@@ -601,7 +604,7 @@ class SurveyController(BaseController):
         
         
         
-        return dict(success=self.success, message = self.message);
+        return dict(success=self.success, message = self.message,result = self.result);
     
     
     @expose('json')
@@ -691,5 +694,97 @@ class SurveyController(BaseController):
             
         
         return dict(success=self.success, result = self.result , message = self.message);
+    
+    
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def sendSurvey(self, **kw):
+        reload(sys).setdefaultencoding('utf8')
+        self.success = True;
+        self.result = True;
+        self.message = 'Send Success';
+        
+        
+        try:
+            df = json.loads(request.body, encoding=request.charset);
+            
+            print( df);
+            print( df.get('id_question_option'));
+            print( df.get('id_question_project'));
+            print( df.get('id_question_invitation'));
+            
+            self.option = model.QuestionOption.getId(df.get('id_question_option'));
+            
+            if self.option.send_status == 0 :
+                
+                self.emailtemplate = model.Invitation.getId(df.get('id_question_invitation'));
+                if(self.emailtemplate is not None):
+                    
+                    #self.sendSurveyService = SendSurveyService();
+                    #self.sendSurveyService.setEmailToVoter(model,self.option,self.emailtemplate);
+                    #self.sendSurveyService.start();
+                    
+                    user =  request.identity['user'];
+                    
+                    self.voters, self.leng= model.Voter.getVoter(user.user_id,page=0, page_size=100); 
+        
+                    for v in self.voters:
+                        #print v;
+                        self.resp = model.Respondents();
+                        self.resp.id_voter = v.id_voter;
+                        self.resp.id_question_project = self.option.id_question_project;
+                        self.resp.id_question_option=self.option.id_question_option;
+                        
+                        self.resp.save();
+                        
+                        
+                        self.emailValues={};
+                        self.emailValues['name'] = str(v.firstname) + " " + str(v.lastname);
+                        self.emailValues['email'] = v.email;
+                        self.emailValues['subject'] = self.emailtemplate.subject;
+                        self.emailValues['from'] =  self.emailtemplate.from_name;
+                        
+                        
+                        
+                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(self.option.id_question_project) ,str(self.option.id_question_option) , str(v.id_voter))  ;
+                        
+                        template = self.emailtemplate.content;
+                        for k,v in  self.emailValues.iteritems():
+                            template = template.replace('[%s]' % k,v)
+                            
+                        
+                        sendmail  = SendMailService();
+                    
+                        sendmail.sentEmail(self.emailValues,template);
+                        
+                       
+                       
+                        
+                    
+                else:
+                    self.result = False;
+                    self.message = "Please select template email.";
+                
+                
+                #self.result,self.message =  model.QuestionOption.updateSendStatus(1,df.get('id_question_option'));
+                
+                print "\n send to thread";
+            else:
+                self.result =False;
+                self.message = "system found send already"; 
+            
+            #model.Invitation.deleteById(df.get('id_question_invitation'));
+             
+            
+        except Exception as e:
+            
+            self.result = False;
+            self.message = '' + str(e);
+            
+        
+        return dict(success=self.success, result = self.result , message = self.message);
+        
+        
+        
         
     
