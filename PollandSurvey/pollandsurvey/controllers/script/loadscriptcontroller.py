@@ -316,6 +316,7 @@ class ScriptController(BaseController):
             }
         
             extPrefix = useDebug ? '/ext' : '/ext-all';
+            //extPrefix =  '/ext-all-debug'  ;
             
             document.write('<script type="text/javascript" src="' + path + extPrefix +
                                     (rtl ? '-rtl' : '') + '.js"></script>');
