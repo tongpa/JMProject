@@ -24,7 +24,7 @@ from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
-           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme']
+           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation']
 
 
 
@@ -1053,6 +1053,8 @@ class QuestionOption(DeclarativeBase):
     welcome_message  =  Column(Text, nullable=True );
     end_message  =  Column(Text, nullable=True );
     
+    send_status = Column(BIT, nullable=True, default=0);
+    
     redirect_url =   Column(String(255) );
     gen_code =   Column(String(20)   );
     show_navigator = Column(BIT, nullable=True, default=0);
@@ -1065,7 +1067,7 @@ class QuestionOption(DeclarativeBase):
         pass;
         
     def __str__(self):
-        return '"%s"' % str(self.id_question_option )
+        return "question option"; #'"%s"' % str(self.id_question_option )
     
     def save (self):
         DBSession.add(self); 
@@ -1090,11 +1092,33 @@ class QuestionOption(DeclarativeBase):
                  "end_message": self.end_message ,
                  "redirect_url": self.redirect_url ,
                  "name_publication": self.name_publication,
-                 "show_navigator" : self.show_navigator
+                 "show_navigator" : self.show_navigator,
+                 "id_question_invitation" : self.id_question_invitation,
+                 "send_status":self.send_status
                  };
                  
         return dict;
     
+    
+    
+    @classmethod
+    def updateSendStatus(cls,status,id):
+        try:
+            DBSession.query(cls).filter(cls.id_question_option == id).update({"send_status": status}) ; # , synchronize_session='evaluate' 
+            return True, 'success';
+        except IntegrityError as  e:
+            print e;  
+            return False, 'Cannot delete.';#e.__str__();
+    
+    @classmethod
+    def checkSendStatus(cls,idOption):
+        option = DBSession.query(cls).get(idOption);
+        
+        if option.send_status == 1:
+            
+            return True;
+        
+        return False;
     
     @classmethod
     def getByProject(cls,idProject):
@@ -1123,6 +1147,7 @@ class QuestionOption(DeclarativeBase):
             print e;  
             return False, 'Cannot delete.';#e.__str__();
         
+     
         
         
     @classmethod

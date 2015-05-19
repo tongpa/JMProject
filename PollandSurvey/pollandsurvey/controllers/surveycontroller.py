@@ -44,8 +44,7 @@ class SurveyController(BaseController):
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def samplegrid(self, *args, **kw):
         """Handle the front-page."""
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         return dict(page='index')
     
     @expose('pollandsurvey.templates.survey.index_new')
@@ -94,17 +93,15 @@ class SurveyController(BaseController):
     @require(predicates.in_any_group('creator','managers', msg=l_('Only for creator')))
     def index(self, *args, **kw):
         """Handle the front-page."""
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         log.info( "survey controller index");
         
         return dict(page='index')
     
     @expose('json')
-    def getProjectByUser(self, *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+    def getProjectByUser(self, came_from=lurl('/'),*args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
         
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
@@ -132,8 +129,7 @@ class SurveyController(BaseController):
     
     @expose('json')
     def updateProject(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         
@@ -166,8 +162,7 @@ class SurveyController(BaseController):
         
     @expose('json')
     def deleteProject(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         
@@ -188,16 +183,14 @@ class SurveyController(BaseController):
     
     @expose('json')
     def saveitems(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         
         return dict(success=self.success, message = self.message);
     @expose('json')
     def saveProject(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         
@@ -243,8 +236,7 @@ class SurveyController(BaseController):
     
     @expose('json')
     def deleteQuestion(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         self.success = True;
         self.message = "Save Success";
@@ -272,10 +264,10 @@ class SurveyController(BaseController):
         
     @expose('json',content_type="text/plain" )
     def addQuestion(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
+        self.result = True;
         
         self.dataValue = kw;
         log.info( kw);
@@ -470,6 +462,7 @@ class SurveyController(BaseController):
                   
                 else:
                     log.info( "Other type");
+                    
                 pass;
              
             
@@ -477,13 +470,13 @@ class SurveyController(BaseController):
         
         
         
-        return dict(success=self.success, message = self.message);
+        return dict(success=self.success, message = self.message,result = self.result);
     
     
     @expose('json')
     def createBasicData(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
+        
         
         self.success = True;
         self.message = "success";
@@ -495,8 +488,8 @@ class SurveyController(BaseController):
     
     @expose('json')
     def updateQuestionData(self  , **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
+       
         self.success = True;
         self.message = "success";
         log.info('---------1--------------');
@@ -522,8 +515,7 @@ class SurveyController(BaseController):
     
     @expose('json')
     def deleteMediaQuestion(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         log.info('---------1--------------');
@@ -536,8 +528,7 @@ class SurveyController(BaseController):
     
     @expose('json')
     def deleteQuestionData(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         log.info('---------1--------------');
@@ -550,8 +541,7 @@ class SurveyController(BaseController):
     
     @expose('json')
     def addOptions(self, came_from=lurl('/'), *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
         self.result = True;

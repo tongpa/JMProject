@@ -323,6 +323,7 @@ class Voter(DeclarativeBase):
     
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
+    active  = Column(BIT, nullable=True, default=1);
     respondents = relation('Respondents')  ; 
     maptype = relation('VoterMapType');
     
@@ -331,7 +332,7 @@ class Voter(DeclarativeBase):
         pass;
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.email )
     
     def save (self):
         DBSession.add(self); 
@@ -342,23 +343,42 @@ class Voter(DeclarativeBase):
         return DBSession.query(cls).get(id); 
     
     @classmethod
-    def getAll(cls,act):
-        if act is not None:
-            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
-            #return DBSession.query(cls).get(act); 
-        else:
-            return DBSession.query(cls) .all();
+    def getAll(cls):
+        return DBSession.query(cls) .all();
+    
+    @classmethod
+    def getVoter(cls,user_id_owner,voter_type=5,search=None,page=0, page_size=None):
+        query= DBSession.query(cls).join(VoterMapType).filter(cls.user_id_owner ==  str(user_id_owner).decode('utf-8'),
+                                                               VoterMapType.id_voter_type ==  str(voter_type).decode('utf-8')
+                                                              , VoterMapType.is_send ==  str('1').decode('utf-8')  );
         
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+          
+        data = [];
+        for v in values:
+            data.append(v.to_json());
+                         
+        return values,total;
+    
     def to_json(self):
         return {"id_voter": self.id_voter, "email": self.email, "prefix": self.prefix, "firstname": self.firstname , "lastname": self.lastname
-                , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status , "id_voter_type": self.id_voter_type, "birthdate": self.birthdate
+                , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status ,  "birthdate": self.birthdate
                 , "id_gender": self.id_gender, "create_date": self.create_date};
     def to_dict(self):
         return {"id_voter": self.id_voter, "email": self.email, "prefix": self.prefix, "firstname": self.firstname , "lastname": self.lastname
-                , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status , "id_voter_type": self.id_voter_type, "birthdate": self.birthdate
+                , "timezone": self.timezone, "id_marriage_status": self.id_marriage_status ,   "birthdate": self.birthdate
                 , "id_gender": self.id_gender, "create_date": self.create_date};
     
-    
+        
     @classmethod
     def getVoterByOwnerAndEmail(cls,user_id_owner,email):
         return DBSession.query(cls).filter(cls.user_id_owner ==  str(user_id_owner).decode('utf-8'), cls.email ==  str(email).decode('utf-8') ).first();
@@ -426,6 +446,7 @@ class VoterMapType(DeclarativeBase):
     id_voter_type = Column(   BigInteger,ForeignKey('sur_m_voter_type.id_voter_type'), nullable=False, index=True) ;
     votertype = relation('VoterType', backref='sur_voter_map_type_id_voter_type');
     
+    is_send   = Column(BIT, nullable=True, default=1);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     update_date =  Column(DateTime, nullable=False ); 
     
@@ -515,7 +536,7 @@ class Respondents(DeclarativeBase):
         try:
             DBSession.add(self); 
             DBSession.flush() ;
-            print "save project"
+            print "save Respondents"
             return None;
         except  IntegrityError:
             print "Duplicate entry" 
