@@ -70,7 +70,7 @@ Ext.define('survey.view.PEmailTemplate.EmailTemplateView',{
 	                    	console.log(action);
 	                    	if( action.result.result){
 	                    		
-	                    		main.closeWindow(main,bt);
+	                    		main.closeWindow(bt);
 		                    	Ext.Msg.alert( survey.message.success , action.result.message);
 		                    	main.refreshOther();
 	                    		
@@ -107,7 +107,7 @@ Ext.define('survey.view.PEmailTemplate.EmailTemplateView',{
 			hidden : !main.showClose,
 			handler: function (bt,ev){
 				 
-				main.closeWindow(main,bt);
+				main.closeWindow (bt);
 			}
 		});
 		
@@ -118,12 +118,15 @@ Ext.define('survey.view.PEmailTemplate.EmailTemplateView',{
 		this.fireEvent('refreshOther', this);
 		
 	},
-	closeWindow : function (main,bt){
-		if(main.parentForm != null){
-			main.form.reset();
-			main.parentForm.hide(bt);
-			 
+	closeWindow : function ( bt){
+		
+		var main = this;
+		main.form.reset();
+		if(main.ownerCt != null){
+			main.ownerCt.hide();
 		}
+		
+		 
 	}
 });
 

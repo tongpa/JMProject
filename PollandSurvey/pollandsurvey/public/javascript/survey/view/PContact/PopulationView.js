@@ -87,8 +87,8 @@ Ext.define('survey.view.PVoters.PopulationView',{
 			
 			hidden : !main.showClose,
 			handler: function (bt,ev){
-				//main.closeWindow(main,bt);
-				main.ownerCt.hide(bt);
+				main.closeWindow(bt);
+				//main.ownerCt.hide(bt);
 				
 				//main.up('form').getForm().reset();
 				//main.parentForm.hide(bt);
@@ -105,6 +105,17 @@ Ext.define('survey.view.PVoters.PopulationView',{
 	refreshOther : function(){
 		this.fireEvent('refreshOther', this);
 		
+	},
+	closeWindow : function ( bt){
+		
+		var main = this;
+		main.form.reset();
+		 
+		if(main.ownerCt != null){
+			main.ownerCt.hide();
+		}
+		
+		 
 	}
 });
 

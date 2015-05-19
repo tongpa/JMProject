@@ -18,9 +18,9 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
     getHeaderColumn : function(){
     	var main = this;
     	return [
-				{header: survey.label.email_title  , dataIndex: 'subject',width : '20%' , sortable: false }  ,
+				{header: survey.label.email_title  , dataIndex: 'subject',width : '25%' , sortable: false }  ,
 				{header: survey.label.start_date , dataIndex: 'create_date',width : '20%' , sortable: false }  ,
-				{header: survey.label.update_date , dataIndex: 'update_date',width : '30%' , sortable: false }  ,
+				{header: survey.label.update_date , dataIndex: 'update_date',width : '20%' , sortable: false }  ,
 				 
 				{header: survey.label.delete  ,  width : '10%',  renderer :main.deletebuttonManage,  sortable: false  } ,
 				{header: survey.label.edit ,  width : '10%',  renderer :main.showbuttonManage,  sortable: false  }   
@@ -119,27 +119,6 @@ Ext.define('survey.view.PEmailTemplate.ListEmailTemplate',{
         }, 50);
         return Ext.String.format('<div id="{0}"></div>', id);
    
-    },
-    showbuttonView : function(value,m,r){
-    	
-    	var main = this;
-    	var id = Ext.id();
-        Ext.defer(function () {
-            Ext.widget('button', {
-                renderTo: id,
-                text: survey.label.view ,// + r.get('name'),
-                width: 75,
-                handler: function () {
-                //	debugger;
-                	main.openUrl =  window.location.origin +"/";// window.location.protocol + window.location.host + "/"; 
-                	console.log(main.openUrl);	
-                	 
-                	window.open(  "/preview?id=" + r.data.id_question_option,"_blank");
-                	 
-                }
-            });
-        }, 50);
-        return Ext.String.format('<div id="{0}"></div>', id);
     },
     refreshOther : function(){
 		this.fireEvent('refreshOther', this);

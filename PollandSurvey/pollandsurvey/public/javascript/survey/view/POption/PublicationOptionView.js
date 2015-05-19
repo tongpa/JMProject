@@ -24,6 +24,12 @@ Ext.define('survey.view.POption.PublicationOptionView',{
     		 
     		this.idquestion.setValue(optionsrecord.id);
     		this.getForm().loadRecord(optionsrecord);
+    		
+    		//set save button is hidden when send to voter already 
+    		if(optionsrecord.data.send_status == 1){
+    			
+    			this.btsave.setHidden(true);
+    		}
     	}
     	else{
     	
@@ -140,7 +146,7 @@ Ext.define('survey.view.POption.PublicationOptionView',{
 	                    	console.log(action);
 	                    	if( action.result.result){
 	                    		
-	                    		main.closeWindow(main,bt);
+	                    		main.closeWindow(bt);
 		                    	Ext.Msg.alert( survey.message.success , action.result.message);
 		                    	main.refreshOther();
 	                    		
@@ -177,7 +183,7 @@ Ext.define('survey.view.POption.PublicationOptionView',{
 			hidden : !main.showClose,
 			handler: function (bt,ev){
 				 
-				main.closeWindow(main,bt);
+				main.closeWindow(bt);
 			}
 		});
 		
@@ -185,15 +191,19 @@ Ext.define('survey.view.POption.PublicationOptionView',{
 		this.callParent();
 	},
 	refreshOther : function(){
+		console.log("refresh other from panel");
 		this.fireEvent('refreshOther', this);
 		
 	},
-	closeWindow : function (main,bt){
-		if(main.parentForm != null){
-			main.form.reset();
-			main.parentForm.hide(bt);
-			 
+	closeWindow : function (bt){
+		
+		var main = this;
+		main.form.reset();
+		if(main.ownerCt != null){
+			main.ownerCt.hide();
 		}
+		
+		 
 	}
 });
 

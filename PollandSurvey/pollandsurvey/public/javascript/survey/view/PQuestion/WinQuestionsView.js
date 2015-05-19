@@ -1,10 +1,10 @@
-Ext.define('survey.view.POption.WinPublicationOptionView',{
+Ext.define('survey.view.PQuestion.WinQuestionsView',{
 	extend: 'Ext.window.Window',
-	alias: ['widget.WinPublicationOptionView'],
+	alias: ['widget.WinQuestionsView'],
 	requires: [
-	           'survey.view.POption.PublicationOptionView' 
+	           'survey.view.PQuestion.QuestionsView' 
 	       ],
-	text : survey.label.create_publication ,
+	text : survey.label.create_question,
 	layout: 'fit',
 	
 	modal : true,
@@ -23,15 +23,17 @@ Ext.define('survey.view.POption.WinPublicationOptionView',{
         titleAlign: 'center' 
     },
     
-    setLoadData : function(projectrecord,optionsrecord ){
-    	//console.log('survey.view.list.Project.winAddQuestion');
-     	this.panelOption.setLoadData(projectrecord,optionsrecord );
+    setLoadData : function(projectrecord,questionrecord, questiontyperecord,numberorder){
+     
+    	
+    	this.panelView.setLoadData(projectrecord,questionrecord, questiontyperecord,numberorder);
     },
     
 	initComponent: function() {
-		 
+		
+		console.log("init component");
 		var main = this;
-		main.panelOption = Ext.create('survey.view.POption.PublicationOptionView' ,{
+		main.panelView = Ext.create('survey.view.PQuestion.QuestionsView' ,{
 			url : main.url,
 			showClose : main.showClose,
 			parentForm : main,
@@ -44,7 +46,7 @@ Ext.define('survey.view.POption.WinPublicationOptionView',{
 		    }});
 	 	 
 		 
-		main.items = [main.panelOption]; 
+		main.items = [main.panelView]; 
 		 
 		this.callParent();
 		

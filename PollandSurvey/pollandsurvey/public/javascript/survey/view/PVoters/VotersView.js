@@ -87,11 +87,7 @@ Ext.define('survey.view.PVoters.VotersView',{
 			
 			hidden : !main.showClose,
 			handler: function (bt,ev){
-				//main.closeWindow(main,bt);
-				main.ownerCt.hide(bt);
-				
-				//main.up('form').getForm().reset();
-				//main.parentForm.hide(bt);
+				main.closeWindow(bt);
 			}
 		});
 		
@@ -105,6 +101,17 @@ Ext.define('survey.view.PVoters.VotersView',{
 	refreshOther : function(){
 		this.fireEvent('refreshOther', this);
 		
+	},
+	closeWindow : function ( bt){
+		
+		var main = this;
+		main.form.reset();
+		 
+		if(main.ownerCt != null){
+			main.ownerCt.hide();
+		}
+		
+		 
 	}
 });
 
