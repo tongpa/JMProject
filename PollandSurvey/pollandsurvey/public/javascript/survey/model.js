@@ -44,7 +44,7 @@ Ext.define('Survey.model.listQuestions',{
 Ext.define('Survey.model.listOptions',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question_option',    
-    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template' ] 
+    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template','id_question_invitation','send_status' ] 
 });
 
 

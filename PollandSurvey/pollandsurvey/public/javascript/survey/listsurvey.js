@@ -37,9 +37,22 @@ Ext.require([
              'survey.view.POption.PublicationOptionView',
              'survey.view.POption.WinPublicationOptionView',
              
+             
+             'survey.view.PQuestion.questiontype.imagepanel.UploadImagePanel',
+             'survey.view.PQuestion.questiontype.QuestionImageAnswerPanel',
+             'survey.view.PQuestion.questiontype.QuestionListAnswerPanel',
+             'survey.view.PQuestion.questiontype.CardQuestionTypePanel',
+             'survey.view.PQuestion.ListQuestions',
+             'survey.view.PQuestion.ImageView',
+             'survey.view.PQuestion.QuestionsView',
+             'survey.view.PQuestion.WinQuestionsView',
+             
              'survey.panel.ManageVoters',
              'survey.panel.ManageEmailTemplate',
-             'survey.panel.ManagePublicationOption'
+             'survey.panel.ManagePublicationOption',
+             'survey.panel.ManageVariable',
+             'survey.panel.ManageQuestion'
+            
              
          ]);
  
@@ -97,14 +110,14 @@ Ext.application({
 				    	
 				    	manage_project.loadData(record); 
 				    	
-				    	var manage_question = Ext.create('survey.view.list.Project.PCreateQuestion',{
+				    	var manage_question = Ext.create('survey.panel.ManageQuestion',{
 				    		width: '100%',   		
 				    		title : survey.label.create_question,
 				    		iconMask: true,
 			        		iconCls: "icon-question"
 				    	});
 				    	
-				    	var manage_variable = Ext.create('survey.view.list.Project.PCreateVariable',{
+				    	var manage_variable = Ext.create('survey.panel.ManageVariable',{
 				    		width: '100%',   		
 				    		title : survey.label.create_variable,
 				    		iconMask: true,
@@ -134,7 +147,7 @@ Ext.application({
 			        		iconCls: "icon-list-voter"
 				    	});
 				    	
-				    	var manage_sendInvitation = Ext.create('survey.view.list.Project.PManageInvitations',{
+				    	var manage_sendInvitation = Ext.create('survey.panel.ManageVariable',{
 				    		width: '100%',   		
 				    		title : 'send Invitation',
 				    		iconMask: true,
