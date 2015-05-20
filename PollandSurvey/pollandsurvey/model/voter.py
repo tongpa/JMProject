@@ -523,7 +523,7 @@ class Respondents(DeclarativeBase):
     question_option = relation('QuestionOption', backref='sur_respondents_id_question_option');
     
     finished  = Column(BIT, nullable=True, default=0);
-     
+    score_exam =   Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
     

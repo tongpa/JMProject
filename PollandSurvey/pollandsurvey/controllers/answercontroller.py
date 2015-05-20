@@ -120,8 +120,8 @@ class AnswerController(BaseController):#RestController): #
             
     @expose('pollandsurvey.templates.view.welcome')
     def welcome(self,id=0,came_from=lurl('/')):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
+         
         
         log.info('preview id : ' + str(id));
         
@@ -149,8 +149,7 @@ class AnswerController(BaseController):#RestController): #
     
     @expose('pollandsurvey.templates.view.goodbye')
     def thankyou(self,id=0,came_from=lurl('/')):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         log.info('preview id : ' + str(id));
         
@@ -175,8 +174,7 @@ class AnswerController(BaseController):#RestController): #
     
     @expose('json')
     def getDataPreview(self, came_from=lurl('/'),   *args, **kw): 
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         idProject = kw.get('idProject');
         print args;
@@ -207,8 +205,7 @@ class AnswerController(BaseController):#RestController): #
     
     @expose('json')
     def saveQuestion(self, *args, **kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         self.df = json.loads(request.body, encoding=request.charset);
         
         self.value = self.df.get('value');

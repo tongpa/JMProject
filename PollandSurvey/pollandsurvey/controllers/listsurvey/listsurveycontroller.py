@@ -62,12 +62,12 @@ class ListSurveyController(BaseController):
             
         
         groups = request.identity['groups'] ;
-         
+        """ 
         if ('creator' in groups):
             log.info("redirect to create survey page");
             groups = None;
             redirect('/survey');
-                
+        """        
         return dict(page='metronic') 
     
     #def index(self, came_from=lurl('/'), *args, **kw):

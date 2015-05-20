@@ -82,7 +82,7 @@ class AccountController(BaseController):
     @require(predicates.not_anonymous())
     def rechangepass(self, *args, **kw):
         
-        self.success = True;
+        self.success = False;
         self.message= '';
         if request.identity:
             log.warning("user cannot login, redirect to login");
@@ -91,7 +91,7 @@ class AccountController(BaseController):
             self.new_password = kw.get('newpassword');
             self.re_new_password = kw.get('rnewpassword');
             user =  request.identity['user'];
-            print str(self.new_password) == str(self.re_new_password);
+            
             if( user.validate_password(self.current_password)):
                 if(str(self.new_password) == str(self.re_new_password)):
                     user._set_password(self.new_password);
@@ -99,17 +99,19 @@ class AccountController(BaseController):
                     self.message = "password changed";
                 else:
                     self.message = "password not same";
+                     
             else:
                 log.warning("user %s password not match : %s",user.user_name,self.current_password );
                 self.message= 'password not match';
+                 
                 
             
             
         else:
             self.message = 'user is not login.';
-        print self.message;
+         
         
-        dict(success=self.success, message = self.message);
+        return dict(success=self.success, message = self.message);
     
     
      
