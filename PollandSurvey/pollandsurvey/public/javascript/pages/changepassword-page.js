@@ -63,12 +63,15 @@ var ChangePassword = function () {
 	   			    	 console.log('success');
 	   			    	 console.log(data);
 	   			    	 if(data.success == true){
+	   			    		alert("change password success."); 
+	   			    		$('.changepass-form')[0].reset();
+	   			    		
 	   			    		 
 	   			    		// $(location).attr('href',"/register/registerSuccess"); 
 	   			    	 }
 	   			    	 else {
-	   			    		 
-	   			    		 
+	   			    		alert(data.message);
+	   			    		//$('.changepass-form')[0][2].value='';
 	   			    		 return false;
 	   			    	 }
 	   			     },
