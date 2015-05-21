@@ -557,7 +557,7 @@ class SurveyController(BaseController):
         if ( not self.utility.isEmpty(kw.get('id_question_option'))):
             self.option = model.QuestionOption.getId( kw.get('id_question_option')  ); 
             
-            
+        print kw;    
              
         self.option.id_question_project = kw.get('id_question_project');        
         self.option.id_question_theme = kw.get('id_question_theme'); 
