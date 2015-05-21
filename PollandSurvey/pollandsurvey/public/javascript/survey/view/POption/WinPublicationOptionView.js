@@ -24,7 +24,8 @@ Ext.define('survey.view.POption.WinPublicationOptionView',{
     },
     
     setLoadData : function(projectrecord,optionsrecord ){
-    	//console.log('survey.view.list.Project.winAddQuestion');
+    	console.log(projectrecord);
+    	console.log(optionsrecord);
      	this.panelView.setLoadData(projectrecord,optionsrecord );
     },
     

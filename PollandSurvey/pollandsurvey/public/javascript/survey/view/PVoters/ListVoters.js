@@ -12,6 +12,7 @@ Ext.define('survey.view.PVoters.ListVoters',{
 	hideHeaders : true,
     getHeaderColumn : function(){
     	
+    	var main = this;
     	return [	{xtype: 'rownumberer',width : '3%'},
     	        	{header: 'id',   sortable: false, dataIndex: 'id_voter' ,hidden : true,menuDisabled: true},        	 
     	        	{header: 'Email', dataIndex: 'email',  width : '35%',   sortable: false,menuDisabled: true}   ,
@@ -22,7 +23,8 @@ Ext.define('survey.view.PVoters.ListVoters',{
     	                	iconCls : 'icon-edit'	, style: 'margin-left: 5px;', tooltip: survey.label.edit, flex: 1, 
     	                    handler: function(grid, rowIndex, colIndex) {
     	                        var rec = grid.getStore().getAt(rowIndex);
-    	                        grid.fireEvent('editVoters', this,rec);
+    	                        main.fireEvent('editVoters', this,rec);
+    	                         
     	                        
     	                    }
     	                } ]

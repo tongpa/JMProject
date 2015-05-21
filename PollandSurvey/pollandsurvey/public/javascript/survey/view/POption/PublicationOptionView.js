@@ -19,7 +19,10 @@ Ext.define('survey.view.POption.PublicationOptionView',{
     	this.idquestion.setValue('');
     	this.record = optionsrecord;
 		this.getForm().reset();
-		 
+		
+		console.log(projectRecord);
+    	console.log(optionsrecord);
+    	
     	if(optionsrecord != null && optionsrecord.id != null){
     		 
     		this.idquestion.setValue(optionsrecord.id);
@@ -35,6 +38,7 @@ Ext.define('survey.view.POption.PublicationOptionView',{
     	
 			if (projectRecord != null && projectRecord.id != null) {
 			    		this.projectid = projectRecord.id;
+			    		 
 			    		this.idquestion.setValue(this.projectid);
 		   }
     	}
@@ -44,8 +48,8 @@ Ext.define('survey.view.POption.PublicationOptionView',{
 	},
 	initComponent : function(){
 		var main = this;
-		main.idoptions = Ext.create('Ext.form.field.Hidden',{name : 'id_question_project'} );    
-		main.idquestion = Ext.create('Ext.form.field.Hidden',{name : 'id_question_option'} );    
+		main.idoptions = Ext.create('Ext.form.field.Hidden',{name : 'id_question_option'} );    
+		main.idquestion = Ext.create('Ext.form.field.Hidden',{name :'id_question_project' } );    
 		
 		main.optionName = Ext.create('Ext.form.field.Text',{name : 'name_publication',fieldLabel : survey.label.name, allowBlank : false});
 		main.showTheme = Ext.create('Ext.form.ComboBox',{name : 'id_question_theme',fieldLabel : survey.label.theme,
