@@ -2,14 +2,13 @@
  
 
 
-Ext.define('survey.panel.ManageEmailTemplate',{
-	//extend : 'Ext.panel.Panel', 	 
+Ext.define('survey.panel.ManageEmailTemplate',{ 	 
 	extend : 'Ext.form.Panel',
+	alias: ['widget.ManageEmailTemplate'],
 	layout: 'fit',
 	defaults: {
         anchor: '100%',
-        labelWidth: 120 
-       // layout: {   type: 'fix' }
+        labelWidth: 120  
     },
 	frame: true,
 	 

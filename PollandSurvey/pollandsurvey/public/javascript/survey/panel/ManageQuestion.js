@@ -5,12 +5,13 @@
 Ext.define('survey.panel.ManageQuestion',{
 	//extend : 'Ext.panel.Panel', 	 
 	extend : 'Ext.form.Panel',
+	layout: 'fit',
 	alias: ['widget.ManageQuestion'],
 	defaults: {
         anchor: '100%',
         labelWidth: 120
     },
-	frame: false,
+	frame: true,
 	
 	height : 500,
 	bodyPadding: 10,
@@ -39,7 +40,8 @@ Ext.define('survey.panel.ManageQuestion',{
     	var main = this;
 		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
 		
-		main.projectid = Ext.create('survey.view.list.Project.fieldProjectId');
+		main.projectid = Ext.create('Ext.form.field.Hidden',{name : 'id_question_project'});
+		 
 		
 		
 		main.winAddQuestion = Ext.create('survey.view.PQuestion.WinQuestionsView',{

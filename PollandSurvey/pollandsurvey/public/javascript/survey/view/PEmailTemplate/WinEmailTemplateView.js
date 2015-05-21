@@ -25,13 +25,13 @@ Ext.define('survey.view.PEmailTemplate.WinEmailTemplateView',{
     
     setLoadData : function(projectrecord,optionsrecord ){
     	//console.log('survey.view.list.Project.winAddQuestion');
-     	this.panelOption.setLoadData(projectrecord,optionsrecord );
+     	this.panelView.setLoadData(projectrecord,optionsrecord );
     },
     
 	initComponent: function() {
 		 
 		var main = this;
-		main.panelOption = Ext.create('survey.view.PEmailTemplate.EmailTemplateView' ,{
+		main.panelView = Ext.create('survey.view.PEmailTemplate.EmailTemplateView' ,{
 			url : main.url,
 			showClose : main.showClose,
 			parentForm : main,
@@ -42,7 +42,7 @@ Ext.define('survey.view.PEmailTemplate.WinEmailTemplateView',{
 		    }});
 	 	 
 		 
-		main.items = [main.panelOption]; 
+		main.items = [main.panelView]; 
 		 
 		this.callParent();
 		

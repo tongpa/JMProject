@@ -61,6 +61,251 @@ Ext.define('Survey.model.Invitation',{
 });
 
  
+survey.listProject = new Ext.data.Store({
+	model : 'Survey.model.listProjectid',
+	storeId:'listBookSendInStore',
+	pageSize: 50,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/survey/getProjectByUser',    	
+		api: {
+            read: '/survey/getProjectByUser',
+            create: '/survey/getProjectByUser',
+            update: '/survey/updateProject',
+            destroy: '/survey/deleteProject'
+        }, 
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	},
+        writer: {
+        	type: 'json' 
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        },
+        listeners: {
+            exception: function(proxy, response, operation){
+               /* Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });*/
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : true
+});
+
+ 
+survey.listBasicData = new Ext.data.Store({
+	model : 'Survey.model.listAnswerData',
+	storeId:'listBasicDataInStore',
+	pageSize: 100,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getBasicData',    	
+	/*	api: {
+            read: '/model/getBasicData',
+            //create: '/survey/createBasicData',
+            //update: '/model/createBasicData',
+            //destroy: '/model/deleteBasicData'
+        }, */
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	},
+        writer: {
+        	type: 'json' ,
+        	writeAllFields: true
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        },
+        listeners: {
+            exception: function(proxy, response, operation){
+               /* Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });*/
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : false
+});
+
+survey.listQuestionsData = new Ext.data.Store({
+	model : 'Survey.model.listQuestions',
+	storeId : 'listQuestionsDataInStore',
+	pageSize: 100,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getQuestionsData',    	
+		api: {
+            read: '/model/getQuestionsData',
+            create: '/survey/createQuestionData',
+            update: '/survey/updateQuestionData',
+            destroy: '/survey/deleteQuestionData'
+        }, 
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	},
+        writer: {
+        	type: 'json' 
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        },
+        listeners: {
+            exception: function(proxy, response, operation){
+               /* Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });*/
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : true
+});
+
+
+
+survey.listQuestionType = new Ext.data.Store({
+	model : 'Survey.model.listQuestionType',
+	storeId : 'listQuestionTypeInStore',
+	pageSize : 50,
+	proxy : {
+		type : 'ajax',
+		url : '/model/getQuestionType',
+		reader : {
+			type : 'json',
+			rootProperty : 'survey'
+		}
+	},
+	autoLoad : false
+});
+
+
+survey.listOptionTheme = new Ext.data.Store({
+	model : 'Survey.model.listOptionTheme',
+	storeId : 'listOptionThemeInStore',
+	pageSize : 50,
+	proxy : {
+		type : 'ajax',
+		url : '/model/getOptionTheme',
+		reader : {
+			type : 'json',
+			rootProperty : 'survey'
+		}
+	},
+	autoLoad : false
+});
+
+
+survey.listOptions = new Ext.data.Store({
+	model : 'Survey.model.listOptions',
+	storeId:'listOptionsInStore',
+	pageSize: 100,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getOptionsProject',    	
+		api: {
+            read: '/model/getOptionsProject'
+            //,create: '/survey/createBasicData'
+            //,update: '/model/createBasicData'
+            //,destroy: '/model/deleteBasicData'
+        }, 
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	},
+        writer: {
+        	type: 'json' ,
+        	writeAllFields: true
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        },
+        listeners: {
+            exception: function(proxy, response, operation){
+               /* Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });*/
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : false
+});
+
+
+survey.listBasicMediaData = new Ext.data.Store({
+	model : 'Survey.model.listAnswerData',
+	storeId:'listBasicMediaDataInStore',
+	pageSize: 100,
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getBasicMediaData',    	
+		api: {
+            read: '/model/getBasicMediaData',
+            create: '/survey/createBasicMediaData',
+            update: '/model/createBasicMediaData',
+            destroy: '/model/deleteBasicMediaData'
+        }, 
+        reader:{
+        	type: 'json',
+    		rootProperty : 'survey',
+    		totalProperty : 'total'
+    	},
+        writer: {
+        	type: 'json' ,
+        	writeAllFields: true
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        },
+        listeners: {
+            exception: function(proxy, response, operation){
+               /* Ext.MessageBox.show({
+                    title: 'REMOTE EXCEPTION',
+                    msg: operation.getError(),
+                    icon: Ext.MessageBox.ERROR,
+                    buttons: Ext.Msg.OK
+                });*/
+            } 
+        }
+	},
+	autoSync: false,
+	autoLoad : false
+});
+
+
 
 
 Ext.define('survey.MasterStore',{
@@ -89,159 +334,6 @@ Ext.define('survey.MasterStore',{
 	}
 });
 
-survey.listProject = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listProjectid',
-	storeId:'listBookSendInStore',
-	 
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/survey/getProjectByUser',    	
-		api: {
-            read: '/survey/getProjectByUser',
-            create: '/survey/getProjectByUser',
-            update: '/survey/updateProject',
-            destroy: '/survey/deleteProject'
-        } ,
-        writer: {
-        	type: 'json' 
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	},
-	autoLoad : true
-});
-
-survey.listBasicData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listAnswerData',
-	storeId:'listBasicDataInStore',
-	 
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getBasicData',    	
-	
-        reader:{
-        	type: 'json',
-    		rootProperty : 'survey',
-    		totalProperty : 'total'
-    	},
-        writer: {
-        	type: 'json' ,
-        	writeAllFields: true
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	} 
-});
-
-survey.listQuestionsData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listQuestions',
-	storeId : 'listQuestionsDataInStore',
-	 
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getQuestionsData',    	
-		api: {
-            read: '/model/getQuestionsData',
-            create: '/survey/createQuestionData',
-            update: '/survey/updateQuestionData',
-            destroy: '/survey/deleteQuestionData'
-        }, 
-         
-        writer: {
-        	type: 'json' 
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	}, 
-	autoLoad : true
-});
-
-survey.listQuestionType = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listQuestionType',
-	storeId : 'listQuestionTypeInStore',
-	 
-	proxy : {
-		type : 'ajax',
-		url : '/model/getQuestionType',
-		reader : {
-			type : 'json',
-			rootProperty : 'survey'
-		}
-	} 
-});
-
-survey.listOptionTheme  = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listOptionTheme',
-	storeId : 'listOptionThemeInStore',
-	 
-	proxy : {
-		type : 'ajax',
-		url : '/model/getOptionTheme',
-		reader : {
-			type : 'json',
-			rootProperty : 'survey'
-		}
-	} 
-});
-
-survey.listBasicMediaData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listAnswerData',
-	storeId:'listBasicMediaDataInStore',
-	 
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getBasicMediaData',    	
-		api: {
-            read: '/model/getBasicMediaData',
-            create: '/survey/createBasicMediaData',
-            update: '/model/createBasicMediaData',
-            destroy: '/model/deleteBasicMediaData'
-        }, 
-        
-        writer: {
-        	type: 'json' ,
-        	writeAllFields: true
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	} 
-});
-
-survey.listOptions = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listOptions',
-	storeId:'listOptionsInStore',	 
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getOptionsProject',    	
-		api: {
-            read: '/model/getOptionsProject'
-            //,create: '/survey/createBasicData'
-            //,update: '/model/createBasicData'
-            //,destroy: '/model/deleteBasicData'
-        } ,
-        writer: {
-        	type: 'json' ,
-        	writeAllFields: true
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	} 
-});
 
 survey.listVoterData = Ext.create('survey.MasterStore', {
 	model : 'Survey.model.listVoters',

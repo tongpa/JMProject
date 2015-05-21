@@ -6,7 +6,8 @@ Ext.Loader.setConfig({
     enabled: true,
     paths: {
     	'Ext.ux': '/javascript/extjs-extend/ux',
-    	'survey': '/javascript/survey'
+    	'survey': '/javascript/survey',
+    	
         
     }
 });
@@ -26,6 +27,7 @@ Ext.require([
              'Ext.state.*', 
              'Ext.Msg.*', 
              'Ext.ux.form.ItemSelector', 
+             'Ext.ux.grid.column.UploadFile',
              'survey.view.PVoters.ListVoters',
              'survey.view.PVoters.SelectVoters',
              'survey.view.PVoters.VotersView',
@@ -47,11 +49,18 @@ Ext.require([
              'survey.view.PQuestion.QuestionsView',
              'survey.view.PQuestion.WinQuestionsView',
              
+             'survey.view.Project.ProjectView',
+             'survey.view.Project.ListProject',
+             'survey.view.project.WinProjectView',
+             
              'survey.panel.ManageVoters',
              'survey.panel.ManageEmailTemplate',
              'survey.panel.ManagePublicationOption',
              'survey.panel.ManageVariable',
-             'survey.panel.ManageQuestion'
+             'survey.panel.ManageQuestion',
+             'survey.panel.ManageProject'
+             
+             
             
              
          ]);
@@ -67,7 +76,7 @@ Ext.application({
     	
     	
     	survey.listOptionTheme.load();
-   	 	
+    	//survey.listProject.load();
     	var contact_view = Ext.create('Ext.form.Panel',{
     		title : survey.label.contact,//'Contacts',
     		width: '100%',
@@ -75,7 +84,7 @@ Ext.application({
     	});
     	
     	
-    	var project_view = Ext.create('survey.view.list.Project',{   		 
+    	var project_view = Ext.create('survey.view.Project.ListProject',{//'survey.view.list.Project',{   		 
     		flex: 1,
     	    hidden : false,
     	    
@@ -103,12 +112,12 @@ Ext.application({
 					 
 						
 						//manage project 
-				    	var manage_project = Ext.create('survey.view.list.Project.ManageProject',{   		 
+				    	var manage_project = Ext.create('survey.panel.ManageProject',{   		 
 				    		width: '100%',				    	     
 				    	    url : '/survey/updateProject'
 				    	});
 				    	
-				    	manage_project.loadData(record); 
+				    	manage_project.setLoad(record); 
 				    	
 				    	var manage_question = Ext.create('survey.panel.ManageQuestion',{
 				    		width: '100%',   		

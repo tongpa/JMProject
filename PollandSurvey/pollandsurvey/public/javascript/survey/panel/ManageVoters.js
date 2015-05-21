@@ -6,11 +6,12 @@ Ext.define('survey.panel.ManageVoters',{
 	//extend : 'Ext.panel.Panel', 	 
 	extend : 'Ext.form.Panel',
 	alias: ['widget.manageVoters'],
+	layout: 'fit',
 	defaults: {
         anchor: '100%',
         labelWidth: 120
     },
-	frame: false,
+	frame: true,
 	
 	height : 500,
 	bodyPadding: 10,

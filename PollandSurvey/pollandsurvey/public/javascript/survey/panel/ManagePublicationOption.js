@@ -2,15 +2,15 @@
  
 
 
-Ext.define('survey.panel.ManagePublicationOption',{
-	//extend : 'Ext.panel.Panel', 	 
+Ext.define('survey.panel.ManagePublicationOption',{  
 	extend : 'Ext.form.Panel',
 	alias: ['widget.ManagePublicationOption'],
+	layout: 'fit',
 	defaults: {
         anchor: '100%',
         labelWidth: 120
     },
-	frame: false,
+	frame: true,
 	
 	height : 500,
 	bodyPadding: 10,

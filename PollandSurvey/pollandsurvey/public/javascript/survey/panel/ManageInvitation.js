@@ -5,12 +5,13 @@
 Ext.define('survey.panel.ManageVariable',{
 	//extend : 'Ext.panel.Panel', 	 
 	extend : 'Ext.form.Panel',
+	layout: 'fit',
 	alias: ['widget.ManageVariable'],
 	defaults: {
         anchor: '100%',
         labelWidth: 120
     },
-	frame: false,
+	frame: true,
 	
 	height : 500,
 	bodyPadding: 10,
