@@ -30,7 +30,7 @@ Ext.define('survey.panel.ManageVoters',{
 		main.selectVoters = Ext.create(
 				//'Ext.ux.form.ItemSelector' 
 				//'survey.view.PVoters.ShowVoters'
-				'survey.view.PVoters.ListVoters'
+				'survey.view.pvoters.ListVoters'
 				,{
 			name: 'itemselector',
             id: 'itemselector-field',
@@ -45,7 +45,7 @@ Ext.define('survey.panel.ManageVoters',{
             
 		});
 
-		main.panelVoters = Ext.create('survey.view.PVoters.VotersView',{
+		main.panelVoters = Ext.create('survey.view.pvoters.VotersView',{
 			url : '/voter/createVoter',
 			listeners : {
 				refreshOther : function(cmp) {

@@ -38,7 +38,7 @@ Ext.define('survey.panel.ManageEmailTemplate',{
 		
 		var main = this;
 		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
-		main.showWindowsOption =   Ext.create('survey.view.PEmailTemplate.WinEmailTemplateView',{ // Ext.create('survey.view.list.Project.Invitation.winAddInvitation',{
+		main.showWindowsOption =   Ext.create('survey.view.pemailtemplate.WinEmailTemplateView',{ // Ext.create('survey.view.list.Project.Invitation.winAddInvitation',{
 			url : '/survey/addInvitation',
 			title : survey.label.create_invitation ,
 			titleAlign : 'left',
@@ -64,7 +64,7 @@ Ext.define('survey.panel.ManageEmailTemplate',{
             //,            menu: [{text: 'Menu Button 1'}]
         }];
 		
-		main.showListOption = Ext.create('survey.view.PEmailTemplate.ListEmailTemplate',{
+		main.showListOption = Ext.create('survey.view.pemailtemplate.ListEmailTemplate',{
 			listeners : {
 				showManageOption : function(grid,optionsrecord) {
 					main.showWindowsOption.show();

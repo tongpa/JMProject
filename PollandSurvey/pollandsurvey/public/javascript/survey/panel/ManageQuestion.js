@@ -44,7 +44,7 @@ Ext.define('survey.panel.ManageQuestion',{
 		 
 		
 		
-		main.winAddQuestion = Ext.create('survey.view.PQuestion.WinQuestionsView',{
+		main.winAddQuestion = Ext.create('survey.view.pquestion.WinQuestionsView',{
 			url : '/survey/addQuestion',
 			title : survey.label.create_question,
 			titleAlign : 'left',
@@ -71,7 +71,7 @@ Ext.define('survey.panel.ManageQuestion',{
 		
  
 		
-		main.gridQuestion = Ext.create('survey.view.PQuestion.ListQuestions',{
+		main.gridQuestion = Ext.create('survey.view.pquestion.ListQuestions',{
 			listeners : {
 				showEditQuestion : function(cmp,record) {
 					

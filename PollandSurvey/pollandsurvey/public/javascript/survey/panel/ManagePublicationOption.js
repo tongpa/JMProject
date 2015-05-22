@@ -38,7 +38,7 @@ Ext.define('survey.panel.ManagePublicationOption',{
 		
     	var main = this;
 		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
-		main.showWindowsOption = Ext.create('survey.view.POption.WinPublicationOptionView',{
+		main.showWindowsOption = Ext.create('survey.view.poption.WinPublicationOptionView',{
 			url : '/survey/addOptions',
 			title : survey.label.create_publication ,
 			titleAlign : 'left',
@@ -64,7 +64,7 @@ Ext.define('survey.panel.ManagePublicationOption',{
             //,            menu: [{text: 'Menu Button 1'}]
         }];
 		
-		main.showListOption = Ext.create('survey.view.POption.ListPublicationOption',{
+		main.showListOption = Ext.create('survey.view.poption.ListPublicationOption',{
 			listeners : {
 				showManageOption : function(grid,optionsrecord) {
 					main.showWindowsOption.show();

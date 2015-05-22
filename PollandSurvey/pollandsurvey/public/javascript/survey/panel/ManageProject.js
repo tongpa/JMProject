@@ -37,7 +37,7 @@ Ext.define('survey.panel.ManageProject',{
     	
     	var main = this;
 		
-		main.panelProject = Ext.create('survey.view.Project.ProjectView' ,{
+		main.panelProject = Ext.create('survey.view.pproject.ProjectView' ,{
 			url : main.url,
 			showClose : false,
 			isCreate : false, 
