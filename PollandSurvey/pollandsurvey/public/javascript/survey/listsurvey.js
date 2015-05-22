@@ -28,30 +28,30 @@ Ext.require([
              'Ext.Msg.*', 
              'Ext.ux.form.ItemSelector', 
              'Ext.ux.grid.column.UploadFile',
-             'survey.view.PVoters.ListVoters',
-             'survey.view.PVoters.SelectVoters',
-             'survey.view.PVoters.VotersView',
-             'survey.view.PEmailTemplate.ListEmailTemplate',
-             'survey.view.PEmailTemplate.EmailTemplateView',
-             'survey.view.PEmailTemplate.WinEmailTemplateView',
+             'survey.view.pvoters.ListVoters',
+             'survey.view.pvoters.SelectVoters',
+             'survey.view.pvoters.VotersView',
+             'survey.view.pemailtemplate.ListEmailTemplate',
+             'survey.view.pemailtemplate.EmailTemplateView',
+             'survey.view.pemailtemplate.WinEmailTemplateView',
              
-             'survey.view.POption.ListPublicationOption',
-             'survey.view.POption.PublicationOptionView',
-             'survey.view.POption.WinPublicationOptionView',
+             'survey.view.poption.ListPublicationOption',
+             'survey.view.poption.PublicationOptionView',
+             'survey.view.poption.WinPublicationOptionView',
              
              
-             'survey.view.PQuestion.questiontype.imagepanel.UploadImagePanel',
-             'survey.view.PQuestion.questiontype.QuestionImageAnswerPanel',
-             'survey.view.PQuestion.questiontype.QuestionListAnswerPanel',
-             'survey.view.PQuestion.questiontype.CardQuestionTypePanel',
-             'survey.view.PQuestion.ListQuestions',
-             'survey.view.PQuestion.ImageView',
-             'survey.view.PQuestion.QuestionsView',
-             'survey.view.PQuestion.WinQuestionsView',
+             'survey.view.pquestion.questiontype.imagepanel.UploadImagePanel',
+             'survey.view.pquestion.questiontype.QuestionImageAnswerPanel',
+             'survey.view.pquestion.questiontype.QuestionListAnswerPanel',
+             'survey.view.pquestion.questiontype.CardQuestionTypePanel',
+             'survey.view.pquestion.ListQuestions',
+             'survey.view.pquestion.ImageView',
+             'survey.view.pquestion.QuestionsView',
+             'survey.view.pquestion.WinQuestionsView',
              
-             'survey.view.Project.ProjectView',
-             'survey.view.Project.ListProject',
-             'survey.view.project.WinProjectView',
+             'survey.view.pproject.ProjectView',
+             'survey.view.pproject.ListProject',
+             'survey.view.pproject.WinProjectView',
              
              'survey.panel.ManageVoters',
              'survey.panel.ManageEmailTemplate',
@@ -84,7 +84,7 @@ Ext.application({
     	});
     	
     	
-    	var project_view = Ext.create('survey.view.Project.ListProject',{//'survey.view.list.Project',{   		 
+    	var project_view = Ext.create('survey.view.pproject.ListProject',{//'survey.view.list.Project',{   		 
     		flex: 1,
     	    hidden : false,
     	    
