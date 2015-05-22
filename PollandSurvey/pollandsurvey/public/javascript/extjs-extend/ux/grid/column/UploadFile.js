@@ -1,4 +1,4 @@
-Ext.define('Ext.grid.column.UploadFile', {
+Ext.define('Ext.ux.grid.column.UploadFile', {
     extend: 'Ext.grid.column.Column',
     alias: ['widget.uploadfile'],
      
