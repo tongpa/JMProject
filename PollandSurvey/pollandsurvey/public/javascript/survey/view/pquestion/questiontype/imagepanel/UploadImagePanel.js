@@ -10,7 +10,7 @@ Ext.define('survey.view.pquestion.questiontype.imagepanel.UploadImagePanel',{
 	accept: ['jpg', 'png', 'gif',  'bmp', 'tif'],  
 	fileslist: [],   
 	imageUrl : '',
-	record :   new Survey.model.listAnswerData({      		 
+	record :   new survey.model.listAnswerData({      		 
 				value: 'answer',
 				answer: 0,
 				seq:  0  
@@ -90,7 +90,15 @@ initComponent: function() {
 	            } 
 	        }
 			});
-	 
+		
+		main.score = Ext.create('Ext.form.field.Text',{
+			name: 'score',
+			 margin: '5 0 0 5' ,
+			 hideLabel : true,
+			 anchor: '100%',
+			 
+			 value : main.record.get('score')
+		});
 		main.checkbox = Ext.create('Ext.form.field.Checkbox',{
 			name: 'answer',
 			 margin: '5 0 0 5' ,
@@ -164,19 +172,36 @@ initComponent: function() {
 			
 			items : [
 			   {
-				   columnWidth: 0.4,
+				   columnWidth: 0.3,
 				   items : [main.labelupload,main.imageFileUpload ]
 			   } ,
 			   {
 				   columnWidth: 0.2,
+				   layout: {
+				        type: 'vbox',
+				        align : 'middle'
+				    },
 				   items : [main.fileUpload]
 			   } ,
 			   {
-				   columnWidth: 0.2,
+				   columnWidth: 0.15,
+				   layout: 'fit',
+				   items : [main.score]
+			   },
+			   {
+				   columnWidth: 0.15,
+				   layout: {
+				        type: 'vbox',
+				        align : 'middle'
+				    },
 				   items : [main.checkbox]
 			   } ,
 			   {
-				   columnWidth: 0.2,frame : true,
+				   columnWidth: 0.2,frame : false,
+				   layout: {
+				        type: 'vbox',
+				        align : 'middle'
+				    },
 				   items : [main.deletebt]
 			   } 
 			]

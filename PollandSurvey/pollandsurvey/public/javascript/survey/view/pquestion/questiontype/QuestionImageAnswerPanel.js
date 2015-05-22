@@ -77,6 +77,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 		
 		parent.headImage = Ext.create('Ext.form.Label',{text: survey.label.image ,margin: '5 0 0 5' });
 		parent.headUpload = Ext.create('Ext.form.Label',{text: survey.label.upload  ,margin: '5 0 0 5' });
+		parent.headScore = Ext.create('Ext.form.Label',{text: survey.label.score  ,margin: '5 0 0 5' });
 		parent.headAnswer = Ext.create('Ext.form.Label',{text: survey.label.answer  ,margin: '5 0 0 5' });
 		parent.headDelete = Ext.create('Ext.form.Label',{text: survey.label.delete  ,margin: '5 0 0 5' });
 		var panelColumn = Ext.create('Ext.panel.Panel',{
@@ -84,15 +85,19 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 			
 			items : [
 			   {
-				   columnWidth: 0.4,frame : true,
+				   columnWidth: 0.3,frame : true,
 				   items : [parent.headImage ]
 			   } ,
 			   {
 				   columnWidth: 0.2,frame : true,
 				   items : [parent.headUpload]
+			   },
+			   {
+				   columnWidth: 0.15,frame : true,
+				   items : [parent.headScore]
 			   } ,
 			   {
-				   columnWidth: 0.2,frame : true,
+				   columnWidth: 0.15,frame : true,
 				   items : [parent.headAnswer]
 			   } ,
 			   {

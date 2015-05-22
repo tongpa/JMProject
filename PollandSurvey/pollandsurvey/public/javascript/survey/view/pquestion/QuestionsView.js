@@ -78,6 +78,15 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 		
 		main.dataGrid = Ext.create('Ext.form.field.Hidden',{name : 'datagrid'});
 		
+		main.difficultyLevel = main.projectType = Ext.create('Ext.form.ComboBox',{msgTarget: 'side',name : 'id_fix_difficulty_level',
+			fieldLabel: survey.label.difficulty_level   ,  
+			allowBlank: false ,
+			store: survey.listDifficultyLevel,
+		    queryMode: 'local',
+		    displayField: 'description',
+		    valueField: 'id_fix_difficulty_level',
+		    blankText : survey.label.please_select  ,
+		    emptyText : survey.label.please_select });
 		
 		
 		main.fieldSetsHelp = Ext.create('Ext.form.FieldSet',{
@@ -97,7 +106,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 		
 //		
 		 
-		main.items = [main.questionid,main.projectid,main.order,main.questiontypeid ,main.dataGrid, main.question ,main.fileUpload, main.fieldSetsHelp,main.answerCardPanel   ];  
+		main.items = [main.questionid,main.projectid,main.order,main.questiontypeid ,main.dataGrid, main.question ,main.fileUpload,main.difficultyLevel , main.fieldSetsHelp,main.answerCardPanel   ];  
 		
 		main.btsave = Ext.create('Ext.Button',{		 
 			text : survey.label.save,

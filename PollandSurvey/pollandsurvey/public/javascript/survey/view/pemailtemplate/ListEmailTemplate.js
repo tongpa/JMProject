@@ -18,7 +18,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
     getHeaderColumn : function(){
     	var main = this;
     	return [
-				{header: survey.label.email_title  , dataIndex: 'subject',width : '25%' , sortable: false }  ,
+				{header: survey.label.name_content  , dataIndex: 'name_content',width : '25%' , sortable: false }  ,
 				{header: survey.label.start_date , dataIndex: 'create_date',width : '20%' , sortable: false }  ,
 				{header: survey.label.update_date , dataIndex: 'update_date',width : '20%' , sortable: false }  ,
 				 
@@ -75,7 +75,8 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
 	    			                	success: function(response, opts){
 	    			                		var resp = Ext.decode(response.responseText); 	
 	    			                		//console.log(resp);
-	    			                		if(resp.success){
+	    			                		
+	    			                		if(resp.result){
 	    			                			
 	    			                			main.getStore().remove(r);
 	    			                			

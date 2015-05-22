@@ -65,6 +65,6 @@ from authuser import UserService,UserGenCode, UserSocialNetwork;
  
 from survey import EmailTemplateType,EmailTemplate,SysConfig
 from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData,BasicTextData,Question,QuestionValidation
-from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation
+from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation,DifficultyLevel,RandomType
 from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType
 

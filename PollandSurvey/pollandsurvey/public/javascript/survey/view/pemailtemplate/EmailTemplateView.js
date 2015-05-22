@@ -38,10 +38,10 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
 		var main = this;
 		
 		main.idquestion = Ext.create('Ext.form.field.Hidden',{name : 'id_question_project'} );
-		main.idinvitation = Ext.create('Ext.form.field.Hidden',{name : 'id_invitation'} );
+		main.idinvitation = Ext.create('Ext.form.field.Hidden',{name : 'id_question_invitation'} );
 		
 		main.nameContent = Ext.create('Ext.form.field.Text',{name : 'name_content',fieldLabel : survey.label.name_content, allowBlank : false});
-		main.subjectinvitation = Ext.create('Ext.form.field.Text',{name : 'title',fieldLabel : survey.label.email_title, allowBlank : false});
+		main.subjectinvitation = Ext.create('Ext.form.field.Text',{name : 'subject',fieldLabel : survey.label.email_title, allowBlank : false});
 		main.fromName = Ext.create('Ext.form.field.Text',{name : 'from_name',fieldLabel : survey.label.from_name, allowBlank : true});
 		
 		main.content = Ext.create('Ext.form.field.HtmlEditor',{name : 'content',enableColors: false, enableAlignments: false});

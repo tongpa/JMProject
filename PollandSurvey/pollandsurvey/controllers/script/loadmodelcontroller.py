@@ -101,6 +101,21 @@ class ScriptModelController(BaseController):
         return dict(survey=question , total = len(question));
     
     @expose('json')
+    def getDefficultyLevel(self, *args, **kw):
+         
+        question = model.DifficultyLevel.getAll(1);
+        
+        return dict(survey=question , total = len(question));
+    
+    @expose('json')
+    def getRandomType(self, *args, **kw):
+         
+        question = model.RandomType.getAll(1);
+        
+        return dict(survey=question , total = len(question));
+    
+    
+    @expose('json')
     def getLanguages(self,*args, **kw):
         languages = model.Languages.getAll();
         return dict(survey=languages,total=len(languages));

@@ -302,6 +302,8 @@ class SurveyController(BaseController):
             question.text_label = '';
             question.user_id = user.user_id;
             question.order = self.dataValue.get('order');  
+            question.score = self.dataValue.get('score');  
+            question.id_fix_difficulty_level = self.dataValue.get('id_fix_difficulty_level');
             question.save();
             
             log.info( question.id_question);
@@ -312,6 +314,8 @@ class SurveyController(BaseController):
                 question.help_message = self.dataValue.get('help_message');
                 question.text_label = '';
                 question.question = self.dataValue.get('question');
+                question.score = self.dataValue.get('score');  
+                question.id_fix_difficulty_level = self.dataValue.get('id_fix_difficulty_level');
                 question.user_id = user.user_id;
             else:
                 log.info( "error question is not found");
@@ -564,6 +568,8 @@ class SurveyController(BaseController):
         self.option.name_publication = kw.get('name_publication');
         
         
+        self.option.id_fix_random_type = kw.get('id_fix_random_type');
+        
         if (not self.utility.isEmpty(kw.get('activate_date'))):
             self.option.activate_date =  datetime.strptime(  kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;
         
@@ -625,9 +631,9 @@ class SurveyController(BaseController):
         reload(sys).setdefaultencoding('utf8')
         
         print kw;
-        print kw.get('id_invitation');
+        print kw.get('id_question_invitation');
         #print kw.get('content');
-        print kw.get('title');
+        print kw.get('subject');
         print kw.get('id_question_project');
         print kw.get('from_name');
         
@@ -635,17 +641,29 @@ class SurveyController(BaseController):
         self.success = True;
         self.message = "Save Success";
         self.result = True;
-        
-        
-        self.template = model.Invitation();
-        
-        self.template.name_content = kw.get('name_content');
-        self.template.from_name = kw.get('from_name');
-        self.template.subject = kw.get('title');
-        self.template.id_question_project = kw.get('id_question_project');
-        self.template.content = kw.get('content');
-        
-        self.template.save();
+        try:
+            
+            self.template = model.Invitation();
+            
+            if ( not self.utility.isEmpty(kw.get('id_question_invitation'))):
+                self.template = model.Invitation.getId(kw.get('id_question_invitation')); 
+                
+            
+            
+            self.template.name_content = kw.get('name_content');
+            self.template.from_name = kw.get('from_name');
+            self.template.subject = kw.get('subject');
+            self.template.id_question_project = kw.get('id_question_project');
+            self.template.content = kw.get('content');
+            
+            if (  self.utility.isEmpty(kw.get('id_question_option'))):
+                log.info( "save email template");
+                self.template.save();
+        except Exception as e:
+            self.result = False;
+            self.message = '' + str(e);
+            
+        print self.message;        
         
         return dict(success=self.success, message = self.message,result= self.result);
     
@@ -673,9 +691,13 @@ class SurveyController(BaseController):
             
             print( df);
             print( df.get('id_question_invitation'));
-            print kw;
             
-            model.Invitation.deleteById(df.get('id_question_invitation'));
+            
+            
+            self.result =model.Invitation.deleteById(df.get('id_question_invitation'));
+            
+            if not self.result:
+                self.message = 'Can not Delete.'; 
             
             
         except Exception as e:

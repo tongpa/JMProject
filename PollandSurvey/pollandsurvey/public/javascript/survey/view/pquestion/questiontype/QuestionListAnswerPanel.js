@@ -62,14 +62,12 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
     	main.columns = [
     	                	{xtype: 'rownumberer'},
     	                	{header: 'id', width : '9%', sortable: false, dataIndex: 'id_question' ,hidden : true,menuDisabled: true},
-    	    	   //	{header: 'No.', width : '9%', sortable: false, dataIndex: 'seq',menuDisabled: true},
     	                	{header: 'Choose', dataIndex: 'value', 
-		    	    	   		field : {
-		    	    	   			type : 'textfield'
-		    	    	   		},
+		    	    	   		field : { type : 'textfield' },
 		    	    	   		//editor: 'textfield',  
-		    	    	   		width : '70%',   sortable: false,menuDisabled: true}  , 
-    	          
+		    	    	   		width : '60%',   sortable: false,menuDisabled: true}  , 
+		    	    	   	{header: 'Score', width : '10%', sortable: false, dataIndex: 'score',menuDisabled: true,
+		    	    	   			field : { type : 'textfield' }},	
 		    	    	   	{
 		        	            xtype: 'checkcolumn',
 		        	            header: survey.label.answer,

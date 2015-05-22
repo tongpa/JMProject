@@ -1,12 +1,26 @@
 Ext.namespace("survey");
 
-Ext.define('Survey.model.listOptionTheme',{
+Ext.define('survey.model.listOptionTheme',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question_theme',    
     fields: ['id_question_theme',   'description', 'template', 'active' ] 
 });
 
-Ext.define('Survey.model.listProjectid', {
+
+Ext.define('survey.model.listDifficultyLevel',{
+	extend: 'Ext.data.Model',
+    idProperty: 'id_fix_difficulty_level',    
+    fields: ['id_fix_difficulty_level',   'description' , 'active' ] 
+});
+
+Ext.define('survey.model.RandomType',{
+	extend: 'Ext.data.Model',
+    idProperty: 'id_fix_random_type',    
+    fields: ['id_fix_random_type',   'description' , 'active' ] 
+});
+
+
+Ext.define('survey.model.listProjectid', {
     extend: 'Ext.data.Model',
     idProperty: 'id_question_project',
     
@@ -19,7 +33,7 @@ Ext.define('Survey.model.listProjectid', {
     
 });
 
-Ext.define('Survey.model.listQuestionType', {
+Ext.define('survey.model.listQuestionType', {
     extend: 'Ext.data.Model',
     idProperty: 'id_question_type',
     
@@ -28,33 +42,33 @@ Ext.define('Survey.model.listQuestionType', {
 });
 
 
-Ext.define('Survey.model.listAnswerData', {
+Ext.define('survey.model.listAnswerData', {
     extend: 'Ext.data.Model',
     idProperty: 'id_basic_data',    
-    fields: ['id_basic_data',   'value','answer','seq','id_question' ,'answer_image'] 
+    fields: ['id_basic_data',   'value','answer','seq','id_question' ,'answer_image','score'] 
     
 });
 
-Ext.define('Survey.model.listQuestions',{
+Ext.define('survey.model.listQuestions',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question',    
-    fields: ['id_question',   'question','id_qustion_type','help_message','text_label','id_question_project','order','question_type_name' ] 
+    fields: ['id_question',   'question','id_qustion_type','help_message','text_label','id_question_project','order','question_type_name','score','id_fix_difficulty_level' ] 
 });
 
-Ext.define('Survey.model.listOptions',{
+Ext.define('survey.model.listOptions',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question_option',    
-    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template','id_question_invitation','send_status' ] 
+    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template','id_question_invitation','send_status' ,'show_score','random_answer'] 
 });
 
 
-Ext.define('Survey.model.listVoters',{
+Ext.define('survey.model.listVoters',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_voter',    
     fields: ['id_voter','user_id_owner', 'id_gender','firstname','lastname','prefix','birthdate','email','id_marriage_status'  ] 
 });
 
-Ext.define('Survey.model.Invitation',{
+Ext.define('survey.model.Invitation',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question_invitation',    
     fields: ['id_question_invitation','from_name','name_content', 'subject','id_question_project','content','create_date','update_date'] 
@@ -90,7 +104,7 @@ Ext.define('survey.MasterStore',{
 });
 
 survey.listProject = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listProjectid',
+	model : 'survey.model.listProjectid',
 	storeId:'listBookSendInStore',
 	 
 	proxy : {
@@ -115,7 +129,7 @@ survey.listProject = Ext.create('survey.MasterStore', {
 });
 
 survey.listBasicData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listAnswerData',
+	model : 'survey.model.listAnswerData',
 	storeId:'listBasicDataInStore',
 	 
 	proxy : {
@@ -140,7 +154,7 @@ survey.listBasicData = Ext.create('survey.MasterStore', {
 });
 
 survey.listQuestionsData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listQuestions',
+	model : 'survey.model.listQuestions',
 	storeId : 'listQuestionsDataInStore',
 	 
 	proxy : {
@@ -166,7 +180,7 @@ survey.listQuestionsData = Ext.create('survey.MasterStore', {
 });
 
 survey.listQuestionType = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listQuestionType',
+	model : 'survey.model.listQuestionType',
 	storeId : 'listQuestionTypeInStore',
 	 
 	proxy : {
@@ -179,8 +193,9 @@ survey.listQuestionType = Ext.create('survey.MasterStore', {
 	} 
 });
 
+ 
 survey.listOptionTheme  = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listOptionTheme',
+	model : 'survey.model.listOptionTheme',
 	storeId : 'listOptionThemeInStore',
 	 
 	proxy : {
@@ -193,8 +208,37 @@ survey.listOptionTheme  = Ext.create('survey.MasterStore', {
 	} 
 });
 
+survey.listDifficultyLevel  = Ext.create('survey.MasterStore', {
+	model : 'survey.model.listDifficultyLevel',
+	storeId : 'listDifficultyLevelInStore',
+	 
+	proxy : {
+		type : 'ajax',
+		url : '/model/getDefficultyLevel',
+		reader : {
+			type : 'json',
+			rootProperty : 'survey'
+		}
+	} 
+});
+
+survey.listRandomType  = Ext.create('survey.MasterStore', {
+	model : 'survey.model.RandomType',
+	storeId : 'listRandomTypeInStore',
+	 
+	proxy : {
+		type : 'ajax',
+		url : '/model/getRandomType',
+		reader : {
+			type : 'json',
+			rootProperty : 'survey'
+		}
+	} 
+});
+ 
+
 survey.listBasicMediaData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listAnswerData',
+	model : 'survey.model.listAnswerData',
 	storeId:'listBasicMediaDataInStore',
 	 
 	proxy : {
@@ -220,7 +264,7 @@ survey.listBasicMediaData = Ext.create('survey.MasterStore', {
 });
 
 survey.listOptions = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listOptions',
+	model : 'survey.model.listOptions',
 	storeId:'listOptionsInStore',	 
 	proxy : {
 		 
@@ -244,7 +288,7 @@ survey.listOptions = Ext.create('survey.MasterStore', {
 });
 
 survey.listVoterData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.listVoters',
+	model : 'survey.model.listVoters',
 	storeId:'listVoterDataInStore',
 	proxy : {
 		 
@@ -259,7 +303,7 @@ survey.listVoterData = Ext.create('survey.MasterStore', {
 });
 
 survey.listInvitationData = Ext.create('survey.MasterStore', {
-	model : 'Survey.model.Invitation',
+	model : 'survey.model.Invitation',
 	storeId:'listInvitationDataInStore',
 	proxy : {
 		 
@@ -275,7 +319,7 @@ survey.listInvitationData = Ext.create('survey.MasterStore', {
 
 /*
 survey.listInvitationData = new Ext.data.Store({
-	model : 'Survey.model.Invitation',
+	model : 'survey.model.Invitation',
 	storeId:'listInvitationDataInStore',
 	pageSize: 50,
 	proxy : {
@@ -312,10 +356,10 @@ survey.listInvitationData = new Ext.data.Store({
 
 
 /*
-Ext.define('Survey.store.listProjectid', {
+Ext.define('survey.store.listProjectid', {
     extend: 'Ext.data.Store',
-    requires: 'Survey.model.listProjectid',
-    model: 'Survey.model.listProjectid',
+    requires: 'survey.model.listProjectid',
+    model: 'survey.model.listProjectid',
     id : 'storelistProjectid',
     leadingBufferZone : 300,
     pageSize : 50,

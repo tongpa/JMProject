@@ -24,7 +24,7 @@ from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
-           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation']
+           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType']
 
 
 
@@ -55,11 +55,42 @@ class SysConfig(DeclarativeBase):
         #expired_activate_code
         pass;
         
-
-
+class DifficultyLevel(DeclarativeBase):
+    __tablename__ = 'sur_fix_difficulty_level';
+    
+    id_fix_difficulty_level =  Column(Integer, autoincrement=True, primary_key=True);
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime ,onupdate=sql.func.utc_timestamp());
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+        
+    @classmethod
+    def getAll(cls,active):
+        return DBSession.query(cls).filter(cls.active == str(active).decode('utf-8')).all();
+    
+class RandomType(DeclarativeBase):
+    __tablename__ = 'sur_fix_random_type';
+    
+    id_fix_random_type =  Column(Integer, autoincrement=True, primary_key=True);
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime ,onupdate=sql.func.utc_timestamp());
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+        
+    @classmethod
+    def getAll(cls,active):
+        return DBSession.query(cls).filter(cls.active == str(active).decode('utf-8')).all();
 
 class EmailTemplate(DeclarativeBase):
-    __tablename__ = 'sur_m_email_template'
+    __tablename__ = 'sur_m_email_template';
 
     id_email_template =  Column(Integer, autoincrement=True, primary_key=True);
     id_email_template_type =   Column( Integer,ForeignKey('sur_fix_email_template_type.id_email_template_type'), nullable=False, index=True) ;
@@ -394,6 +425,10 @@ class Question(DeclarativeBase):
     user_id = Column(   Integer,ForeignKey('tg_user.user_id'), nullable=False, index=True) ;
     user = relation('User', backref='sur_question_user_id');
     
+    id_fix_difficulty_level = Column(   BigInteger,ForeignKey('sur_fix_difficulty_level.id_fix_difficulty_level'), nullable=False, index=True) ;
+    difficultylevel = relation('DifficultyLevel', backref='sur_question_id_fix_difficulty_level');
+    
+    
     question = Column(String(255),  nullable=False);
     help_message = Column(String(255),  nullable=False);
     text_label = Column(String(255),  nullable=False);
@@ -428,7 +463,8 @@ class Question(DeclarativeBase):
                 'type': self.question_type.type,
                 "answer": [],
                 "image" : checkMedia,
-                "active": self.active };
+                "active": self.active,
+                "id_fix_difficulty_level" : self.id_fix_difficulty_level };
                 
         child =[];
         if len( self.child ) >0 : 
@@ -829,6 +865,7 @@ class BasicQuestion(DeclarativeBase):
     
     answer   = Column(BIT, nullable=True, default=0);
     order =  Column(BigInteger   ); 
+    score =  Column(Integer  , default=0 );
     basicData  = relation('BasicData')  ;  
     
     
@@ -896,7 +933,7 @@ class BasicQuestion(DeclarativeBase):
             
             #data = DBSession.query(BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type).join(BasicData).join(BasicDataType).join(BasicTextData).filter(cls.id_question == str(id)).all(); 
             
-            data =  DBSession.query(cls.id_question,cls.answer,BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).join(BasicTextData).join(BasicDataType).filter(cls.id_question == str(id)).all();
+            data =  DBSession.query(cls.id_question,cls.score,cls.answer,BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).join(BasicTextData).join(BasicDataType).filter(cls.id_question == str(id)).all();
             
             
             #datad = BasicQuestion()._convertBasicTextToJson( data);
@@ -908,7 +945,7 @@ class BasicQuestion(DeclarativeBase):
         data = [];
         if id is not None:
              
-            data =  DBSession.query(cls.id_question,cls.answer,BasicMultimediaData.id_basic_data,BasicMultimediaData.value,BasicMultimediaData.media_type,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).join(BasicMultimediaData).join(BasicDataType).filter(cls.id_question == str(id)).all();
+            data =  DBSession.query(cls.id_question,cls.score,cls.answer,BasicMultimediaData.id_basic_data,BasicMultimediaData.value,BasicMultimediaData.media_type,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).join(BasicMultimediaData).join(BasicDataType).filter(cls.id_question == str(id)).all();
           
            
         return data;
@@ -1043,6 +1080,11 @@ class QuestionOption(DeclarativeBase):
     id_question_invitation=   Column(   BigInteger,ForeignKey('sur_question_invitation.id_question_invitation'), nullable=False, index=True) ;
     emailTemplate = relation('Invitation', backref='sur_question_option_id_question_invitation');
     
+    id_fix_random_type=   Column(   BigInteger,ForeignKey('sur_fix_random_type.id_fix_random_type'), nullable=False, index=True) ;
+    randomType = relation('RandomType', backref='sur_question_option_id_fix_random_type');
+    
+    
+    
     
     name_publication  = Column(String(255),  nullable=True);
     activate_date =  Column(DateTime, nullable=True );
@@ -1054,6 +1096,8 @@ class QuestionOption(DeclarativeBase):
     end_message  =  Column(Text, nullable=True );
     
     send_status = Column(BIT, nullable=True, default=0);
+    show_score = Column(BIT, nullable=True, default=0);
+    random_answer = Column(BIT, nullable=True, default=1);
     
     redirect_url =   Column(String(255) );
     gen_code =   Column(String(20)   );
@@ -1094,7 +1138,10 @@ class QuestionOption(DeclarativeBase):
                  "name_publication": self.name_publication,
                  "show_navigator" : self.show_navigator,
                  "id_question_invitation" : self.id_question_invitation,
-                 "send_status":self.send_status
+                 "send_status":self.send_status,
+                 "id_fix_random_type":self.id_fix_random_type,
+                 "show_score" : self.show_score,
+                 "random_answer" : self.random_answer
                  };
                  
         return dict;
@@ -1239,10 +1286,25 @@ class Invitation(DeclarativeBase):
     def getId(cls,act):
         return DBSession.query(cls).get(act);    
     
+    def delete(self):
+        DBSession.delete(self); 
+        DBSession.flush() ;
     @classmethod
     def deleteById(cls,id):
-        DBSession.query(cls).filter(  cls.id_question_invitation == str(id) ).delete();        
-        DBSession.flush() ;   
+        #not work , it not delete now
+        
+        try:
+            DBSession.query(cls).filter(  cls.id_question_invitation == str(id) ).delete();
+            return True;
+            #value = DBSession.query(cls).filter(  cls.id_question_invitation == str(id) ).first();
+            #print value;
+        except Exception as e:
+            print e;
+            return False;
+        #DBSession.delete(value);
+        
+          
+        #DBSession.flush() ;   
     
     @classmethod
     def getByidProject(cls,idProject,page=0, page_size=None):

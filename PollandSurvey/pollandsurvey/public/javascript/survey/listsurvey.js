@@ -28,6 +28,12 @@ Ext.require([
              'Ext.Msg.*', 
              'Ext.ux.form.ItemSelector', 
              'Ext.ux.grid.column.UploadFile',
+             
+             //'survey.model.ListOptionTheme',
+             
+             //'survey.store.MasterStore',
+             //'survey.store.ListOptionThemeStore',
+             
              'survey.view.pvoters.ListVoters',
              'survey.view.pvoters.SelectVoters',
              'survey.view.pvoters.VotersView',
@@ -76,6 +82,8 @@ Ext.application({
     	
     	
     	survey.listOptionTheme.load();
+    	survey.listDifficultyLevel.load();
+    	survey.listRandomType.load();
     	//survey.listProject.load();
     	var contact_view = Ext.create('Ext.form.Panel',{
     		title : survey.label.contact,//'Contacts',

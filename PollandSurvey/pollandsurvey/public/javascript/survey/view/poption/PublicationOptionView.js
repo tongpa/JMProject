@@ -60,6 +60,14 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 								editable : false,
 								value : 1, allowBlank : false});
 		
+		main.RandomType = Ext.create('Ext.form.ComboBox',{name : 'id_fix_random_type',fieldLabel : survey.label.random_type,
+			store: survey.listRandomType,
+			queryMode: 'local',
+			displayField: 'description',
+			valueField: 'id_fix_random_type',
+			editable : false,
+			value : 1, allowBlank : false});
+		
 		main.emailTemplate = Ext.create('Ext.form.ComboBox',{name : 'id_question_invitation',fieldLabel : survey.label.email_template,
 			store: survey.listInvitationData,
 			queryMode: 'local',
@@ -90,6 +98,48 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		            {
 		                boxLabel  : survey.label.show_navigator_no,
 		                name      : 'show_navigator',
+		                inputValue: '0' 
+		            }
+		     ]  });
+		
+		main.showScore = Ext.create('Ext.form.FieldContainer',{name : 'navigator',defaultType: 'radiofield',
+			defaults: {
+		        flex: 1
+		    },
+		    layout: 'hbox',
+			fieldLabel : survey.label.show_score,
+			allowBlank : false,
+			items: [
+		             {
+		                boxLabel  : survey.label.show_navigator_yes,
+		                name      : 'show_score',
+		                inputValue: '1' 
+		                 
+		            },
+		            {
+		                boxLabel  : survey.label.show_navigator_no,
+		                name      : 'show_score',
+		                inputValue: '0' 
+		            }
+		     ]  });
+		
+		main.randomAnswer = Ext.create('Ext.form.FieldContainer',{name : 'navigator',defaultType: 'radiofield',
+			defaults: {
+		        flex: 1
+		    },
+		    layout: 'hbox',
+			fieldLabel : survey.label.random_answer,
+			allowBlank : false,
+			items: [
+		             {
+		                boxLabel  : survey.label.show_navigator_yes,
+		                name      : 'random_answer',
+		                inputValue: '1' 
+		                 
+		            },
+		            {
+		                boxLabel  : survey.label.show_navigator_no,
+		                name      : 'random_answer',
 		                inputValue: '0' 
 		            }
 		     ]  });
@@ -127,7 +177,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		});
 		
 		
-		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
+		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
 		
 		
 		main.btsave = Ext.create('Ext.Button',{		 

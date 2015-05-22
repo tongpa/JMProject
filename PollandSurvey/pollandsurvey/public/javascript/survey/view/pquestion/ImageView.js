@@ -81,7 +81,7 @@ Ext.define('survey.view.pquestion.ImageView',{
     	main.deleteFileUpload = Ext.create('Ext.Button',{
 			parent : main,
             scope: this,
-            margin: '5 0 0 5',
+            margin: '5 25 0 5',
             flex:1,
             margins:'0',
             name : 'delete_image',
@@ -96,15 +96,14 @@ Ext.define('survey.view.pquestion.ImageView',{
     	
     	
     	main.items = [
-    	              {	
+    	              {	 
+    	            	  
     	            	  layout: {
     	            	        type: 'hbox' 
     	            	        ,align:'middle'	
     	            	        ,pack:'start'
     	            	        //,align: 'stretch'
     	            	    },
-    	            	    
-    	            	    //defaults:{margins:'0 5 0 0'},
     	            	    items : [main.labelFileUpload ,main.wrappedImage,main.labelShowFileUpload,main.fileUpload,main.deleteFileUpload ]
     	              }
     	              
@@ -114,9 +113,6 @@ Ext.define('survey.view.pquestion.ImageView',{
 	onDeleteClick : function(bt,ev){
 		//console.log('onDeleteClick');
 		var form = this;
-		
-		//debugger;
-		
 
 		Ext.Ajax.request({
 		   url: '/survey/deleteMediaQuestion',
@@ -149,7 +145,8 @@ Ext.define('survey.view.pquestion.ImageView',{
 	     var indexofPeriod = view.getValue().lastIndexOf("."),  
 	            uploadedExtension = view.getValue().substr(indexofPeriod + 1, view.getValue().length - indexofPeriod); 
 	     
-	 
+	     var erMsg = "";
+	     var messageBox;
 	     
 	     if (!Ext.Array.contains(this.accept, uploadedExtension.toLowerCase())) {  
 	         isValid = false;  
@@ -157,11 +154,11 @@ Ext.define('survey.view.pquestion.ImageView',{
 	         // the red exclamation point on the form field  
 	         
 	         //var erroMsg = Ext.String.format('Please upload files with an extension of {0} only!', this.accept.join());
-	         var erroMsg = Ext.String.format(survey.message.error_upload_without_extention , this.accept.join()); 
+	         erroMsg = Ext.String.format(survey.message.error_upload_without_extention , this.accept.join()); 
 	         //me.setActiveError(erroMsg);
 	         //console.log(erroMsg);
 	         // Let the user know why the field is red and blank!  
-	         var messageBox = Ext.MessageBox.show({  
+	         messageBox = Ext.MessageBox.show({  
 	           title: survey.message.upload,  
 	           msg: erroMsg,  
 	           buttons: Ext.Msg.OK,  
@@ -169,15 +166,16 @@ Ext.define('survey.view.pquestion.ImageView',{
 	         });       
 	         //view.setRawValue(null);  
 	         //view.reset();  
-	       }  
+	       }
+	     	
 	       for (var i = 0; i < this.fileslist.length; i++) {  
 	         if (this.fileslist[i].indexOf(filename) !== -1) {  
-	           isValid = false;  
-	           var erMsg = Ext.String.format(survey.message.upload_success, filename);  
+	        	 isValid = false;  
+	        	 erroMsg = Ext.String.format(survey.message.upload_success, filename);  
 	           //console.log(erroMsg);
-	           var messageBox = Ext.MessageBox.show({  
+	            messageBox = Ext.MessageBox.show({  
 	             title: survey.message.upload,  
-	             msg: erMsg,  
+	             msg: erroMsg,  
 	             buttons: Ext.Msg.OK,  
 	             icon: Ext.Msg.INFO  
 	           });  
