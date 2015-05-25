@@ -1103,6 +1103,7 @@ class QuestionOption(DeclarativeBase):
     gen_code =   Column(String(20)   );
     show_navigator = Column(BIT, nullable=True, default=0);
     limit_time  = Column(Integer, nullable=True, default=0);
+    use_question_no = Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now);
     
     
@@ -1141,7 +1142,9 @@ class QuestionOption(DeclarativeBase):
                  "send_status":self.send_status,
                  "id_fix_random_type":self.id_fix_random_type,
                  "show_score" : self.show_score,
-                 "random_answer" : self.random_answer
+                 "random_answer" : self.random_answer,
+                 'use_question_no' : self.use_question_no,
+                 'limit_time' :self.limit_time
                  };
                  
         return dict;
