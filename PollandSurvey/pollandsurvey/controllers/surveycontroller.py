@@ -304,6 +304,7 @@ class SurveyController(BaseController):
             question.order = self.dataValue.get('order');  
             question.score = self.dataValue.get('score');  
             question.id_fix_difficulty_level = self.dataValue.get('id_fix_difficulty_level');
+            
             question.save();
             
             log.info( question.id_question);
@@ -316,6 +317,7 @@ class SurveyController(BaseController):
                 question.question = self.dataValue.get('question');
                 question.score = self.dataValue.get('score');  
                 question.id_fix_difficulty_level = self.dataValue.get('id_fix_difficulty_level');
+                 
                 question.user_id = user.user_id;
             else:
                 log.info( "error question is not found");
@@ -582,12 +584,11 @@ class SurveyController(BaseController):
         self.option.footer_message = kw.get('footer_message');
         self.option.welcome_message = kw.get('welcome_message');
         self.option.end_message = kw.get('end_message');
-        log.info("show_navigator %s", kw.get('show_navigator') );
+        self.option.use_question_no = kw.get('use_question_no');
+         
         
         self.option.show_navigator = self.utility.convertToBit(kw.get('show_navigator')) ;         
         self.option.redirect_url =kw.get('redirect_url');
-        
-        log.info("show_navigator %s", self.option.show_navigator );
         
         if (  self.utility.isEmpty(kw.get('id_question_option'))):
             log.info( "save option");
