@@ -14,37 +14,59 @@ Ext.define('survey.view.poption.PublicationOptionView',{
     isCreate : true,
     parentForm : null,
     setLoadData : function(projectRecord,optionsrecord ){
-    	
-    	this.record =  projectRecord; 
-    	this.idquestion.setValue('');
-    	this.record = optionsrecord;
-		this.getForm().reset();
+    	var main = this;
+    	main.record =  projectRecord; 
+    	main.idquestion.setValue('');
+    	main.record = optionsrecord;
+    	main.getForm().reset();
 		
 		console.log(projectRecord);
     	console.log(optionsrecord);
     	
     	if(optionsrecord != null && optionsrecord.id != null){
-    		 
-    		this.idquestion.setValue(optionsrecord.id);
-    		this.getForm().loadRecord(optionsrecord);
+    		//show only have option
+    		main.idquestion.setValue(optionsrecord.id);
+    		main.getForm().loadRecord(optionsrecord);
     		
     		//set save button is hidden when send to voter already 
     		if(optionsrecord.data.send_status == 1){
     			
-    			this.btsave.setHidden(true);
+    			main.btsave.setHidden(true);
     		}
+    		
+    		main.lenghtQuestion = survey.listQuestionsData.data.length;
+    		main.useQuestionNo.setMaxValue(main.lenghtQuestion);
+    		main.useQuestionNo.setMinValue( 0 );
+    	//	console.log(main.lenghtQuestion);
+    		
+    		main.labelAllQuestion.setText( main.getQuestionNo(main.lenghtQuestion) );
     	}
     	else{
     	
 			if (projectRecord != null && projectRecord.id != null) {
-			    		this.projectid = projectRecord.id;
+					main.projectid = projectRecord.id;
 			    		 
-			    		this.idquestion.setValue(this.projectid);
+					main.idquestion.setValue(this.projectid);
 		   }
     	}
+    	
+    	
+    	
     },
 	createHtmlEditor : function(fieldName){
 		return Ext.create('Ext.form.field.HtmlEditor',{name:fieldName,enableColors: false,enableAlignments: false});
+	},
+	getQuestionNo : function(lenghtQuestion){
+		var main = this;
+		 
+		main.templateData = new Ext.Template(
+				survey.label.all, ' ',
+			        '{questionNo}', ' ',
+			        survey.label.question
+		);
+		
+		return main.templateData.apply({questionNo:  lenghtQuestion});
+		 
 	},
 	initComponent : function(){
 		var main = this;
@@ -53,12 +75,19 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		
 		main.optionName = Ext.create('Ext.form.field.Text',{name : 'name_publication',fieldLabel : survey.label.name, allowBlank : false});
 		main.showTheme = Ext.create('Ext.form.ComboBox',{name : 'id_question_theme',fieldLabel : survey.label.theme,
-								store: survey.listOptionTheme,
-								queryMode: 'local',
-								displayField: 'description',
-								valueField: 'id_question_theme',
-								editable : false,
-								value : 1, allowBlank : false});
+			store: survey.listOptionTheme,
+			queryMode: 'local',
+			displayField: 'description',
+			valueField: 'id_question_theme',
+			editable : false,
+			value : 1, allowBlank : false,
+			listeners:{
+		         scope: main,
+		         'select': function ( combo, record, eOpts ){
+		        	 console.log(record);
+		         }
+		    }
+		});
 		
 		main.RandomType = Ext.create('Ext.form.ComboBox',{name : 'id_fix_random_type',fieldLabel : survey.label.random_type,
 			store: survey.listRandomType,
@@ -74,12 +103,29 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 			displayField: 'name_content',
 			valueField: 'id_question_invitation',
 			editable : false,
-			allowBlank : false});
+			allowBlank : false
+		});
 		
 		main.startDate = Ext.create('Ext.form.field.Date',{name : 'activate_date',fieldLabel : survey.label.start_date, format: 'd/m/Y',allowBlank: false ,editable : false});
 		main.finishDate = Ext.create('Ext.form.field.Date',{name : 'expire_date',fieldLabel : survey.label.expire_date, format: 'd/m/Y',allowBlank: false ,editable : false});
 		
 		main.redirectURL = Ext.create('Ext.form.field.Text',{name : 'redirect_url',fieldLabel : survey.label.redirect_url, allowBlank: true  });
+		
+		main.useQuestionNo = Ext.create('Ext.form.field.Number', {name: 'use_question_no',hideLabel : true, fieldLabel: survey.label.use_question_no,allowBlank:true,keyNavEnabled: true,
+	        mouseWheelEnabled: true,maxValue: 99,minValue: 0});
+		
+		
+		main.labelAllQuestion = Ext.create('Ext.form.Label',{ text: main.getQuestionNo(),margin: '4 0 0 10'});
+		
+		main.showQuestionNo = Ext.create('Ext.form.FieldContainer',{
+			layout : 'hbox',
+			
+			fieldLabel : survey.label.use_question_no,
+			items :[
+			        main.useQuestionNo,main.labelAllQuestion
+			]
+		});
+		
 		
 		main.showNavigator = Ext.create('Ext.form.FieldContainer',{name : 'navigator',defaultType: 'radiofield',
 			defaults: {
@@ -151,6 +197,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		main.footer_msg = main.createHtmlEditor('footer_message') ;   
 		
 		main.tabMessage = Ext.create('Ext.tab.Panel', {
+			height: 150,
 			items: [
 			        {
 			        	title : survey.label.welcome_message ,
@@ -177,7 +224,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		});
 		
 		
-		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
+		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer,main.showQuestionNo ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
 		
 		
 		main.btsave = Ext.create('Ext.Button',{		 

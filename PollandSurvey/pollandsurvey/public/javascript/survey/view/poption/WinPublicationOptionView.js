@@ -9,7 +9,7 @@ Ext.define('survey.view.poption.WinPublicationOptionView',{
 	
 	modal : true,
 	width : 600,
-	height : 500,
+	height : 600,
 	closable: true,
 	 
     closeAction: 'hide',
