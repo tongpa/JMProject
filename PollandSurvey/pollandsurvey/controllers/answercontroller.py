@@ -63,7 +63,7 @@ class AnswerController(BaseController):#RestController): #
         self.footer = '';
         self.nextQuestion ='';
         self.template ='';
-        
+        #check link expire
         self.idProject,self.idPublic,self.idVoter,self.redirect = self.__checkExpire(id);
        
         self.respondent,self.redirect = self.__checkRespondentFinished(self.idVoter,self.idPublic,idResp=None);
@@ -73,7 +73,8 @@ class AnswerController(BaseController):#RestController): #
         
         print "after redirect";
         print "ready : ", ready;     
-        print self.questionOption.id_question_option;    
+        print self.questionOption.id_question_option;
+            
         if str(ready).lower() == 'no':    
             #check have welcome page
             if( not self.utility.isEmpty(self.questionOption.welcome_message) ) :
@@ -206,18 +207,75 @@ class AnswerController(BaseController):#RestController): #
     @expose('json')
     def saveQuestion(self, *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
+        print "body data";
+        print request.body
         self.df = json.loads(request.body, encoding=request.charset);
         
-        self.value = self.df.get('value');
+        self.listAnswer = self.df.get('value');
+        
+        print len(self.listAnswer);
+        
         self.finished =self.df.get('finished');
         self.redirect = '';
+        print 'value : ' , self.listAnswer;
+        
         print 'finished : ' ,self.finished;
          
         
         #from urlparse import urlparse;
         #parsed = urlparse(request.environ.get("HTTP_REFERER" ))
         #print 'path url : ', parsed.path
-        
+        if (len(self.listAnswer) >0):
+            for value in self.listAnswer:
+                print "value :" , value;
+                if(value):
+                    self.idPublic =  value.get('idproject');
+                    self.idResp =  value.get('idresp');
+                    self.idQuestion = value.get('id');
+                    self.values = value.get('value');
+                    
+                    self.questionOption,self.redirect = self.__checkOptionExpired(self.idPublic,False);
+            
+                    self.respondent,self.redirect = self.__checkRespondentFinished( None,  None,self.idResp,False);
+                    
+                    if(self.respondent):
+                        self.question = model.Question.getById(self.idQuestion);
+                        
+                        self.respondent.finished = self.finished;
+                        if(self.question):
+                            self.respondentreply = model.RespondentReply.getByRespondentAndQuestion(self.idResp,self.idQuestion);
+                            if (self.respondentreply is None):
+                                #save
+                                self.respondentreply = model.RespondentReply();
+                                self.respondentreply.id_respondents = self.idResp;
+                                self.respondentreply.id_question = self.idQuestion;
+                                #self.respondentreply.save();
+                                
+                                for v in self.values:
+                                    self.replyquestion = model.ReplyBasicQuestion(); 
+                                    self.replyquestion.id_resp_reply = self.respondentreply.id_resp_reply;
+                                    self.replyquestion.id_basic_data = v;
+                                #    self.replyquestion.save();
+                                
+                                
+                            else:
+                                log.info('user %s do this question : %s',self.idResp,self.idQuestion);
+                        else:
+                            log.info('find not found question id : : %s',self.idQuestion);
+                            
+                    else:
+                        log.info('find not found respondent id : : %s',self.idResp);
+                    
+                    
+            if(self.finished):     
+                self.redirect = self.URL_GOODBYE.format(   self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
+               
+                    
+                    
+                    
+                    
+        """       
+            
          
         if(self.value):
             self.idPublic =  self.value.get('idproject');
@@ -261,7 +319,7 @@ class AnswerController(BaseController):#RestController): #
             
             if(self.finished):     
                 self.redirect = self.URL_GOODBYE.format(   self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
-                
+        """        
         return dict(success = True,redirect = self.redirect, finished = self.finished  );
     
     
