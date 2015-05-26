@@ -28,7 +28,7 @@
  	<div class="row">
 	 	<div class="col-md-12">
 	 	
-	 		<center>  ${Markup(header)}  </center>
+	 		<center>  ${Markup(header)}</center>
 	 		<br/>
 	 	</div>
  	</div>
@@ -63,22 +63,18 @@
 	                </div>
 	                 -->
 	                <!-- Content Poll and Survey -->
+	                
 	                <div data-ng-app="poll" name='1'>
-	                	
-	                	 
-						
-	                	
-	                	
-						<div id="container" ng-controller="pollController" ng-init="init('${urldata}', '${idproject}','${idresp}')">
+	                
+						<div id="container" ng-controller="pollController">
 							 
 					 	 	 
 						 
-							<!--  <form name="myForm" action="${action}" method ="POST"> -->
-							<form name="myForm" action="" method ="POST">
+							<form name="myForm" action="${action}" method ="POST">
 								 
 							 <content-item ng-repeat="item in content" content="item"></content-item>
 							 
-							 	<center><button type="submit" class="btn btn-default" ng-click="setNextQuestion()">Submit</button></center>
+							 	<center><button type="submit" class="btn btn-default">Submit</button></center>
 							</form>
 						</div>
 					

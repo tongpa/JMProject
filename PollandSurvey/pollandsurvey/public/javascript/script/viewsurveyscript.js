@@ -60,12 +60,12 @@ var app = angular.module("poll", ['ui.bootstrap']);
 			//next Question 
 			
 			//check Validate before next Question
-			$log.log('selected_radio : ' + ($scope.selectAnswer ) );
+			//$log.log('selected_radio : ' + ($scope.selectAnswer ) );
 			if ($scope.selectAnswer){
 			 
 				
-				$log.log('Page changed to : ' + ($scope.bigCurrentPage ) );
-				$log.log('Page total to : ' + ($scope.bigTotalItems ) );
+				//$log.log('Page changed to : ' + ($scope.bigCurrentPage ) );
+				//$log.log('Page total to : ' + ($scope.bigTotalItems ) );
 				
 				$scope.numberQuestion = $scope.numberQuestion +1;
 				if( $scope.bigCurrentPage < $scope.bigTotalItems)
@@ -79,6 +79,7 @@ var app = angular.module("poll", ['ui.bootstrap']);
 					}
 					
 				}
+				
 				
 				$scope.selectAnswer = false;
 			}
@@ -102,17 +103,27 @@ var app = angular.module("poll", ['ui.bootstrap']);
 		  //  $log.log($scope.countQuestion);
 		    
 		  //  $log.log('last data ');
-		 //   $log.log($scope.lastQuestion);
+		      console.log($scope.lastQuestion);
 		  
 		     
 		    if( $scope.lastQuestion.length > 0 ){
 		    
-			    var data = {value : $scope.lastQuestion[0]  };
-			    data.finished =  ($scope.bigCurrentPage > $scope.bigTotalItems);
+		    	 
+		    	
+			    var data = {value : $scope.lastQuestion  };
+		    	
+		    	
 			    
-			   
+			    //var data ={value : $scope.lastQuestion  }; 
+			    
+			    data.finished =  ($scope.bigCurrentPage > $scope.bigTotalItems) ||  ($scope.lastQuestion.length == $scope.bigTotalItems);
+			    
+			    console.log(data);
+			    
+			    
 			    $http.post("/ans/saveQuestion",data).success(function(data,status,heafers, config){
 			   
+			    	 
 			    	if (status == 200 && data.success == true){
 			    		value = $scope.lastQuestion.pop(); //remove data;
 			    		
@@ -125,6 +136,7 @@ var app = angular.module("poll", ['ui.bootstrap']);
 			    	}
 			    	 
 			    }).error(function(data, status, headers, config) {
+			    	alert("error");
 			        // called asynchronously if an error occurs
 			        // or server returns response with an error status.
 			      });

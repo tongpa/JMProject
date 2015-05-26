@@ -14,8 +14,10 @@ var app = angular.module("poll", ['ui.bootstrap','ngRoute']);
 		var getUrl = $location.url();
 		var param = $location.search();
 		
-		console.log(param.id);
-		 
+		console.log(param);
+		console.log("search param id :" + param.id);
+		
+		debugger;
 		
 		 
 		$scope.setPage = function (pageNo) {
@@ -33,7 +35,7 @@ var app = angular.module("poll", ['ui.bootstrap','ngRoute']);
 		/**Paging**/
 		
 		$scope.fetchContent = function (){
-			
+			 
 			$scope.url = $scope.url + "?idProject=" +param.id  ;
 			
 	        $http.get($scope.url).success(function(response) {
