@@ -58,7 +58,7 @@ Ext.define('survey.model.listQuestions',{
 Ext.define('survey.model.listOptions',{
 	extend: 'Ext.data.Model',
     idProperty: 'id_question_option',    
-    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template','id_question_invitation','send_status' ,'show_score','random_answer','use_question_no'] 
+    fields: ['id_question_option','id_question_project','name_publication',   'header_message','footer_message','welcome_message','end_message','activate_date', 'expire_date',	'create_date','redirect_url','id_question_theme','theme','template','id_question_invitation','send_status' ,'show_score','random_answer','use_question_no','duration_time'] 
 });
 
 

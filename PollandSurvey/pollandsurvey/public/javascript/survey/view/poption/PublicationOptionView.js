@@ -113,9 +113,11 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		
 		main.useQuestionNo = Ext.create('Ext.form.field.Number', {name: 'use_question_no',hideLabel : true, fieldLabel: survey.label.use_question_no,allowBlank:true,keyNavEnabled: true,
 	        mouseWheelEnabled: true,maxValue: 99,minValue: 0});
-		
-		
 		main.labelAllQuestion = Ext.create('Ext.form.Label',{ text: main.getQuestionNo(),margin: '4 0 0 10'});
+
+		main.durationTime = Ext.create('Ext.form.field.Number', {name: 'duration_time',hideLabel : true, fieldLabel: survey.label.duration_time,allowBlank:true,keyNavEnabled: true,
+	        mouseWheelEnabled: true,maxValue: 120,minValue: 0});
+		main.labelDurationTime = Ext.create('Ext.form.Label',{ text: survey.message.help_duration_time,margin: '4 0 0 10'});
 		
 		main.showQuestionNo = Ext.create('Ext.form.FieldContainer',{
 			layout : 'hbox',
@@ -191,6 +193,19 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		     ]  });
 		
 		
+		main.ShowDurationTime = Ext.create('Ext.form.FieldContainer',{name : 'durationtime' ,
+			 
+		    layout: 'hbox',
+			fieldLabel : survey.label.duration_time,
+			defaults: {
+				flex: 1,
+	            layout: '100%'
+	        },
+			allowBlank : false,
+			items: [main.durationTime,main.labelDurationTime
+		     ]  });
+		
+		
 		main.welcome_msg = main.createHtmlEditor('welcome_message') ; 
 		main.goodbye_msg = main.createHtmlEditor('end_message') ;  
 		main.header_msg = main.createHtmlEditor('header_message') ;  
@@ -224,7 +239,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		});
 		
 		
-		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer,main.showQuestionNo ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
+		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer,main.showQuestionNo,main.ShowDurationTime ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
 		
 		
 		main.btsave = Ext.create('Ext.Button',{		 
