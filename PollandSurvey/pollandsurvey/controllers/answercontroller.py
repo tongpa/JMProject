@@ -182,24 +182,18 @@ class AnswerController(BaseController):#RestController): #
         print kw ;
         
         questions = [];
-        
+        #get Project Option
         self.questionOption = model.QuestionOption.getId(idProject);
         if self.questionOption :
+            #get Question 
             self.listQuestions = model.Question.getByProjectId(self.questionOption.id_question_project);
             
             question = [];
+            #get to object json
             for self.question in self.listQuestions:
-                #print self.question.id_question;
-                #print self.question.question;
-                #print self.question.question_type.type;
-                #print self.question.order;
-                question.append(self.question.to_json());
-            
+                question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
             
             questions = [];
-           
-             
-            
             questions.append({'id': idProject, 'question' : question});
         
         return dict(questions = questions);

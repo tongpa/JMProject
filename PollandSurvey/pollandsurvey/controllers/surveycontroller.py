@@ -563,7 +563,7 @@ class SurveyController(BaseController):
         if ( not self.utility.isEmpty(kw.get('id_question_option'))):
             self.option = model.QuestionOption.getId( kw.get('id_question_option')  ); 
             
-        print kw;    
+            
              
         self.option.id_question_project = kw.get('id_question_project');        
         self.option.id_question_theme = kw.get('id_question_theme'); 
@@ -585,7 +585,8 @@ class SurveyController(BaseController):
         self.option.welcome_message = kw.get('welcome_message');
         self.option.end_message = kw.get('end_message');
         self.option.use_question_no = kw.get('use_question_no');
-         
+        self.option.duration_time   = kw.get('duration_time');
+        self.option.random_answer = int ( kw.get('random_answer') ); 
         
         self.option.show_navigator = self.utility.convertToBit(kw.get('show_navigator')) ;         
         self.option.redirect_url =kw.get('redirect_url');
