@@ -23,6 +23,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
+import random; 
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
            ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType']
 
@@ -448,9 +449,9 @@ class Question(DeclarativeBase):
         return '"%s"' % (self.question )
     
     
-    def to_json(self):
+    def to_json(self,randomAnswer=True):
         
-        #{'id':1 ,'seq':1,'question': 'What do you like a color?','type': 'radio', 'answer': answer};
+         
         checkMedia = 0;
         if( self.media):
             checkMedia = 1;
@@ -467,6 +468,8 @@ class Question(DeclarativeBase):
                 "id_fix_difficulty_level" : self.id_fix_difficulty_level };
                 
         child =[];
+        
+        
         if len( self.child ) >0 : 
             for answer in self.child:
                 for basicText in  answer.basicData.childenText:                    
@@ -474,6 +477,10 @@ class Question(DeclarativeBase):
                 for basicMedia in  answer.basicData.childenMedia:                    
                     child.append(basicMedia.to_json());
         
+        #radom answer 
+        if(randomAnswer):
+            random.shuffle( child);
+         
         dict['answer'] = child;
          
         return dict;
@@ -765,9 +772,16 @@ class Variables(DeclarativeBase):
                 "childen": [],
                 "active": self.active };
         child =[];
-        if len( self.childen ) >0 : 
+        #import random;
+        
+        
+        
+        if len( self.childen ) >0 :
+            #random.shuffle( self.childen); 
             for obj in  self.childen:
                 child.append(obj.to_json());
+        
+        
         
         dict['childen'] = child;
          
@@ -1102,7 +1116,7 @@ class QuestionOption(DeclarativeBase):
     redirect_url =   Column(String(255) );
     gen_code =   Column(String(20)   );
     show_navigator = Column(BIT, nullable=True, default=0);
-    limit_time  = Column(Integer, nullable=True, default=0);
+    duration_time  = Column(Integer, nullable=True, default=0);
     use_question_no = Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now);
     
@@ -1144,7 +1158,7 @@ class QuestionOption(DeclarativeBase):
                  "show_score" : self.show_score,
                  "random_answer" : self.random_answer,
                  'use_question_no' : self.use_question_no,
-                 'limit_time' :self.limit_time
+                 'duration_time' :self.duration_time
                  };
                  
         return dict;
