@@ -404,8 +404,10 @@ class RootController(BaseController):
             log.info('forget password email : %s can not access',self.email);
         redirect("/")
         
+    @expose('pollandsurvey.templates.timer')
+    def exampletimer(self, **kw):
+        return dict(historys = '1');
     
-     
     """
     @expose('pollandsurvey.templates.login')
     def login_old(self, came_from=lurl('/')):
