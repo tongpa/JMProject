@@ -1,10 +1,58 @@
-var app = angular.module("poll", ['ui.bootstrap']);
+function startTimer(sectionId) {
+  document.getElementById(sectionId).getElementsByTagName('timer')[0].start();
+}
+
+function stopTimer(sectionId) {
+  document.getElementById(sectionId).getElementsByTagName('timer')[0].stop();
+}
+
+
+function addCDSeconds(sectionId, extraTime) {
+  document.getElementById(sectionId).getElementsByTagName('timer')[0].addCDSeconds(extraTime);
+}
+
+function stopResumeTimer(sectionId, btn) {
+  if (btn.innerHTML === 'Start') {
+    document.getElementById(sectionId).getElementsByTagName('timer')[0].start();
+    btn.innerHTML = 'Stop';
+  }
+  else if (btn.innerHTML === 'Stop') {
+    document.getElementById(sectionId).getElementsByTagName('timer')[0].stop();
+    btn.innerHTML = 'Resume';
+  }
+  else {
+    document.getElementById(sectionId).getElementsByTagName('timer')[0].resume();
+    btn.innerHTML = 'Stop';
+  }
+}
+
+
+var app = angular.module("poll", ['ui.bootstrap','timer']);
  
- 
+app.controller('TimerDemoController',['$scope',  function ($scope) {
+    $scope.linkAnchors = function () {
+        $('ul.nav a').click(function (){
+            var path = $(this).attr('href');
+            if (path != '#') {
+                window.location = path;
+            }
+        });
+    };
+    
+    $scope.callbackTimer={};
+    $scope.callbackTimer.status='Running';
+    $scope.callbackTimer.callbackCount=0;    
+    $scope.callbackTimer.finished=function(){
+        $scope.callbackTimer.status='COMPLETE!!';
+        $scope.callbackTimer.callbackCount++;
+        $scope.$apply();
+    };
+}]);	 
+
 
 /**controller***/
 	app.controller("pollController", function($scope, $http,$window,$log) {
-		
+		console.log("pollController");
 		
 		
 		//$scope.url = '/ang/getQuestion';
@@ -48,6 +96,29 @@ var app = angular.module("poll", ['ui.bootstrap']);
 			
 			$scope.fetchContent();
 		}
+		
+	/*	
+		$scope.linkAnchors = function () {
+	        $('ul.nav a').click(function (){
+	            var path = $(this).attr('href');
+	            if (path != '#') {
+	                window.location = path;
+	            }
+	        });
+	    };
+	    
+	    console.log("timerDemoController");
+	    $scope.callbackTimer={};
+	    $scope.callbackTimer.status='Running';
+	    $scope.callbackTimer.callbackCount=0;    
+	    $scope.callbackTimer.finished=function(){
+	        $scope.callbackTimer.status='COMPLETE!!';
+	        $scope.callbackTimer.callbackCount++;
+	        $scope.$apply();
+	    };
+		
+		*/
+		
 		
 		
 		/**function for this controller update Question attempted**/
@@ -322,3 +393,25 @@ var app = angular.module("poll", ['ui.bootstrap']);
 	     return directive;
 	   
 	});
+	
+	
+app.controller('TimerDemoController',['$scope',  function ($scope) {
+    $scope.linkAnchors = function () {
+        $('ul.nav a').click(function (){
+            var path = $(this).attr('href');
+            if (path != '#') {
+                window.location = path;
+            }
+        });
+    };
+    
+    console.log("timerDemoController");
+    $scope.callbackTimer={};
+    $scope.callbackTimer.status='Running';
+    $scope.callbackTimer.callbackCount=0;    
+    $scope.callbackTimer.finished=function(){
+        $scope.callbackTimer.status='COMPLETE!!';
+        $scope.callbackTimer.callbackCount++;
+        $scope.$apply();
+    };
+}]);
