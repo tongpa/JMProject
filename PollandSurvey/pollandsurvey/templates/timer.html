@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:py="http://genshi.edgewall.org/"
+      xmlns:xi="http://www.w3.org/2001/XInclude"
+      xmlns:ng="http://angularjs.org"
+      py:strip="">   
+
+<head>
+  <title>Welcome to TurboGears 2.3, standing on the shoulders of giants, since 2007</title>
+  
+  
+   <script src="${tg.url('/javascript/jquery/jquery-2.1.3.js')}"></script>
+  <script src="${tg.url('/javascript/angularjs/angular.js')}"></script> 
+  
+  
+  <script src="${tg.url('/javascript/angularjs/timer/_timer.js')}"></script>
+  <script src="${tg.url('/javascript/angularjs/timer/i18nService.js')}"></script>
+  <script src="${tg.url('/javascript/angularjs/timer/progressBarService.js')}"></script>
+ 
+ 		
+  <script src="${tg.url('/javascript/angularjs/momentjs/min/moment-with-locales.min.js')}"></script>
+  <script src="${tg.url('/javascript/angularjs/humanize-duration/humanize-duration.js')}"></script> 
+  
+  <script src="${tg.url('/javascript/angularjs/timer/docs.js')}"></script> 
+  
+  
+</head>
+<body ng-app="timers" >
+
+ 
+
+<div >
+    
+	<div id="secondController" ng-controller="TimerDemoController">
+		
+	</div>
+
+
+    <section id="finish-callback-timer" ng-controller="TimerDemoController"> 
+        <h3>Countdown Finished Callback</h3>
+
+        <div class="bs-docs-example">
+            
+            <h3 class="counter">
+                <timer countdown="120" interval="1000" finish-callback="callbackTimer.finished()"> {{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}} </timer>
+            </h3>
+            Timer: <span class="timer-status">{{callbackTimer.status}}</span>
+            Callbacks: <span class="timer-callbacks">{{callbackTimer.callbackCount}}</span>
+
+        </div>
+    </section>
+ 
+</div>
+</body>
+</html>

@@ -55,9 +55,27 @@
 				<!-- center panel -->
 				<div class="col-md-8">
 					
-				
 	                <!-- Content Poll and Survey -->
 	                <div data-ng-app="poll" name='1'>
+	                
+	                <div ng-controller="TimerDemoController" id="timerController">
+						<section id="finish-callback-timer" >
+					         
+					
+					        <div class="bs-docs-example">
+					              
+					
+					            <h3 class="counter">
+					                <timer countdown="120" interval="1000" finish-callback="callbackTimer.finished()"> {{hhours}} hour{{hoursS}}, {{mminutes}} minute{{minutesS}}, {{sseconds}} second{{secondsS}} </timer>
+					            </h3>
+					            Timer: <span class="timer-status">{{callbackTimer.status}}</span> <br/>
+					            Callbacks: <span class="timer-callbacks">{{callbackTimer.callbackCount}}</span>
+					
+					        </div>
+					    </section>
+					</div>
+	                
+	                
 	                
 						<div id="container" ng-controller="pollController" ng-init="init('${urldata}', '${idproject}','${idresp}')">
 							 
@@ -91,7 +109,8 @@
 						</div>
 					
 					</div>
-					<script src="${tg.url('/javascript/script/viewsurveyscript.js')}"></script>
+					<!--<script src="${tg.url('/javascript/angularjs/timer/docs.js')}"></script>  -->
+					 <script src="${tg.url('/javascript/script/viewsurveyscript.js')}"></script>  
 				</div>
 				
 				<!-- right panel -->
