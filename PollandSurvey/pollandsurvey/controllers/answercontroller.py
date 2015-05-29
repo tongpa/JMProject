@@ -26,6 +26,7 @@ from tg import tmpl_context
 from webhelpers.markdown import Markdown;  
 from posixpath import basename;
 import logging;
+import random; 
 log = logging.getLogger(__name__);
 
 __all__ = ['AnswerController']
@@ -193,10 +194,16 @@ class AnswerController(BaseController):#RestController): #
             for self.question in self.listQuestions:
                 question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
             
+            #option Randon Question
+            if( self.questionOption.id_fix_random_type == 2):
+                question = random.sample(question,len(question));#,self.questionOption.use_question_no );
+            
+            question = question[0:self.questionOption.use_question_no];
+            
             questions = [];
             questions.append({'id': idProject, 'question' : question});
         
-        return dict(questions = questions);
+        return dict(questions = questions,timer = self.questionOption.duration_time);
     
     @expose('json')
     def saveQuestion(self, *args, **kw):
