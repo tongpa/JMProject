@@ -1,35 +1,36 @@
-function startTimer(sectionId) {
-  document.getElementById(sectionId).getElementsByTagName('timer')[0].start();
-}
-
-function stopTimer(sectionId) {
-  document.getElementById(sectionId).getElementsByTagName('timer')[0].stop();
-}
-
-
-function addCDSeconds(sectionId, extraTime) {
-  document.getElementById(sectionId).getElementsByTagName('timer')[0].addCDSeconds(extraTime);
-}
-
-function stopResumeTimer(sectionId, btn) {
-  if (btn.innerHTML === 'Start') {
-    document.getElementById(sectionId).getElementsByTagName('timer')[0].start();
-    btn.innerHTML = 'Stop';
-  }
-  else if (btn.innerHTML === 'Stop') {
-    document.getElementById(sectionId).getElementsByTagName('timer')[0].stop();
-    btn.innerHTML = 'Resume';
-  }
-  else {
-    document.getElementById(sectionId).getElementsByTagName('timer')[0].resume();
-    btn.innerHTML = 'Stop';
-  }
-}
-
 
 var app = angular.module("poll", ['ui.bootstrap','timer']);
- 
-app.controller('TimerDemoController',['$scope',  function ($scope) {
+
+/**share Broadcast*/
+app.factory('setTimerService', function($rootScope) {
+	
+    var sharedService = {};
+    sharedService.message = '';    
+    /**used call service*/
+    sharedService.prepForBroadcast = function(msg) {
+        this.message = msg;
+        this.broadcastItem();
+    };
+    /**broadcast to other controller*/
+    sharedService.broadcastItem = function() {
+        $rootScope.$broadcast('setTimerBroadcast');
+    };
+    
+    sharedService.preTimeOutBroadcast = function(msg){
+    	this.message =msg;
+    	this.broadcastTimeOut();
+    }
+    
+    /**broadcast to other controller*/
+    sharedService.broadcastTimeOut = function() {
+        $rootScope.$broadcast('setTimeOutBroadcast');
+    };
+
+    return sharedService;
+});
+
+/**Timer Controller*/
+app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
     $scope.linkAnchors = function () {
         $('ul.nav a').click(function (){
             var path = $(this).attr('href');
@@ -46,12 +47,43 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
         $scope.callbackTimer.status='COMPLETE!!';
         $scope.callbackTimer.callbackCount++;
         $scope.$apply();
+        
+        /**set new timer*/
+    	setTimerService.preTimeOutBroadcast({msg:'Time Out'}); 
+        
     };
-}]);	 
+    
+    /**handle setTimerBroadcast*/
+    $scope.$on('setTimerBroadcast', function() {
+        $scope.message = setTimerService.message;
+        //set time 
+        
+        if(setTimerService.message.init > 0){
+        	$scope.$broadcast('timer-set-countdown-seconds', setTimerService.message.init);
+     	    $scope.$broadcast('timer-start');
+        }
+        else{
+        	
+        	$scope.$broadcast('timer-set-countdown-seconds', 120); 
+        	$scope.$broadcast('timer-stop');
+        	document.getElementsByTagName('timer')[0].hidden = true;
+        }
+        
+        
+    });
+    
+    
+    
+    $scope.$on('setTimeOutBroadcast', function() {
+        $scope.message = setTimerService.message;
+        //set time 
+        
+    });
+} );	 
 
 
 /**controller***/
-	app.controller("pollController", function($scope, $http,$window,$log) {
+	app.controller("pollController", function($rootScope,$scope, $http,$window,$log,setTimerService) {
 		console.log("pollController");
 		
 		
@@ -96,28 +128,7 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
 			
 			$scope.fetchContent();
 		}
-		
-	/*	
-		$scope.linkAnchors = function () {
-	        $('ul.nav a').click(function (){
-	            var path = $(this).attr('href');
-	            if (path != '#') {
-	                window.location = path;
-	            }
-	        });
-	    };
-	    
-	    console.log("timerDemoController");
-	    $scope.callbackTimer={};
-	    $scope.callbackTimer.status='Running';
-	    $scope.callbackTimer.callbackCount=0;    
-	    $scope.callbackTimer.finished=function(){
-	        $scope.callbackTimer.status='COMPLETE!!';
-	        $scope.callbackTimer.callbackCount++;
-	        $scope.$apply();
-	    };
-		
-		*/
+
 		
 		
 		
@@ -233,6 +244,8 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
 	        $http.get($scope.url).success(function(response) {
 	        	$scope.content = response.questions[0].question;
 	        	
+	        	$scope.duration_time = response.timer*60;
+	        	
 	        	$scope.contentQuestion = [];
 	        	
 	        	$scope.contentQuestion.push($scope.content[0]);
@@ -244,7 +257,9 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
 	        	}
 	        	//$log.log('Nomber to: ' + $scope.bigTotalItems);
 	        	
-	        	
+	        	/**set new timer*/
+	        	setTimerService.prepForBroadcast({init:$scope.duration_time}); 
+	
 	        	 
 	        });
 		};
@@ -254,7 +269,28 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
 		};
 		*/
 
-	    
+		/**handle setTimerBroadcast*/
+		$scope.$on('setTimerBroadcast', function() {
+	        $scope.message = setTimerService.message;
+	       
+	    });
+		
+		$scope.$on('setTimeOutBroadcast', function() {
+	        $scope.message = setTimerService.message;
+	        //set time 
+	        $log.log('Time Out!');
+	        $scope.bigCurrentPage =   $scope.bigTotalItems +1;
+	        //$scope.bigTotalItems = 
+	        
+	        var qnaObj = new Object();
+	        
+	        
+	        $scope.lastQuestion.push(qnaObj);
+	        
+	        
+	        $scope.pageChanged();
+	        
+	    });
 	    
 	   
 	});
@@ -394,24 +430,4 @@ app.controller('TimerDemoController',['$scope',  function ($scope) {
 	   
 	});
 	
-	
-app.controller('TimerDemoController',['$scope',  function ($scope) {
-    $scope.linkAnchors = function () {
-        $('ul.nav a').click(function (){
-            var path = $(this).attr('href');
-            if (path != '#') {
-                window.location = path;
-            }
-        });
-    };
-    
-    console.log("timerDemoController");
-    $scope.callbackTimer={};
-    $scope.callbackTimer.status='Running';
-    $scope.callbackTimer.callbackCount=0;    
-    $scope.callbackTimer.finished=function(){
-        $scope.callbackTimer.status='COMPLETE!!';
-        $scope.callbackTimer.callbackCount++;
-        $scope.$apply();
-    };
-}]);
+ 
