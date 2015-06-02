@@ -1,0 +1,1 @@
+ALTER TABLE pollandsurvey.sur_question MODIFY COLUMN question TEXT(65535);
