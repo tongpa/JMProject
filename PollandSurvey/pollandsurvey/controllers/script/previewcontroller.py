@@ -187,7 +187,7 @@ class PreviewController(BaseController):
                 #print self.question.question;
                 #print self.question.question_type.type;
                 #print self.question.order;
-                question.append(self.question.to_json());
+                question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
             
             
             questions = [];
