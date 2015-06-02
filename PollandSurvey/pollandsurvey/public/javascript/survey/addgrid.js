@@ -145,7 +145,7 @@ Ext.define('survey.view.gui.questiontype.GridAnswer', {
     	}
     	console.log(this.store.data.length);
     	 
-    	var r = new Survey.model.listAnswerData({
+    	var r = new survey.model.listAnswerData({
     		id: Ext.id(), 
     		id_basic_data : '',
     		value: 'answer',
@@ -156,7 +156,7 @@ Ext.define('survey.view.gui.questiontype.GridAnswer', {
     	});
     	
     	 
-    	this.store.insert(0, new Survey.model.listAnswerData({
+    	this.store.insert(0, new survey.model.listAnswerData({
     		value : 'answer ' + this.store.data.length  ,
     		seq:   this.store.data.length +1
     	}));

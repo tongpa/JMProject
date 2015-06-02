@@ -152,7 +152,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     	//console.log('add data to listAnswerData') ;
     	Survey.model.listAnswerData
     	parent.rowAt = parent.rowAt +1;
-    	var r = new Survey.model.listAnswerData({      		 
+    	var r = new survey.model.listAnswerData({      		 
     		value: 'answer',
     		answer: 0,
     		seq:   parent.rowAt  

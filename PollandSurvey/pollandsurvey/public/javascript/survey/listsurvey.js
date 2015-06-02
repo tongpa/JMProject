@@ -59,6 +59,9 @@ Ext.require([
              'survey.view.pproject.ListProject',
              'survey.view.pproject.WinProjectView',
              
+             'survey.view.pvariable.ListVariableTemplateView',
+             'survey.view.pvariable.VariableView',
+             
              'survey.panel.ManageVoters',
              'survey.panel.ManageEmailTemplate',
              'survey.panel.ManagePublicationOption',

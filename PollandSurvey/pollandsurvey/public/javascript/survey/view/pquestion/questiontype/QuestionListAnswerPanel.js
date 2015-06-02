@@ -143,7 +143,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
     		bt.parent.id_question = bt.parent.record;
     	}
     	 
-    	this.store.add(new Survey.model.listAnswerData( {
+    	this.store.add(new survey.model.listAnswerData( {
     		value: '',
     		answer : 0,
     		seq: (this.store.data.length +1),

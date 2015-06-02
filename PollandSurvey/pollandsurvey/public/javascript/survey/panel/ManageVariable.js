@@ -40,7 +40,7 @@ Ext.define('survey.panel.ManageVariable',{
     	var main = this;
 		//main.add111 = Ext.create('survey.view.list.Project.AddQuestion',{msgTarget: 'side'});
 		 
-		main.tbar =  [{
+		/*main.tbar =  [{
             xtype:'button',
             text: survey.label.create_publication ,
             iconCls: 'project-add',
@@ -50,9 +50,11 @@ Ext.define('survey.panel.ManageVariable',{
             }
             //,            menu: [{text: 'Menu Button 1'}]
         }];
+		*/
+		main.panel  = Ext.create('survey.view.pvariable.VariableView'  );
 		
 		  
-		//main.items = main.add111;
+		main.items = [main.panel];
 		
 		this.callParent();
     }
