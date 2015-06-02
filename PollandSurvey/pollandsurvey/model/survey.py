@@ -430,7 +430,7 @@ class Question(DeclarativeBase):
     difficultylevel = relation('DifficultyLevel', backref='sur_question_id_fix_difficulty_level');
     
     
-    question = Column(String(255),  nullable=False);
+    question = Column(Text,  nullable=False);
     help_message = Column(String(255),  nullable=False);
     text_label = Column(String(255),  nullable=False);
     order =  Column(Integer  );
