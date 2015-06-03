@@ -57,8 +57,8 @@ class AnswerController(BaseController):#RestController): #
     def reply(self,id=0,ready='no', **kw):
         reload(sys).setdefaultencoding('utf8')
          
-        print id,
-        print kw;
+        log.info( id);
+        log.info( kw);
          
         self.header = '';
         self.footer = '';
@@ -72,9 +72,9 @@ class AnswerController(BaseController):#RestController): #
         self.questionOption,self.redirect = self.__checkOptionExpired(self.idPublic);
         
         
-        print "after redirect";
-        print "ready : ", ready;     
-        print self.questionOption.id_question_option;
+        log.info( "after redirect");
+     
+        log.info( self.questionOption.id_question_option);
             
         if str(ready).lower() == 'no':    
             #check have welcome page
@@ -179,8 +179,8 @@ class AnswerController(BaseController):#RestController): #
         reload(sys).setdefaultencoding("utf-8");
         
         idProject = kw.get('idProject');
-        print args;
-        print kw ;
+        log.info( args);
+        log.info( kw) ;
         
         questions = [];
         #get Project Option
@@ -208,19 +208,17 @@ class AnswerController(BaseController):#RestController): #
     @expose('json')
     def saveQuestion(self, *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        print "body data";
-        print request.body
+        log.info( "body data");
+        log.info( request.body);
         self.df = json.loads(request.body, encoding=request.charset);
         
         self.listAnswer = self.df.get('value');
         
-        print len(self.listAnswer);
+         
         
         self.finished =self.df.get('finished');
         self.redirect = '';
-        print 'value : ' , self.listAnswer;
         
-        print 'finished : ' ,self.finished;
          
         
         #from urlparse import urlparse;
@@ -228,7 +226,7 @@ class AnswerController(BaseController):#RestController): #
         #print 'path url : ', parsed.path
         if (len(self.listAnswer) >0):
             for value in self.listAnswer:
-                print "value :" , value;
+                 
                 if(value):
                     self.idPublic =  value.get('idproject');
                     self.idResp =  value.get('idresp');
@@ -327,7 +325,7 @@ class AnswerController(BaseController):#RestController): #
     def __checkExpire(self,id):
         #sprint 10.2.1.0.html     idproject.idpublic.idvoter.
         self.value = self.utility.spritValue(id,'.');
-        print self.value;
+         
         self.idProject =0;
         self.idPublic = 0;
         self.idVoter = 0;
@@ -364,17 +362,17 @@ class AnswerController(BaseController):#RestController): #
         return self.idProject,self.idPublic,self.idVoter, self.redirect;
             
     def __checkOptionExpired(self,idPublic,isRedirect = True):
-        print 'public option id ',idPublic;
+        #print 'public option id ',idPublic;
         self.questionOption = model.QuestionOption.getId( idPublic);           
         self.redirect = '';
         if  self.questionOption is None or ( not self.utility.isActiveFromDate(None,self.questionOption.activate_date,self.questionOption.expire_date) ):
             self.redirect = self.URL_EXPIRED;
             if (isRedirect):
-                print 'redirect ',self.URL_EXPIRED; 
+                #print 'redirect ',self.URL_EXPIRED; 
                 redirect(self.URL_EXPIRED) ;
       
                 
-        print 'id option : ', self.questionOption.welcome_message;
+        #print 'id option : ', self.questionOption.welcome_message;
         
         return self.questionOption,self.redirect;    
             

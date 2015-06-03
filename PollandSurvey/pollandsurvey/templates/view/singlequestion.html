@@ -20,6 +20,15 @@
 	table tr:nth-child(even) {
 	  background-color: #ffffff;
 	}
+	
+	.progress { 
+	  height: 3em;
+	  i { line-height: 3.5em; }
+	}
+	
+	.progress-bar { 
+	  transition: width 1s ease-in-out; 
+	}
   </style> 
 </head>
 
@@ -57,6 +66,14 @@
 					
 	                <!-- Content Poll and Survey -->
 	                <div data-ng-app="poll" name='1'>
+	                
+	                <div ng-controller="ProgressBarController">
+	                	<progressbar class="progress-striped active" animate="false" max="maxValue" value="progressValue" type="success">
+	                		<i> {{progressValue}} / {{maxValue}}</i>
+	                	</progressbar>
+	                	 
+	                	
+	                </div>
 	                
 	                <div ng-controller="TimerDemoController" id="timerController">
 						<section id="finish-callback-timer" >

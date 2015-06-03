@@ -1,11 +1,12 @@
 
-var app = angular.module("poll", ['ui.bootstrap','timer']);
+var app = angular.module("poll", ['ui.bootstrap','timer' ]);
 
 /**share Broadcast*/
 app.factory('setTimerService', function($rootScope) {
 	
     var sharedService = {};
     sharedService.message = '';    
+    
     /**used call service*/
     sharedService.prepForBroadcast = function(msg) {
         this.message = msg;
@@ -16,17 +17,54 @@ app.factory('setTimerService', function($rootScope) {
         $rootScope.$broadcast('setTimerBroadcast');
     };
     
+    
+    /**for time out*/
     sharedService.preTimeOutBroadcast = function(msg){
     	this.message =msg;
     	this.broadcastTimeOut();
     }
     
-    /**broadcast to other controller*/
+    /**for time out broadcast to other controller*/
     sharedService.broadcastTimeOut = function() {
         $rootScope.$broadcast('setTimeOutBroadcast');
     };
 
+    /**for Progress */
+    sharedService.preProgressBroadcast = function(msg){
+    	this.message =msg;
+    	this.progressBroadcast();
+    }
+    
+    /**for Progress broadcast to other controller*/
+    sharedService.progressBroadcast = function() {
+        $rootScope.$broadcast('setProgressBroadcast');
+    };
+    
     return sharedService;
+});
+ 
+
+/**progressBar*/
+app.controller('ProgressBarController', function($scope,$timeout,setTimerService){
+		 
+	  
+	 // $scope.maxValue = 1;
+	  
+	  $scope.progressValue = 0;
+	  
+	  
+	  $scope.$on('setProgressBroadcast', function() {
+		  console.log('plus progess');
+	        $scope.message = setTimerService.message;
+	        console.log($scope.message.init);
+	        console.log($scope.message.total);
+
+	        //set time 
+	        $scope.progressValue++;
+	        $scope.maxValue = $scope.message.total;
+	        
+	    });
+	   
 });
 
 /**Timer Controller*/
@@ -209,7 +247,8 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 			    	if (status == 200 && data.success == true){
 			    		value = $scope.lastQuestion.pop(); //remove data;
 			    		
-			    	
+			    		console.log('set progress');
+			    		setTimerService.preProgressBroadcast({init:1,total:$scope.bigTotalItems}); 
 			    		if(data.finished){
 			    			//$scope.bigCurrentPage = $scope.bigCurrentPage - 1;
 			    			$window.location.href = data.redirect;
@@ -259,6 +298,9 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	        	
 	        	/**set new timer*/
 	        	setTimerService.prepForBroadcast({init:$scope.duration_time}); 
+	        	
+	        	/**set new progressbar*/
+	        	setTimerService.preProgressBroadcast({init:1,total:$scope.bigTotalItems}); 
 	
 	        	 
 	        });
@@ -415,10 +457,14 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     directive.controller = function($scope) {
 	         $scope.getTemplateUrl = function() {  
 	        	 console.log('gettemplate');
-	        	 
-	        	 
-	        	 
-	        	 return getTemplate($scope.content.type);
+	        	  
+	        	 if($scope.content == null)
+	        	 {
+	        		 return getTemplate('radio');
+	        	 }
+	        	 else{
+	        		 return  getTemplate($scope.content.type);
+	        	 }
 	           
 	         }
 	       }
