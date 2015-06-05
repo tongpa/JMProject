@@ -1,12 +1,12 @@
  
 
-Ext.define('survey.view.pvariable.ListVariableTemplateView',{
+Ext.define('survey.view.pvariable.ListVariableView',{
 	//extend : 'Ext.form.Panel',
 	extend : 'Ext.grid.Panel',
-	alias: ['widget.ListVariableTemplateView'],
+	alias: ['widget.ListVariableView'],
 	anchor: '100%',
 	width : '100%',
-	height :  '100%',
+	height :  '200%',
 	
 	frame: false,
 	bodyPadding: 10,
@@ -26,7 +26,7 @@ Ext.define('survey.view.pvariable.ListVariableTemplateView',{
     getHeaderColumn : function(){
     	var main = this;
     	return [
-	       	    {header: survey.label.name, dataIndex: 'name' , width : '90%', sortable: false }         	    	     
+	       	    {header: survey.label.name, dataIndex: 'name' , width : '99%', sortable: false }         	    	     
 	        ] ;
     },
     setDefaultField : function(){
@@ -53,20 +53,19 @@ Ext.define('survey.view.pvariable.ListVariableTemplateView',{
 		
     	
     	main.viewConfig = {
-            plugins: {
-                ptype: 'gridviewdragdrop',
-                dragGroup: 'firstGridDDGroup',
-                dropGroup: 'secondGridDDGroup'
-            },
-            listeners: {
-                drop: function(node, data, dropRec, dropPosition) {
-                	
-                	debugger;
-                    var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
-                    Ext.MessageBox.show("Drag from right to left", 'Dropped ' + data.records[0].get('name') + dropOn);
+                plugins: {
+                    ptype: 'gridviewdragdrop',
+                    dragGroup: 'secondGridDDGroup',
+                    dropGroup: 'firstGridDDGroup'
+                },
+                listeners: {
+                    drop: function(node, data, dropRec, dropPosition) {
+                    	
+                        //var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
+                        //Ext.MessageBox.show("Drag from left to right", 'Dropped ' + data.records[0].get('name') + dropOn);
+                    }
                 }
-            }
-        };
+            };
     	
     	
 		main.items = [ 

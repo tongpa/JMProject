@@ -74,6 +74,12 @@ Ext.define('survey.model.Invitation',{
     fields: ['id_question_invitation','from_name','name_content', 'subject','id_question_project','content','create_date','update_date'] 
 });
 
+Ext.define('survey.model.variable',{
+	extend : 'Ext.data.Model',
+	idProperty: 'id',
+	fields:['id','name']
+});
+
  
 
 
@@ -102,6 +108,51 @@ Ext.define('survey.MasterStore',{
         }
 	}
 });
+
+/*****/
+survey.listVariableTemplate = Ext.create('survey.MasterStore',{
+	model : 'survey.model.variable',
+	storeId : 'listVariableInStore',
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getVariableTemplateData',    	
+		api: {
+            read: '/model/getVariableTemplateData' 
+        } ,
+        writer: {
+        	type: 'json' 
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        } 
+	},
+	autoLoad : true
+});
+
+survey.listVariable = Ext.create('survey.MasterStore',{
+	model : 'survey.model.variable',
+	storeId : 'listVariableInStore',
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getVariableTemplateData',    	
+		api: {
+            read: '/model/getVariableTemplateData' 
+        } ,
+        writer: {
+        	type: 'json' 
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        } 
+	},
+	autoLoad : false
+});
+/*****/
+
 
 survey.listProject = Ext.create('survey.MasterStore', {
 	model : 'survey.model.listProjectid',
