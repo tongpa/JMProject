@@ -156,6 +156,16 @@ class ScriptModelController(BaseController):
         
         return dict(survey=question , total = total);
     
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getVariableTemplateData(self, *args, **kw):
+        
+        question = [];
+        question.append({'id':1,'name': 'age'});
+        question.append({'id':2,'name': 'gender'});
+        
+        return dict(survey=question , total = len(question)); 
+    
     
     
     
