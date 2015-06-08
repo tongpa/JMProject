@@ -168,7 +168,7 @@ Ext.application({
 			        		iconCls: "icon-list-voter"
 				    	});
 				    	
-				    	var manage_sendInvitation = Ext.create('survey.panel.ManageVariable',{
+				    	var manage_sendInvitation = Ext.create('Ext.form.Panel',{
 				    		width: '100%',   		
 				    		title : 'send Invitation',
 				    		iconMask: true,

@@ -62,16 +62,14 @@ Ext.define('survey.view.pvariable.ListVariableTemplateView',{
                 drop: function(node, data, dropRec, dropPosition) {
                 	
                 	debugger;
-                    var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
-                    Ext.MessageBox.show("Drag from right to left", 'Dropped ' + data.records[0].get('name') + dropOn);
+                   // var dropOn = dropRec ? ' ' + dropPosition + ' ' + dropRec.get('name') : ' on empty view';
+                   // Ext.MessageBox.show("Drag from right to left", 'Dropped ' + data.records[0].get('name') + dropOn);
                 }
             }
         };
     	
     	
-		main.items = [ 
-					
-					];
+	//	main.items = [  ];
 		 
 		
 		

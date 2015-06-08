@@ -32,7 +32,8 @@ __all__ = ['PreviewController']
 class PreviewController(BaseController):
    
     def __init__(self):
-        self.URL_GETDATAQUESTION = '/preview/getDataPreview?idProject={0}';
+        self.URL_GETDATAQUESTION = '/preview/getDataPreview?idProject={0}';   
+       
         self.utility = Utility();
     
     @expose('pollandsurvey.templates.view.multiquestion')

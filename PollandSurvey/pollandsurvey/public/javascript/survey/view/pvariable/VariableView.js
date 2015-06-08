@@ -42,7 +42,8 @@ Ext.define('survey.view.pvariable.VariableView',{
             }
 		});
 		
-		main.listVariableTemplate = Ext.create('survey.view.pvariable.ListVariableTemplateView',{region: 'west',
+		main.listVariableTemplate = Ext.create('survey.view.pvariable.ListVariableTemplateView',{
+			region: 'west',
             id: 'northPanel',
             labelWidth: 130, // label settings here cascade unless overridden
             frame: true,
@@ -52,25 +53,23 @@ Ext.define('survey.view.pvariable.VariableView',{
          //   bodyStyle: 'padding:5px 5px 0',
  
             
-            tbar : [ main.createOther]});
+            tbar : [ main.createOther]
+            });
 		
-		main.listVariable = Ext.create('survey.view.pvariable.ListVariableView',{ //survey.view.pvariable.ListVariableView
+	 	main.listVariable = Ext.create('survey.view.pvariable.ListVariableView',{ //survey.view.pvariable.ListVariableView
             region: 'center',
             id: 'westPanel',
             labelWidth: 130, // label settings here cascade unless overridden
             frame: true,
-            width: '100%',
+          //  width: '100%',
            // width: 350,
          //   bodyStyle: 'padding:5px 5px 0',
             defaults: {width: 320},
-            layout: 'fix',
+           // layout: 'fix',
             title : 'west' 
 		});
-		
-		main.items = [main.listVariableTemplate,main.listVariable,
-					 
-					
-					];
+		 
+		main.items = [main.listVariableTemplate ,main.listVariable ];
 		 
 		
 		

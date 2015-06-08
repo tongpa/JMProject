@@ -87,6 +87,7 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
         $scope.$apply();
         
         /**set new timer*/
+        console.log('call function timeout ');
     	setTimerService.preTimeOutBroadcast({msg:'Time Out'}); 
         
     };
@@ -329,8 +330,8 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	        
 	        $scope.lastQuestion.push(qnaObj);
 	        
-	        
-	        $scope.pageChanged();
+	        console.log("time out close");
+	       // $scope.pageChanged();
 	        
 	    });
 	    

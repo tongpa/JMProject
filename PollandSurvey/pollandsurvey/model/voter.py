@@ -607,7 +607,22 @@ class RespondentReply(DeclarativeBase):
         return {"id_resp_reply": self.id_resp_reply, "id_respondents": self.id_respondents, "id_question": self.id_question, "response_date": self.response_date  };
     def to_dict(self):
         return {"id_resp_reply": self.id_resp_reply, "id_respondents": self.id_respondents, "id_question": self.id_question, "response_date": self.response_date  };
-       
+    
+    @classmethod
+    def listQuestionForUser(cls,idRespondent): 
+        
+        return DBSession.query(cls).filter( cls.id_respondents == str(idRespondent)  ).all();
+
+    
+    @classmethod
+    def createQuestionForUser(cls,listQuestion,idRespondent):
+        
+        for question in listQuestion:
+            res =   RespondentReply();
+            res.id_respondents = idRespondent;
+            res.id_question = question['id'];
+            res.save();
+        
     
     @classmethod
     def getByRespondentAndQuestion(cls,idResp,idQuestion):

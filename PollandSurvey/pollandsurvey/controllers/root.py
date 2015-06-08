@@ -12,7 +12,7 @@ from pollandsurvey.model import DBSession, metadata
 from tgext.admin.tgadminconfig import BootstrapTGAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
 
-from pollandsurvey.lib.base import BaseController
+from pollandsurvey.lib.base import BaseController 
 from pollandsurvey.controllers.error import ErrorController
 
 
@@ -29,10 +29,13 @@ from pollandsurvey.controllers.answercontroller import AnswerController;
 
 from pollandsurvey.controllers.listsurvey import ListSurveyController
 
+from pollandsurvey.controllers.interfaceservicecontroller import InterfaceServiceController
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
 import time
 import sys
+
+ 
 
 import logging;
 log = logging.getLogger(__name__);
@@ -73,6 +76,9 @@ class RootController(BaseController):
     
     home = ListSurveyController();
     voter = VoterController();
+    
+    
+    webservice = InterfaceServiceController();
     
     def __init__(self):
         self.sendMailService = SendMailService();

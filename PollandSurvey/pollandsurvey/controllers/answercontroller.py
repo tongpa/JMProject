@@ -57,8 +57,8 @@ class AnswerController(BaseController):#RestController): #
     def reply(self,id=0,ready='no', **kw):
         reload(sys).setdefaultencoding('utf8')
          
-        log.info( id);
-        log.info( kw);
+        log.info("id = %s", id);
+        log.info("kw = %s", kw);
          
         self.header = '';
         self.footer = '';
@@ -115,7 +115,8 @@ class AnswerController(BaseController):#RestController): #
         return dict(page='view',header = Markdown(self.header).convert() , 
                     footer = Markdown(self.footer).convert()  , 
                     action = self.nextQuestion,template= self.template,
-                    urldata = self.URL_GETDATAQUESTION.format(self.idPublic), 
+                    #urldata = self.URL_GETDATAQUESTION.format(self.idPublic),
+                    urldata = self.URL_GETDATAQUESTION.format(id), 
                     idproject = self.idPublic ,
                     idresp = self.respondent.id_respondents,
                     shownavigator = bool(self.questionOption.show_navigator) ); 
@@ -177,31 +178,41 @@ class AnswerController(BaseController):#RestController): #
     @expose('json')
     def getDataPreview(self, came_from=lurl('/'),   *args, **kw): 
         reload(sys).setdefaultencoding("utf-8");
+        log.info("function getDataPreview");
+        
+        log.info("args = %", args);
+        log.info("kw = %s ", kw) ;
         
         idProject = kw.get('idProject');
-        log.info( args);
-        log.info( kw) ;
+        
+        self.idProject=None;
+        self.idPublic=None;
+        self.idVoter=None;
+        self.redirect=None;
+        
+        self.idProject,self.idPublic,self.idVoter,self.redirect = self.__checkExpire(idProject);
+        
+        log.info("idProject : %s ", self.idProject);    
+        log.info("idPublic : %s ", self.idPublic);
+        log.info("idVoter : %s ", self.idVoter);
+        log.info("redirect : %s ", self.redirect);
+        
+        self.respondents  = model.Respondents.getByVoterIdAndPublicId(self.idVoter,self.idPublic);    
+        
+        self.questionOption = model.QuestionOption.getId(self.idPublic);
+        
+        self.listReply = model.RespondentReply.listQuestionForUser(self.respondents.id_respondents);
+        question = [];
+        if( len(self.listReply) >0 ):
+            question = self.__getQuestionFromReply(self.listReply,self.questionOption);
+             
+        else:
+            question = self.__getQuestion(self.idPublic,self.questionOption);
+        model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
+            
         
         questions = [];
-        #get Project Option
-        self.questionOption = model.QuestionOption.getId(idProject);
-        if self.questionOption :
-            #get Question 
-            self.listQuestions = model.Question.getByProjectId(self.questionOption.id_question_project);
-            
-            question = [];
-            #get to object json
-            for self.question in self.listQuestions:
-                question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
-            
-            #option Randon Question
-            if( self.questionOption.id_fix_random_type == 2):
-                question = random.sample(question,len(question));#,self.questionOption.use_question_no );
-            
-            question = question[0:self.questionOption.use_question_no];
-            
-            questions = [];
-            questions.append({'id': idProject, 'question' : question});
+        questions.append({'id': idProject, 'question' : question});
         
         return dict(questions = questions,timer = self.questionOption.duration_time);
     
@@ -391,4 +402,41 @@ class AnswerController(BaseController):#RestController): #
                 redirect(self.URL_THANKYOU) ;
             
         return self.respondent,self.redirect;
+    
+    def __getQuestion(self,idPublic,questionOption):
+        
+        question = [];
+        #get Project Option
+        
+        if self.questionOption :
+            #get Question 
+            self.listQuestions = model.Question.getByProjectId(questionOption.id_question_project);
+            
+            
+            #get to object json
+            for self.question in self.listQuestions:
+                question.append(self.question.to_json(randomAnswer = questionOption.random_answer));
+            
+            #option Randon Question
+            if( self.questionOption.id_fix_random_type == 2):
+                question = random.sample(question,len(question));#,self.questionOption.use_question_no );
+            
+            question = question[0:self.questionOption.use_question_no];
+            
+            #clear sequence 
+            row = 1;
+            for q in question:
+                q['seq'] = row;
+                row = row +1; 
+            row =None;    
+        return question ;
+    
+    def __getQuestionFromReply(self,reply,questionOption):
+        question = [];
+        for re in reply:
+            re.question
+            question.append(re.question.to_json(randomAnswer= questionOption.random_answer));
+        
+        return question;
+        
    

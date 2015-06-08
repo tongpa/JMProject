@@ -6,7 +6,7 @@ Ext.define('survey.view.pvariable.ListVariableView',{
 	alias: ['widget.ListVariableView'],
 	anchor: '100%',
 	width : '100%',
-	height :  '200%',
+	height :  '100%',
 	
 	frame: false,
 	bodyPadding: 10,
@@ -68,9 +68,7 @@ Ext.define('survey.view.pvariable.ListVariableView',{
             };
     	
     	
-		main.items = [ 
-					
-					];
+		//main.items = [  ];
 		 
 		
 		
