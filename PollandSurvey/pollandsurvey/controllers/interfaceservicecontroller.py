@@ -16,7 +16,7 @@ from pollandsurvey.controllers.error import ErrorController
 
 import time
 import sys
-
+import json 
  
 
 import logging;
@@ -29,7 +29,21 @@ class InterfaceServiceController(RestController):
     @with_trailing_slash
     @expose('json')
     #@require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
-    def get_all(self):
+    def get_all(self,*args,**kw):
+        
+     
+        
+        print len(request.headers);
+        
+        for h in request.headers:
+            print h ,  request.headers[h];
+         
+        
+         
+        
+        
+        #self.df = json.loads(request.body, encoding=request.charset);
+        #print self.df;
         
         samples = [];
         samples.append({'id':1,'name': 'test1'});

@@ -198,18 +198,22 @@ class AnswerController(BaseController):#RestController): #
         log.info("redirect : %s ", self.redirect);
         
         self.respondents  = model.Respondents.getByVoterIdAndPublicId(self.idVoter,self.idPublic);    
-        
         self.questionOption = model.QuestionOption.getId(self.idPublic);
         
+        #get old question
         self.listReply = model.RespondentReply.listQuestionForUser(self.respondents.id_respondents);
+        
         question = [];
         if( len(self.listReply) >0 ):
             question = self.__getQuestionFromReply(self.listReply,self.questionOption);
              
         else:
             question = self.__getQuestion(self.idPublic,self.questionOption);
-        model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
-            
+            model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
+        
+        question = self.__randomQuestionAndAnswer(question,self.questionOption);    
+        
+        self.__setSequenceQuestion(question); 
         
         questions = [];
         questions.append({'id': idProject, 'question' : question});
@@ -417,18 +421,10 @@ class AnswerController(BaseController):#RestController): #
             for self.question in self.listQuestions:
                 question.append(self.question.to_json(randomAnswer = questionOption.random_answer));
             
-            #option Randon Question
-            if( self.questionOption.id_fix_random_type == 2):
-                question = random.sample(question,len(question));#,self.questionOption.use_question_no );
             
-            question = question[0:self.questionOption.use_question_no];
             
             #clear sequence 
-            row = 1;
-            for q in question:
-                q['seq'] = row;
-                row = row +1; 
-            row =None;    
+               
         return question ;
     
     def __getQuestionFromReply(self,reply,questionOption):
@@ -436,6 +432,25 @@ class AnswerController(BaseController):#RestController): #
         for re in reply:
             re.question
             question.append(re.question.to_json(randomAnswer= questionOption.random_answer));
+        
+        return question;
+    
+    def __randomQuestionAndAnswer(self,question,questionOption):
+        #option Randon Question
+        if( questionOption.id_fix_random_type == 2):
+            question = random.sample(question,len(question));#,self.questionOption.use_question_no );
+        
+        
+        question = question[0:questionOption.use_question_no];
+            
+        return question;
+    
+    def __setSequenceQuestion(self,question):
+        row = 1;
+        for q in question:
+            q['seq'] = row;
+            row = row +1; 
+        row =None;
         
         return question;
         

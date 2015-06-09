@@ -35,6 +35,7 @@ from pollandsurvey.widget.movie_form import create_movie_form
 import time
 import sys
 
+
  
 
 import logging;
@@ -140,6 +141,8 @@ class RootController(BaseController):
     @expose()
     def post_login(self, came_from=lurl('/')):
 
+         
+        
         if not request.identity:
             log.warning("user cannot login, redirect to login");
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
@@ -151,12 +154,15 @@ class RootController(BaseController):
         
         log.info("user in group : %s " %groups );
         
+        model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="user in group : %s " %groups ,current_page='Login',user_name=user);
+        
         userActive = model.UserGenCode.getUserActivated(user.user_id);
         
         
     
         if(userActive is None and ('managers' not in groups  )):
             log.warning("user cannot login, redirect to login");
+            model.LogSurvey.insert(ip_server='127.0.0.1',status='WARN',message="user cannot login, redirect to login" ,current_page='Login',user_name="Anonymous");
             flash(_('Please activate in your email'), 'warning') 
             #request.identity.current.logout();
             login_counter = request.environ.get('repoze.who.logins', 0) ;
@@ -167,9 +173,11 @@ class RootController(BaseController):
         if('/' == came_from):
             if ('voter' in groups):
                 log.info("redirect to home page");
+                model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to home page" ,current_page='Login',user_name=user);
                 redirect('/home');
             if ('creator' in groups):
                 log.info("redirect to create survey page");
+                model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to create survey page" ,current_page='Login',user_name=user);
                 redirect('/survey');
         
         
