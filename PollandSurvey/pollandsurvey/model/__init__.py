@@ -38,9 +38,17 @@ metadata = DeclarativeBase.metadata
 #
 ######
 
-def init_model(engine):
+ 
+
+
+def init_model(engine1 ):
     """Call me before using any of the tables or classes in the model."""
-    DBSession.configure(bind=engine)
+    DBSession.configure(bind=engine1)
+    
+   
+
+    metadata.bind = engine1
+     
 
     # If you are using reflection to introspect your database and create
     # table objects for you, your tables must be defined and mapped inside
@@ -60,6 +68,7 @@ def init_model(engine):
 
 # Import your model modules here.
 from pollandsurvey.model.auth import User, Group, Permission
+from logsurvey import LogSurvey;
 from movie import Movie
 from authuser import UserService,UserGenCode, UserSocialNetwork;
  
