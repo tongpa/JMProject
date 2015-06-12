@@ -31,21 +31,32 @@ class InterfaceServiceController(RestController):
     #@require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def get_all(self,*args,**kw):
         
-     
+        print "args : ", args;
+        print "kw : ", kw;
         
         print len(request.headers);
         
         for h in request.headers:
             print h ,  request.headers[h];
          
-        
+        try:
          
+            print "body : " ,request.body;
+            if( request.body):
+                self.df = json.loads(request.body, encoding=request.charset);
+                print self.df;
+            
+                self.df['keyAuthorize'] = "#987654321";
+                samples = self.df;
+            else:
+                samples = {u'userName': u'tong', u'keyAuthorize': None, u'password': u'tong', u'dataTestSurfvey': None, u'passKey': u'#13456789'};
         
-        
-        #self.df = json.loads(request.body, encoding=request.charset);
-        #print self.df;
-        
-        samples = [];
-        samples.append({'id':1,'name': 'test1'});
-        samples.append({'id':2,'name': 'test2'});
-        return dict(sample=samples);
+        except Exception as e:
+            
+            if kw:
+                samples = kw;
+                samples['keyAuthorize'] = "#987654321";
+            
+            #samples = {u'userName': u'tong', u'keyAuthorize': None, u'password': u'tong', u'dataTestSurfvey': None, u'passKey': u'#13456789'};
+             
+        return samples;#dict(surfveyAuthorize=samples);
