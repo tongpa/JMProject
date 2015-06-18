@@ -25,6 +25,7 @@ from exportemaildata.controllers.importemail.importEmailController import Import
 
 from  exportemaildata.service.importEmailService import ImportEmailService
 from exportemaildata.service.importDataToJMService import ImportDataToJMService;
+from exportemaildata.service.importDataToSQLService import ImportDataToSQLService;
 __all__ = ['RootController']
 import logging;
 log = logging.getLogger(__name__);
@@ -243,9 +244,13 @@ class RootController(BaseController):
         
          
         
-        self.importDataToJMService = ImportDataToJMService("Thread-export" );
+        #self.importDataToJMService = ImportDataToJMService("Thread-export" );
+        #self.importDataToJMService.start();
         
-        self.importDataToJMService.start();
+        self.importDataToSQLService =  ImportDataToSQLService("Thread-export");
+        self.importDataToSQLService.start();
+        
+        
         #self.importDataToJMService.importDataManual();
         
         #print [c.name for c in model.messages.columns]
