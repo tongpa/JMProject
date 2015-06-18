@@ -6,13 +6,17 @@ This file complements development/deployment.ini.
 
 """
 
-from tg.configuration import AppConfig
+from tg.configuration import AppConfig, config
 
 import pollandsurvey
 from pollandsurvey import model
 from pollandsurvey.lib import app_globals, helpers 
-
+ 
 base_config = AppConfig()
+ 
+
+
+
 base_config.renderers = []
 
 # True to prevent dispatcher from striping extensions
@@ -72,6 +76,11 @@ class ApplicationAuthMetadata(TGAuthMetadata):
 base_config.sa_auth.dbsession = model.DBSession
 
 base_config.sa_auth.authmetadata = ApplicationAuthMetadata(base_config.sa_auth)
+
+
+
+
+
 
 # You can use a different repoze.who Authenticator if you want to
 # change the way users can login
