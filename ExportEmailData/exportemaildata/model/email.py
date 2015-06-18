@@ -325,12 +325,15 @@ class EmailTemp(DeclarativeBase):
     education= Column(Unicode(255) ); 
     export_ready= Column(BIT, nullable=True, default=0)
     export_date =  Column(DateTime, default=datetime.now)
-    
+    export_at = Column(Integer, default=0)
     id_export_email = Column(   Integer,ForeignKey('export_email.id_export_email'), nullable=False, index=True) ;
     exportemail = relation('ExportEmail', backref='email_temp_id_export_email');
     
+     
     
     id_user = None;
+    def __init__(self):
+        self.date_time = datetime.now;
     
     def __repr__(self):
         return '<User: name=%s, email=%s, display=%s>' % (
@@ -339,10 +342,11 @@ class EmailTemp(DeclarativeBase):
     def __unicode__(self):
         return self.firstname_thai or self.email
     
-    def updateExported(self):
+    def updateExported(self,export_at):
         
         email = DBSession.query(EmailTemp).filter(EmailTemp.id == self.id).first();
         email.export_ready = 1;
+        email.export_at = export_at;
         email.export_date = datetime.now();
            
     

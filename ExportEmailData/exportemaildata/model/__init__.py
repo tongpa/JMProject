@@ -88,4 +88,4 @@ import transaction ;
 from exportemaildata.model.auth import User, Group, Permission
 from exportemaildata.model.email import EmailData,ExportEmail,EmailTemp, StatusExport,TypeEmail;
 from exportemaildata.model.email import MapGender,MapPrefix,MapProvince,MapCity,MapCounty;
-from exportemaildata.model.jm.jmmodel import MUser ,MUserLang,MUserMapRole,MUserEmail,MUserGeneralSetting,MUserPhone,MUserAddres,MJobAApplicant,MJobAApPiPersonalDatum,MJobAApplicantCertificate
+from exportemaildata.model.jm.jmmodel import MUser ,MUserLang,MUserMapRole,MUserEmail,MUserGeneralSetting,MUserPhone,MUserAddres,MJobAApplicant,MJobAApPiPersonalDatum,MJobAApplicantCertificate,MSysMUserMapAddres,MSysMUserMapPhone
