@@ -7,12 +7,15 @@ import types;
 import datetime;
 import os.path
 
+from tg.configuration import AppConfig, config
+from tg import request
+
 from datetime import datetime ;
 from pollandsurvey.controllers.utility import Utility
 from pollandsurvey import model
 
 log = logging.getLogger(__name__);
-
+from  survey import LogDBHandler;
 class UserObject(object):
     def __init__(self):
         self.fullname = None;
@@ -24,6 +27,10 @@ class UserObject(object):
         self.password = None;
         self.rpassword = None;
         self.tnc = None;
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
 
 class RegisterService(object):
 

@@ -37,9 +37,12 @@ class Utility(object):
         return self.target_file_name;
     
     def getCurrentDate(self):
-        
         return datetime.datetime.strptime(datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")  , "%Y-%m-%d %H:%M:%S");
         
+    def getStartDate(self):
+        return datetime.datetime.strptime(datetime.datetime.today().strftime("%Y-%m-%d")  , "%Y-%m-%d");
+        #stop = self.plusDate(start, numberDay);
+       # return start,stop;
     
     def plusDate(self,currentDate,numberDay=0):
         if(currentDate is None or ( type(currentDate) is not datetime.datetime )     ):
@@ -208,3 +211,6 @@ print u.getCurrentDate();
  
 #print bool(1);
 #print bool(0);
+ 
+ 
+#datetime.strptime(  kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;

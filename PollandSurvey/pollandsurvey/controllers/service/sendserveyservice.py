@@ -5,12 +5,14 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText 
 import smtplib
 from tg.configuration import AppConfig, config
+from tg import request
 from pollandsurvey import model
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import update
 
 log = logging.getLogger(__name__);
+from  survey import LogDBHandler;
 __all__ = ['SendSurveyService'] 
 class SendSurveyService(threading.Thread):
     
@@ -18,6 +20,9 @@ class SendSurveyService(threading.Thread):
         threading.Thread.__init__(self);
         
         self.__getConnection();
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
         
         pass;
     

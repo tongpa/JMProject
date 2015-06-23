@@ -26,7 +26,7 @@ from pollandsurvey.widget.movie_form import create_movie_form
 
 import logging;
 log = logging.getLogger(__name__);
-
+from  survey import LogDBHandler;
 __all__ = ['SurveyController']
 
 
@@ -35,6 +35,10 @@ class SurveyController(BaseController):
     def __init__(self):
         self.utility = Utility();
         self.UPLOAD_DIR = config['path_upload_file'] ;
+        
+        dh = LogDBHandler( config=config,request=request);
+        
+        log.addHandler(dh)
     
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"

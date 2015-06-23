@@ -15,16 +15,24 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
 import sys;
-
+from tg.configuration import AppConfig, config
 
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form
-
+from  survey import LogDBHandler;
 __all__ = ['ScriptController']
 
+import logging;
+#from model.survey import BasicQuestion
+log = logging.getLogger(__name__);
 
 class ScriptController(BaseController):
     
+    def __init__(self):
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
     @expose()
     def index(self, came_from=lurl('/')):
         if not request.identity:

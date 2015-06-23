@@ -17,14 +17,14 @@ from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.widget.register.registerwidget import RegisterForm ,passwordValidator
 from pollandsurvey.controllers.utility import Utility
 from pollandsurvey.controllers.service import SendMailService,RegisterService,UserObject
-
+from tg.configuration import AppConfig, config
 from tg import tmpl_context 
 
 import tw2.core
 import logging;
 from datetime import datetime ;
 log = logging.getLogger(__name__);
-
+from  survey import LogDBHandler;
 __all__ = ['AccountController']
 
 
@@ -47,7 +47,9 @@ class AccountController(BaseController):
         self.utility = Utility();  
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
-    
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
 
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"

@@ -25,8 +25,21 @@ class LogSurvey(DeclarativeBase):
 
     id_log_survey =  Column(Integer, autoincrement=True, primary_key=True);
     ip_server = Column(String(20), nullable=True);
+    ip_client = Column(String(20), nullable=True);
     status  = Column(String(20), nullable=True);
+    
+    relative_created  = Column(String(10), nullable=True);
+    name = Column(String(255), nullable=True);
+    log_level = Column(String(20), nullable=True);
+    level_text = Column(String(20), nullable=True);
     message = Column(Text, nullable=True);
+    file_name = Column(String(255), nullable=True);
+    path_name = Column(Text, nullable=True);
+    line_no = Column(String(10), nullable=True);
+    milliseconds = Column(String(10), nullable=True);
+    exception = Column(Text, nullable=True);
+    thread = Column(String(10), nullable=True);
+    
     current_page = Column(String(255), nullable=True);
     user_name = Column(String(255), nullable=True);
     active  = Column(BIT, nullable=True, default=1);
@@ -54,6 +67,11 @@ class LogSurvey(DeclarativeBase):
         log.user_name = user_name;
         
         log.save();
+        
+    @classmethod
+    def insertSQL(cls,sql):
+        result = DBSession.execute(sql);
+        DBSession.flush() ;
         
         
     

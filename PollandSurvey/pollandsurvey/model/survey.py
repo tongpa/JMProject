@@ -1119,7 +1119,9 @@ class QuestionOption(DeclarativeBase):
     duration_time  = Column(Integer, nullable=True, default=0);
     use_question_no = Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now);
+    no_use = Column(Integer, nullable=True, default=0);
     
+    use_default = Column(BIT, nullable=True, default=0);
     
     def __init__(self):
         #self.create_date  =datetime.now;
@@ -1183,6 +1185,12 @@ class QuestionOption(DeclarativeBase):
             return True;
         
         return False;
+    
+    @classmethod
+    def getByProjectDefault(cls,idProject,useDefault=1):
+        option =DBSession.query(cls).filter(cls.id_question_project == str(idProject),cls.use_default  == str(useDefault) ).first();
+        
+        return option;
     
     @classmethod
     def getByProject(cls,idProject):

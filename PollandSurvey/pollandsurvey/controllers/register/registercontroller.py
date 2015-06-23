@@ -19,12 +19,12 @@ from pollandsurvey.controllers.utility import Utility
 from pollandsurvey.controllers.service import SendMailService,RegisterService,UserObject
 
 from tg import tmpl_context 
-
+from tg.configuration import AppConfig, config
 import tw2.core
 import logging;
 from datetime import datetime ;
 log = logging.getLogger(__name__);
-
+from  survey import LogDBHandler;
 __all__ = ['RegisterController']
 
 
@@ -47,7 +47,8 @@ class RegisterController(BaseController):
         self.utility = Utility();  
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
-    
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
 
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"

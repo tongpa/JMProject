@@ -20,10 +20,10 @@ import sys;
 from datetime import datetime
 
 from tg import tmpl_context
-
+from tg.configuration import AppConfig, config
 import logging;
 from symbol import decorators
-
+from  survey import LogDBHandler;
 log = logging.getLogger(__name__);
 
 __all__ = ['PreviewController']
@@ -35,6 +35,10 @@ class PreviewController(BaseController):
         self.URL_GETDATAQUESTION = '/preview/getDataPreview?idProject={0}';   
        
         self.utility = Utility();
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
     
     @expose('pollandsurvey.templates.view.multiquestion')
     def index(self ,id=0,ready='no' , came_from=lurl('/')):

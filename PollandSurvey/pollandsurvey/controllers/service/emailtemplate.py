@@ -6,7 +6,12 @@ import logging;
 import types;
 import datetime;
 import os.path
+
+from tg.configuration import AppConfig, config
+from tg import request
+  
 log = logging.getLogger(__name__); 
+from  survey import LogDBHandler;
 class EmailTemplate(object):
 
 
@@ -22,6 +27,10 @@ class EmailTemplate(object):
              [sender]
              
         """;
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
         
     def loadtemplate(self,values):
         print values;

@@ -6,8 +6,10 @@ from email.MIMEText import MIMEText
 import smtplib
 from tg.configuration import AppConfig, config
 from pollandsurvey import model
+from tg import request
 
 log = logging.getLogger(__name__);
+from  survey import LogDBHandler;
 __all__ = ['SendMailService'] 
 class SendMailService(threading.Thread):
 
@@ -17,6 +19,10 @@ class SendMailService(threading.Thread):
         self.SMTP_SERVER = config['smtp_server'] ;
         self.SMTP_USER = config['smtp_user'] ;
         self.SMTP_PASSWORD = config['smtp_password'] ;
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
     
     
     def run(self):

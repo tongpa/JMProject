@@ -29,6 +29,8 @@ import logging;
 import random; 
 log = logging.getLogger(__name__);
 
+from  survey import LogDBHandler;
+
 __all__ = ['AnswerController']
 
 
@@ -45,6 +47,8 @@ class AnswerController(BaseController):#RestController): #
         self.URL_GOODBYE = '/ans/thankyou/{0}.html';
         self.UPLOAD_DIR = config['path_upload_file'] ;
         
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
     
     @expose()
     def _default(self, *args, **kw):

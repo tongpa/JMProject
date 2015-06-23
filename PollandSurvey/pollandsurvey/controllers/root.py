@@ -11,6 +11,7 @@ from pollandsurvey.controllers.secure import SecureController
 from pollandsurvey.model import DBSession, metadata
 from tgext.admin.tgadminconfig import BootstrapTGAdminConfig as TGAdminConfig
 from tgext.admin.controller import AdminController
+from tg.configuration import AppConfig, config
 
 from pollandsurvey.lib.base import BaseController 
 from pollandsurvey.controllers.error import ErrorController
@@ -34,9 +35,11 @@ from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
 import time
 import sys
-
+ 
 
  
+from  survey import LogDBHandler;
+
 
 import logging;
 log = logging.getLogger(__name__);
@@ -85,11 +88,18 @@ class RootController(BaseController):
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
         self.utility = Utility();
+        
+         
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
     
     @expose('pollandsurvey.templates.metronic')
     def index(self, came_from=lurl('/')):
+        
+        
         return dict(page='metronic') 
     
     
@@ -108,6 +118,7 @@ class RootController(BaseController):
     
     @expose('pollandsurvey.templates.about')
     def about(self, came_from=lurl('/')):
+        
         return dict(page='about', login_counter=str(1),
                     came_from=came_from) 
         
@@ -154,7 +165,7 @@ class RootController(BaseController):
         
         log.info("user in group : %s " %groups );
         
-        model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="user in group : %s " %groups ,current_page='Login',user_name=user);
+        #model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="user in group : %s " %groups ,current_page='Login',user_name=user);
         
         userActive = model.UserGenCode.getUserActivated(user.user_id);
         
@@ -162,7 +173,7 @@ class RootController(BaseController):
     
         if(userActive is None and ('managers' not in groups  )):
             log.warning("user cannot login, redirect to login");
-            model.LogSurvey.insert(ip_server='127.0.0.1',status='WARN',message="user cannot login, redirect to login" ,current_page='Login',user_name="Anonymous");
+            #model.LogSurvey.insert(ip_server='127.0.0.1',status='WARN',message="user cannot login, redirect to login" ,current_page='Login',user_name="Anonymous");
             flash(_('Please activate in your email'), 'warning') 
             #request.identity.current.logout();
             login_counter = request.environ.get('repoze.who.logins', 0) ;
@@ -173,11 +184,11 @@ class RootController(BaseController):
         if('/' == came_from):
             if ('voter' in groups):
                 log.info("redirect to home page");
-                model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to home page" ,current_page='Login',user_name=user);
+                #model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to home page" ,current_page='Login',user_name=user);
                 redirect('/home');
             if ('creator' in groups):
                 log.info("redirect to create survey page");
-                model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to create survey page" ,current_page='Login',user_name=user);
+                #model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to create survey page" ,current_page='Login',user_name=user);
                 redirect('/survey');
         
         
@@ -420,6 +431,23 @@ class RootController(BaseController):
         
     @expose('pollandsurvey.templates.timer')
     def exampletimer(self, **kw):
+        return dict(historys = '1');
+    
+    @expose('json')
+    def samplelog(self):
+        
+        log.info("test 123456");
+        
+        
+        print request.remote_addr;
+        import socket
+        print socket.gethostbyname(socket.gethostname());
+        
+         
+        
+        print([ip for ip in socket.gethostbyname(socket.gethostname())[2] if not ip.startswith("127.")][:1])
+        #print([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")][:1])
+        
         return dict(historys = '1');
     
     """

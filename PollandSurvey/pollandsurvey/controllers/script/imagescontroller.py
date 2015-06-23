@@ -19,14 +19,14 @@ import sys;
 from datetime import datetime
 
 from tg import tmpl_context
-
+from tg.configuration import AppConfig, config
 import os;
 import sys;
 import json;  
 
 import logging;
 log = logging.getLogger(__name__);
-
+from  survey import LogDBHandler;
 __all__ = ['ImagesController']
 
 
@@ -35,6 +35,10 @@ class ImagesController(BaseController):
     def __init__(self):
         self.utility = Utility();
         self.target_file_name = self.utility.getDefaultImagePath();
+        
+        dh = LogDBHandler( config=config,request=request);        
+        log.addHandler(dh)
+        
         pass;
     
     @expose(content_type='image/png')
