@@ -28,7 +28,8 @@ class UseExtenalLink(DeclarativeBase):
     user_name = Column(String(255), nullable=True);
     user_type = Column(String(255), nullable=True);
     id_test  = Column(BigInteger, nullable=True);
-    
+    id_voter = Column(BigInteger,ForeignKey('sur_voter.id_voter'), nullable=True, index=True);
+    voter = relation('Voter', backref='sur_use_external_link_id_voter');
     no_test  = Column(Integer, nullable=True);
     id_question_option = Column(BigInteger, nullable=True);
     active  = Column(BIT, nullable=True, default=1);
@@ -43,6 +44,9 @@ class UseExtenalLink(DeclarativeBase):
         DBSession.add(self); 
         DBSession.flush() ;
     
+    @classmethod
+    def getUserLinkBy(cls,idUser,idTest,idPublic):
+        return DBSession.query(cls).filter(cls.id_user == str(idUser),cls.id_test == str(idTest),cls.id_question_option == str(idPublic)  ).first();
         
     
     

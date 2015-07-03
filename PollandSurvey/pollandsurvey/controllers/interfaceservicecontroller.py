@@ -41,7 +41,7 @@ class InterfaceServiceController(RestController):
     @expose('json')
     #@require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def get_all(self,*args,**kw):
-        
+        print "get_all";
         log.info( "args : %s ", args);
         log.info( "kw : %s", kw);
         
@@ -75,6 +75,7 @@ class InterfaceServiceController(RestController):
     @with_trailing_slash
     @expose('json')
     def createTest(self,*args,**kw):
+       
         print "args  "  ,args;
         print "kw  " ,kw;
         
@@ -100,10 +101,11 @@ class InterfaceServiceController(RestController):
             #1 create public
             self.defaultOption = model.QuestionOption.getByProjectDefault(self.userExtenal.id_test,'1');
             if(self.defaultOption is None):
+                print "defaultOption is null"
                 self.defaultOption = model.QuestionOption();  
             
             self.option = model.QuestionOption();   
-         
+            
                  
             self.option.id_question_project = self.defaultOption.id_question_project;        
             self.option.id_question_theme = self.defaultOption.id_question_theme; 
@@ -135,7 +137,7 @@ class InterfaceServiceController(RestController):
             self.userExtenal.id_question_option = self.option.id_question_option;
             #2 
             
-            
+            samples['idPublic'] = self.option.id_question_option;
             samples['status'] = True;
             samples['message'] = "create suvvess";
             samples['urlTest'] = "create suvvess";
@@ -156,14 +158,62 @@ class InterfaceServiceController(RestController):
     @with_trailing_slash
     @expose('json')
     def evaluate(self,*args,**kw):
+        print "call evaluate ";
         print "args  "  ,args;
         print "kw  " ,kw;
-        
-        #create sur_voter
-        #create sur_respondents
-        #create link
-        
         samples = kw;
+        if('Keyauthorize' in request.headers):
+            self.Keyauthorize = request.headers['Keyauthorize'];
+        else:
+            self.Keyauthorize = '0000000000';
+            
+        print "key authorize : " , self.Keyauthorize;
+        if self.Keyauthorize == "#987654321" :
+            self.userExtenal = model.UseExtenalLink.getUserLinkBy( kw.get("idUser"),kw.get("idTest"),kw.get("idPublic"));
+            
+            if self.userExtenal :
+                #create sur_voter
+                
+                self.voter = self.userExtenal.voter;
+                if(self.voter is None):
+                    log.info("user external is not voter %s",kw.get("email"));
+                    self.voter = model.Voter();
+                    self.voter.email = kw.get("email");
+                    self.voter.prefix = kw.get("idPrefix");
+                    self.voter.firstname = kw.get("firstname");
+                    self.voter.lastname = kw.get("lastname");
+                    self.voter.user_id_owner  = 3 ;
+                    self.voter.id_marriage_status =  kw.get("idMarriageStatus");
+                    self.voter.birthdate =   kw.get("birthdate");
+                    self.voter.id_gender = kw.get("idGender");
+                    self.voter.save();
+                    self.userExtenal.id_voter = self.voter.id_voter; 
+                #create sur_respondents
+                
+                    self.respondents = model.Respondents();
+                    self.respondents.id_voter = self.voter.id_voter;
+                    self.respondents.id_question_project = kw.get("idTest");
+                    self.respondents.id_question_option  = kw.get("idPublic");
+        
+                    self.respondents.finished =0;
+                    self.respondents.score_exam =0;
+                    
+                    self.respondents.save();
+                #create link
+                
+                samples['urlTest'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(kw.get("idTest")) ,str(kw.get("idPublic")) , str(self.voter.id_voter))  ;
+
+                samples['status'] = True;
+                samples['errorCode'] = 'S0001';            
+                samples['message'] = "Create Success ";
+            else:
+                samples['status'] = False;
+                samples['errorCode'] = 'E0002';            
+                samples['message'] = "Find not found ";
+                
+        
+        response.headers['KeyAuthorize'] = self.Keyauthorize;
+        
         return samples;
     
             

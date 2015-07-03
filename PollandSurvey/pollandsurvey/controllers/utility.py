@@ -9,6 +9,7 @@ import os.path
 import string
 import random
 import uuid
+import hashlib
 log = logging.getLogger(__name__); 
 class Utility(object):
 
@@ -164,6 +165,15 @@ class Utility(object):
         
         return value;
             
+    def decryptMD5(self,testHash):
+        
+        hash_object = hashlib.md5(b'Hello World')
+        print(hash_object.hexdigest())
+        
+        hash_object = hashlib.md5(hash_object.hexdigest().encode())
+        print(hash_object.hexdigest())
+                        
+         
             
             
 #import ast
@@ -176,7 +186,8 @@ class Utility(object):
 #print ({True: True, False: False}[ answer in 'true'])
 
 u = Utility();
-print u.getCurrentDate();
+#print u.getCurrentDate();
+print u.decryptMD5('40c906c22eaf938f902b2fa85efff1d5');
 #print u.plusDate(datetime.datetime.today(),0);
 
 

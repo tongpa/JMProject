@@ -184,7 +184,7 @@ class AnswerController(BaseController):#RestController): #
         reload(sys).setdefaultencoding("utf-8");
         log.info("function getDataPreview");
         
-        log.info("args = %", args);
+        log.info("args = %s", args);
         log.info("kw = %s ", kw) ;
         
         idProject = kw.get('idProject');
