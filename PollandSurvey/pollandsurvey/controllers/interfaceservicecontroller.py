@@ -109,7 +109,8 @@ class InterfaceServiceController(RestController):
                  
             self.option.id_question_project = self.defaultOption.id_question_project;        
             self.option.id_question_theme = self.defaultOption.id_question_theme; 
-            self.option.name_publication = self.defaultOption.name_publication + "-" + self.userExtenal.user_name;
+            
+            self.option.name_publication = str(self.defaultOption.name_publication) + "-" + str(self.userExtenal.user_name);
             
             
             self.option.id_fix_random_type = self.defaultOption.id_fix_random_type;
