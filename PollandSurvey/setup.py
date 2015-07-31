@@ -32,8 +32,9 @@ testpkgs=['WebTest >= 1.2.3',
                ]
 
 install_requires=[
-    "TurboGears2 >= 2.3.3",
-    "Babel",
+    "TurboGears2 >= 2.3.6",#2.3.5  #2.3.3
+    #"Babel",
+	"Beaker",
     "Genshi",
     "zope.sqlalchemy >= 0.4",
     "sqlalchemy",
@@ -50,12 +51,17 @@ install_requires=[
     "webhelpers",
     "python-memcached",
     "Flask-Social"
+	
     #"tw2.captcha",
     ]
 
+if py_version != (3, 2):
+    # Babel not available on 3.2
+    install_requires.append("Babel")
+	
 setup(
     name='PollandSurvey',
-    version='0.1',
+    version='0.2015.07.03.15.00',
     description='',
     author='',
     author_email='',
