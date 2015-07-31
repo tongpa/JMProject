@@ -567,7 +567,7 @@ class Respondents(DeclarativeBase):
     def getByVoterAndPublicId(cls,idvoter,idpublic):
         
         return DBSession.query(cls).outerjoin(Voter, Voter.id_voter == cls.id_voter).filter( cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
-
+         
 class RespondentReply(DeclarativeBase):
 
     __tablename__ = 'sur_resp_reply'
@@ -579,11 +579,9 @@ class RespondentReply(DeclarativeBase):
     
     id_question = Column(   BigInteger,ForeignKey('sur_question.id_question'), nullable=False, index=True) ;
     question = relation('Question', backref='sur_resp_reply_id_question');
-    
-     
-     
     response_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
+    childenAnswer = relation('ReplyBasicQuestion')  ; 
     
     def __init__(self):
         pass;

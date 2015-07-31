@@ -122,3 +122,22 @@ class UserSocialNetwork(DeclarativeBase):
     image_url = Column(String(512))
     rank = Column(Integer)
     
+class ClientProject(DeclarativeBase):
+    __tablename__ = 'sur_m_client_project';
+    
+    id_client_project = Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime,onupdate=sql.func.utc_timestamp() );
+    
+class UserClientAuthen(DeclarativeBase):
+    __tablename__ = 'sur_user_client_authen';
+    
+    id_client_project = Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime,onupdate=sql.func.utc_timestamp() );
+    
+    

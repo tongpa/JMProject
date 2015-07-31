@@ -60,9 +60,10 @@ class AnswerController(BaseController):#RestController): #
     @expose('pollandsurvey.templates.view.multiquestion')
     def reply(self,id=0,ready='no', **kw):
         reload(sys).setdefaultencoding('utf8')
-         
+        
+        log.info("call reply"); 
         log.info("id = %s", id);
-        log.info("kw = %s", kw);
+        
          
         self.header = '';
         self.footer = '';
@@ -77,6 +78,7 @@ class AnswerController(BaseController):#RestController): #
         
         
         log.info( "after redirect");
+        
      
         log.info( self.questionOption.id_question_option);
             
@@ -105,6 +107,8 @@ class AnswerController(BaseController):#RestController): #
                 
             self.ip=request.environ.get("X_FORWARDED_FOR", request.environ["REMOTE_ADDR"]);
             self.browser = request.environ.get('HTTP_USER_AGENT');
+            
+            
             #save reply
             if(self.respondent is None):
                 self.respondent = model.Respondents();
@@ -114,7 +118,11 @@ class AnswerController(BaseController):#RestController): #
                 self.respondent.id_question_option = self.idPublic;
                 self.respondent.finished = 0;
                 self.respondent.save();
+                log.warn("respondet is null and save already");
                  
+        if self.respondent is None:
+            log.error("System have not idVoter : %s , idPublic : %s " ,self.idVoter,self.idPublic);
+            
                  
         return dict(page='view',header = Markdown(self.header).convert() , 
                     footer = Markdown(self.footer).convert()  , 
@@ -207,15 +215,23 @@ class AnswerController(BaseController):#RestController): #
         #get old question
         self.listReply = model.RespondentReply.listQuestionForUser(self.respondents.id_respondents);
         
-        question = [];
-        if( len(self.listReply) >0 ):
-            question = self.__getQuestionFromReply(self.listReply,self.questionOption);
-             
-        else:
-            question = self.__getQuestion(self.idPublic,self.questionOption);
-            model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
         
-        question = self.__randomQuestionAndAnswer(question,self.questionOption);    
+        
+        question = [];
+        log.info("Random Question And Answer : " );
+        if( len(self.listReply) >0 ):
+            
+            question = self.__getQuestionFromReply(self.listReply,self.questionOption);
+            question = self.__randomQuestionAndAnswer(question,self.questionOption); #add 
+        else:
+            
+            question = self.__getQuestion(self.idPublic,self.questionOption);
+            #save to database
+            question = self.__randomQuestionAndAnswer(question,self.questionOption);   #add
+            model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
+            log.info("Create Question And Answer to user : " + str(self.respondents.id_respondents) );
+        
+        #question = self.__randomQuestionAndAnswer(question,self.questionOption);    
         
         self.__setSequenceQuestion(question); 
         
@@ -227,14 +243,11 @@ class AnswerController(BaseController):#RestController): #
     @expose('json')
     def saveQuestion(self, *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "body data");
+        log.info( "function save Question answer");
         log.info( request.body);
         self.df = json.loads(request.body, encoding=request.charset);
         
         self.listAnswer = self.df.get('value');
-        
-         
-        
         self.finished =self.df.get('finished');
         self.redirect = '';
         
@@ -262,22 +275,28 @@ class AnswerController(BaseController):#RestController): #
                         self.respondent.finished = self.finished;
                         if(self.question):
                             self.respondentreply = model.RespondentReply.getByRespondentAndQuestion(self.idResp,self.idQuestion);
-                            if (self.respondentreply is None):
+                            
+                            
+                            
+                            if (len(self.respondentreply.childenAnswer) == 0):
                                 #save
                                 self.respondentreply = model.RespondentReply();
                                 self.respondentreply.id_respondents = self.idResp;
                                 self.respondentreply.id_question = self.idQuestion;
-                                #self.respondentreply.save();
-                                
+                                self.respondentreply.save();
+                                log.info("save answer respondentreply : " +str( self.respondentreply.id_respondents ) + " and " + str( self.respondentreply.id_question ) + " success");
                                 for v in self.values:
                                     self.replyquestion = model.ReplyBasicQuestion(); 
                                     self.replyquestion.id_resp_reply = self.respondentreply.id_resp_reply;
                                     self.replyquestion.id_basic_data = v;
-                                #    self.replyquestion.save();
+                                    self.replyquestion.save();
+                                 
+                                    log.info("save answer replyquestion : " +str( self.respondentreply.id_resp_reply ) + " and " + str( self.replyquestion.id_basic_data ) + " success");
                                 
                                 
                             else:
                                 log.info('user %s do this question : %s',self.idResp,self.idQuestion);
+                                
                         else:
                             log.info('find not found question id : : %s',self.idQuestion);
                             
@@ -408,7 +427,11 @@ class AnswerController(BaseController):#RestController): #
             self.redirect = self.URL_THANKYOU;
             if (isRedirect):
                 redirect(self.URL_THANKYOU) ;
+        elif (self.respondent is None):
+            log.error("System can not find idVoter : %s , idPublic : %s" , idVoter, idPublic);
             
+            redirect(self.URL_THANKYOU) ;
+        
         return self.respondent,self.redirect;
     
     def __getQuestion(self,idPublic,questionOption):

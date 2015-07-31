@@ -41,29 +41,29 @@ class InterfaceServiceController(RestController):
     @expose('json')
     #@require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def get_all(self,*args,**kw):
-        print "get_all";
+        log.info( "get_all");
         log.info( "args : %s ", args);
         log.info( "kw : %s", kw);
         
-        print len(request.headers);
+        #print len(request.headers);
         
-        for h in request.headers:
-            print h ,  request.headers[h];
+        #for h in request.headers:
+        #    print h ,  request.headers[h];
          
         try:
          
-            print "body : " ,request.body;
+            #print "body : " ,request.body;
             if( request.body):
                 self.df = json.loads(request.body, encoding=request.charset);
-                print self.df;
-            
+                #print self.df;
+                #set keyAuthorize
                 self.df['keyAuthorize'] = "#987654321";
                 samples = self.df;
             else:
                 samples = {u'userName': u'tong', u'keyAuthorize': None, u'password': u'tong', u'dataTestSurfvey': None, u'passKey': u'#13456789'};
         
         except Exception as e:
-            
+            log.error(e);
             if kw:
                 samples = kw;
                 samples['keyAuthorize'] = "#987654321";
@@ -97,6 +97,7 @@ class InterfaceServiceController(RestController):
             self.userExtenal.save();
             
             #x = json.loads(kw, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+            
             
             #1 create public
             self.defaultOption = model.QuestionOption.getByProjectDefault(self.userExtenal.id_test,'1');
@@ -159,9 +160,11 @@ class InterfaceServiceController(RestController):
     @with_trailing_slash
     @expose('json')
     def evaluate(self,*args,**kw):
-        print "call evaluate ";
-        print "args  "  ,args;
-        print "kw  " ,kw;
+        log.info("evaluate")
+        
+         
+        log.info( "args = %s"  ,args);
+        log.info( "kw = %s  " ,kw);
         samples = kw;
         if('Keyauthorize' in request.headers):
             self.Keyauthorize = request.headers['Keyauthorize'];
@@ -170,13 +173,17 @@ class InterfaceServiceController(RestController):
             
         print "key authorize : " , self.Keyauthorize;
         if self.Keyauthorize == "#987654321" :
-            self.userExtenal = model.UseExtenalLink.getUserLinkBy( kw.get("idUser"),kw.get("idTest"),kw.get("idPublic"));
+            
+            log.info( "idOwnerTest : %s , idTest : %s , idPublic : %s", kw.get("idOwnerTest") , kw.get("idTest"),kw.get("idPublic"));
+            
+            self.userExtenal = model.UseExtenalLink.getUserLinkBy( kw.get("idOwnerTest"),kw.get("idTest"),kw.get("idPublic"));
             
             if self.userExtenal :
                 #create sur_voter
-                
-                self.voter = self.userExtenal.voter;
-                if(self.voter is None):
+                self.mapExtenal = model.MapVoterExtenalLink.getUserLinkVoterBy(self.userExtenal.id_use_external_link, kw.get("idUser"));
+                 
+                self.voter = model.Voter;
+                if( self.mapExtenal is None or self.mapExtenal.voter is None):
                     log.info("user external is not voter %s",kw.get("email"));
                     self.voter = model.Voter();
                     self.voter.email = kw.get("email");
@@ -188,7 +195,13 @@ class InterfaceServiceController(RestController):
                     self.voter.birthdate =   kw.get("birthdate");
                     self.voter.id_gender = kw.get("idGender");
                     self.voter.save();
-                    self.userExtenal.id_voter = self.voter.id_voter; 
+                    
+                    self.mapExternalLink = model.MapVoterExtenalLink();
+                    self.mapExternalLink.id_use_external_link =  self.userExtenal.id_use_external_link;
+                    self.mapExternalLink.id_voter= self.voter.id_voter;
+                    self.mapExternalLink. id_user_ref= kw.get("idUser");
+                    self.mapExternalLink.save();
+                    #self.userExtenal.id_voter = self.voter.id_voter; 
                 #create sur_respondents
                 
                     self.respondents = model.Respondents();
@@ -201,6 +214,9 @@ class InterfaceServiceController(RestController):
                     
                     self.respondents.save();
                 #create link
+                else:
+                    self.voter =  self.mapExtenal.voter;
+                print "id voter : %s"  %self.voter.id_voter;
                 
                 samples['urlTest'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(kw.get("idTest")) ,str(kw.get("idPublic")) , str(self.voter.id_voter))  ;
 
@@ -212,6 +228,9 @@ class InterfaceServiceController(RestController):
                 samples['errorCode'] = 'E0002';            
                 samples['message'] = "Find not found ";
                 
+        
+        else:
+            log.error( "Keyauthorize : is not same "  );
         
         response.headers['KeyAuthorize'] = self.Keyauthorize;
         
