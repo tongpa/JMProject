@@ -52,7 +52,13 @@ class Utility(object):
         self.temp =currentDate + datetime.timedelta(days=numberDay);
         return datetime.datetime.strptime(self.temp.strftime("%Y-%m-%d") + " 23:59:59", "%Y-%m-%d %H:%M:%S");
     
-    
+    def plusTime(self,currentDate,numberMinute=0):
+        if(currentDate is None or ( type(currentDate) is not datetime.datetime )     ):
+            currentDate = datetime.datetime.today();
+        
+        self.temp =currentDate + datetime.timedelta(minutes=numberMinute);
+        
+        return datetime.datetime.strptime(self.temp.strftime("%Y-%m-%d %H:%M:%S")  , "%Y-%m-%d %H:%M:%S"); 
     
     def createPathFile(self,path):         
         if os.path.exists(path):
@@ -127,7 +133,7 @@ class Utility(object):
             first = str(first).lower();
             second = str(second).lower();
             self.index = second.rfind(first);
-            print first + " is path of " + second + "  : " + str(self.index);
+            #print first + " is path of " + second + "  : " + str(self.index);
             if(self.index >=0):
                 return True;
             else:
@@ -143,16 +149,16 @@ class Utility(object):
         if self.isEmpty(data):
             data = datetime.datetime.today();
             
-        print 'start : ' , start;    
-        print 'data : ' , data;
-        print 'stop : ' , stop;
+        #print 'start : ' , start;    
+        #print 'data : ' , data;
+        #print 'stop : ' , stop;
         
         
         if self.isEmpty(stop):
-            print 'start < date ', start <= data; 
+            #print 'start < date ', start <= data; 
             return start <= data;
         elif start < data <= stop:
-            print 'start < data <= stop :', start < data <= stop;
+            #print 'start < data <= stop :', start < data <= stop;
             return start < data <= stop;
         
         return False;
@@ -185,11 +191,12 @@ class Utility(object):
 
 #print ({True: True, False: False}[ answer in 'true'])
 
-u = Utility();
+#u = Utility();
 #print u.getCurrentDate();
-print u.decryptMD5('40c906c22eaf938f902b2fa85efff1d5');
+#print u.decryptMD5('40c906c22eaf938f902b2fa85efff1d5');
 #print u.plusDate(datetime.datetime.today(),0);
 
+#print u.plusTime(datetime.datetime.today() , 10);
 
 #print u.plusDate(datetime.datetime.today(),30);
 #print u.my_random_string(15);

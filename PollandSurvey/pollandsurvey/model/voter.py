@@ -21,7 +21,7 @@ from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession ,QuestionOption,QuestionProject,QuestionProjectType
+from pollandsurvey.model import DeclarativeBase, metadata, DBSession ,QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
 import transaction
 __all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
 
@@ -412,7 +412,7 @@ class Voter(DeclarativeBase):
     @classmethod
     def getListSurveyByMember(cls,user_id,  page=0, page_size=None):
         query = DBSession.query(cls.id_voter,QuestionProject.id_question_project,QuestionProject.name,QuestionOption.id_question_option,QuestionOption.activate_date ,QuestionOption.expire_date ,Respondents.finished,QuestionProjectType.description).\
-        join(MemberUser).join(Respondents).join(Respondents).join(QuestionOption).join(QuestionOption).join(QuestionProject).join(QuestionProjectType).filter(MemberUser.user_id  == str(user_id).decode('utf-8')) ;
+        join(MemberUser).join(Respondents).join(QuestionOption).join(QuestionProject).join(QuestionProjectType).filter(MemberUser.user_id  == str(user_id).decode('utf-8')) ;
         if page_size:
             query = query.limit(page_size)
         if page: 
@@ -523,6 +523,7 @@ class Respondents(DeclarativeBase):
     question_option = relation('QuestionOption', backref='sur_respondents_id_question_option');
     
     finished  = Column(BIT, nullable=True, default=0);
+    finished_date =  Column(DateTime, nullable=True );
     score_exam =   Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
@@ -552,13 +553,17 @@ class Respondents(DeclarativeBase):
             #return DBSession.query(cls).get(act); 
         else:
             return DBSession.query(cls) .all();
-        
-    def to_json(self):
-        return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
-                , "create_date": self.timezone };
+         
+    def to_json(self,moreData = False):
+        if not moreData :
+            return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
+                , "create_date": self.create_date };
+        else:
+            return {"id_respondents": self.id_respondents, "email": self.voter.email, "name": str(self.voter.prefix+' '+self.voter.firstname+' '+self.voter.lastname) , "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
+                , "create_date": self.create_date, 'status' : self.finished, 'respondent_data': self.respondent_data };
     def to_dict(self):
         return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
-                , "create_date": self.timezone };
+                , "create_date": self.create_date };
     @classmethod
     def getByVoterIdAndPublicId(cls,idvoter,idpublic):
         return DBSession.query(cls).filter(cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
@@ -567,7 +572,54 @@ class Respondents(DeclarativeBase):
     def getByVoterAndPublicId(cls,idvoter,idpublic):
         
         return DBSession.query(cls).outerjoin(Voter, Voter.id_voter == cls.id_voter).filter( cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
+    
+    @classmethod
+    def updateScoreByIdRespondents(cls, id_respondents):
+        sql = """ update sur_respondents a_respondents
+                    set a_respondents.score_exam =  ( 
+                    
+                     select 
+                    SUM(sur_basic_question.answer)  as sum_answer 
+                    from   sur_resp_reply  
+                      INNER JOIN sur_reply_basic_question on sur_resp_reply.id_resp_reply = sur_reply_basic_question.id_resp_reply
+                      INNER JOIN sur_basic_question on (sur_basic_question.id_question = sur_resp_reply.id_question and sur_basic_question.id_basic_data = sur_reply_basic_question.id_basic_data )
+                    where sur_resp_reply.id_respondents = a_respondents.id_respondents
+                    
+                    
+                    )
+                    where a_respondents.id_respondents = '""" + str(id_respondents) + """'  """;
+                    
+        result = DBSession.execute(sql);
+        DBSession.flush() ;  
+        
+    @classmethod
+    def getListByPublicId(cls,idpublic,page=0, page_size=None):
          
+        try:
+            query = DBSession.query(cls).outerjoin(Voter, Voter.id_voter == cls.id_voter).filter(   cls.id_question_option == str(idpublic) );
+            query_total = query;
+            
+            if page_size:
+                query = query.limit(page_size)
+            if page: 
+                page = 0 if page < 0 else page;
+                query = query.offset(page*page_size)
+            
+            values = query.all();  
+            total = query_total.count();
+              
+            data = [];
+            for v in values:
+                data.append(v.to_json(moreData= True));
+                             
+            return True,data,total;
+        except Exception as  e:
+            print e;  
+            return False, [], 0;#e.__str__();
+        
+        
+         
+           
 class RespondentReply(DeclarativeBase):
 
     __tablename__ = 'sur_resp_reply'
@@ -625,6 +677,12 @@ class RespondentReply(DeclarativeBase):
     @classmethod
     def getByRespondentAndQuestion(cls,idResp,idQuestion):
         return DBSession.query(cls).filter(cls.id_respondents == str(idResp), cls.id_question == str(idQuestion) ).first();
+    
+    @classmethod
+    def getResultByRespondemtAndQuestion(cls,idResp,idQuestion):
+        return  DBSession.query(cls.id_question,ReplyBasicQuestion.id_basic_data,BasicQuestion.answer).\
+            join(ReplyBasicQuestion).join(BasicQuestion,ReplyBasicQuestion.id_basic_data == BasicQuestion.id_basic_data ).\
+            filter(cls.id_respondents ==  str(idResp).decode('utf-8'), cls.id_question ==  str(idQuestion).decode('utf-8') ).first();
                 
 class ReplyBasicQuestion(DeclarativeBase):
 

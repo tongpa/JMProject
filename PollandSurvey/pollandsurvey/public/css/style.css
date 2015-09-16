@@ -61,6 +61,17 @@
 .icon-edit {
     background-image: url('../img/survey/edit.png') !important;
 }
+.icon-view {
+    background-image: url('../img/survey/view.png') !important;
+}
+
+.icon-true {
+    background-image: url('../img/survey/true.png') !important;
+}
+
+.icon-false {
+    background-image: url('../img/survey/false.png') !important;
+}
 
 /******/
 .app-header .x-panel-body {
@@ -168,4 +179,20 @@ td.patient-label {
 	width: '50%';
 	height: '50%';
 } 
+
+
+.true-highlighted{
+	background-color: yellow;
+}
+.false-highlighted{
+	background-color: red;
+}
+
+
+.x-grid-center-icon{
+   display:block;
+   margin:0 auto;
+   text-align:center;
+   cursor:hand;
+}
 /******/

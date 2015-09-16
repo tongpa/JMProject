@@ -69,9 +69,10 @@ def init_model(engine1 ):
 # Import your model modules here.
 from pollandsurvey.model.auth import User, Group, Permission
 from logsurvey import LogSurvey;
+from systemconfig import SysTemEnvironment;
 from movie import Movie
-from authuser import UserService,UserGenCode, UserSocialNetwork;
- 
+from authuser import UserService,UserGenCode, UserSocialNetwork,ClientProject,UserClientAuthen,UserSessionAuthen;
+from mail import SendMail 
 from survey import EmailTemplateType,EmailTemplate,SysConfig
 from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData,BasicTextData,Question,QuestionValidation
 from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation,DifficultyLevel,RandomType

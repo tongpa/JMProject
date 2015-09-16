@@ -172,5 +172,43 @@ class ScriptModelController(BaseController):
         return dict(survey=question , total = len(question)); 
     
     
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getInvitationNumberData(self, *args, **kw):
+        
+        user =  request.identity['user'];
+        self.idOption = kw.get('idOption');
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit');        
+        print args;
+        print kw;
+        
+        result,question,total = model.SendMail.getInvitationNumberByPublicId(self.idOption ,page=int(self.start) ,  page_size=int(self.limit));
+        
+        
+        return dict(survey=question , total = total);
+    
+    
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getListTrackVosterData(self, *args, **kw):
+        
+        user =  request.identity['user'];
+        self.idOption = kw.get('idOption');
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit');        
+        print args;
+        print kw;
+        
+        result,question,total = model.Respondents.getListByPublicId(self.idOption ,page=int(self.start) ,  page_size=int(self.limit));
+        
+        
+        return dict(survey=question , total = total);
+    
+     
+    
+    
     
     

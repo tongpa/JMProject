@@ -14,7 +14,7 @@ Ext.define('survey.view.pvoters.VotersView',{
     
 	
 	initComponent : function(){
-		main = this;
+		var main = this;
 		
 		main.voterid = Ext.create('Ext.form.field.Hidden',{name : 'id_voter'} );
 		
@@ -51,12 +51,15 @@ Ext.define('survey.view.pvoters.VotersView',{
 	                    	
 	                    	//main.closeWindow(main,bt);
 	                    	//form.reset();
-	                    	console.log(action);
+	                    	 
 	                    	if( action.result.result){
 	                    		Ext.Msg.alert(survey.message.success, action.result.message);
 	                    		main.ownerCt.hide(bt);
 	                    		form.reset();
+	                    		 
+	                    		 
 	                    		main.refreshOther();
+	                    		 
 	                    	}
 	                    	else{
 	                    		Ext.Msg.alert(survey.message.success, action.result.message);
@@ -99,6 +102,7 @@ Ext.define('survey.view.pvoters.VotersView',{
 		this.callParent();
 	},
 	refreshOther : function(){
+		 
 		this.fireEvent('refreshOther', this);
 		
 	},

@@ -47,6 +47,7 @@ class RegisterController(BaseController):
         self.utility = Utility();  
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
+        
         dh = LogDBHandler( config=config,request=request);        
         log.addHandler(dh)
 
@@ -75,7 +76,7 @@ class RegisterController(BaseController):
         
         self.success= True;
         self.message = "create success";
-        
+        self.urlServer =  model.SysTemEnvironment.getServerUrl();
         
         u = model.User.by_email_address(self.email);
         if u is None:
@@ -89,8 +90,9 @@ class RegisterController(BaseController):
                 self.emailValues['user_name'] = self.user.display_name;
                 self.emailValues['email'] = self.user.email_address;
                 self.emailValues['password'] = self.password;
-                self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
-               
+                self.emailValues['activate_url'] =  request.scheme   + '://' + self.urlServer + "/activate/" + str(self.userGenCode.code);  #request.application_url
+                
+                self.sendMailService = SendMailService();
                 self.sendMailService.sendActivate(self.emailValues);
                 self.sendMailService.start();
                     

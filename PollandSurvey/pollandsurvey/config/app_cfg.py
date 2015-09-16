@@ -106,6 +106,13 @@ base_config.sa_auth.post_logout_url = '/post_logout'
 #base_config.sa_auth.cookie_timeout = X
 #base_config.sa_auth.cookie_reissue_time = Y
 
+#add mail
+import tgext.mailer
+tgext.mailer.plugme(base_config)
+
+#from tgext.pluggable import plug
+#plug(base_config, 'tgext.mailer')
+
 try:
     # Enable DebugBar if available, install tgext.debugbar to turn it on
     from tgext.debugbar import enable_debugbar

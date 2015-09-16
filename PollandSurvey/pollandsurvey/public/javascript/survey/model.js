@@ -80,7 +80,17 @@ Ext.define('survey.model.variable',{
 	fields:['id','name']
 });
 
- 
+Ext.define('survey.model.InvitationNumber',{
+	extend: 'Ext.data.Model',
+    idProperty: 'email',    
+    fields: ['id_voter','email','name','no_send', 'last_create_date' ] 
+});
+
+Ext.define('survey.model.TrackVoter',{
+	extend: 'Ext.data.Model',
+    idProperty: 'email',    
+    fields: ['id_respondents','email','name','response_ip', 'create_date','status','respondent_data' ] 
+}); 
 
 
 Ext.define('survey.MasterStore',{
@@ -365,8 +375,37 @@ survey.listInvitationData = Ext.create('survey.MasterStore', {
             destroy: '/voter/deleteInvitation' 
            
         } 
-	},
+	}
 });
+
+survey.listInvitationNumberData = Ext.create('survey.MasterStore', {
+	model : 'survey.model.InvitationNumber',
+	storeId:'listInvitationNumberData',
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getInvitationNumberData',    	
+		api: {
+            read: '/model/getInvitationNumberData' 
+           
+        } 
+	}
+});
+
+survey.listTrackVoterData = Ext.create('survey.MasterStore', {
+	model : 'survey.model.TrackVoter',
+	storeId:'listTrackVoterData',
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getListTrackVosterData',    	
+		api: {
+            read: '/model/getListTrackVosterData' 
+           
+        } 
+	}
+});
+
 
 /*
 survey.listInvitationData = new Ext.data.Store({

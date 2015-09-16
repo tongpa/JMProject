@@ -49,6 +49,7 @@ Ext.define('survey.panel.ManageVoters',{
 			url : '/voter/createVoter',
 			listeners : {
 				refreshOther : function(cmp) {
+					 
 		            //main.refreshOther();
 		            survey.listVoterData.load();
 		        }

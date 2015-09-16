@@ -449,7 +449,7 @@ class Question(DeclarativeBase):
         return '"%s"' % (self.question )
     
     
-    def to_json(self,randomAnswer=True):
+    def to_json(self,randomAnswer=True,showResult = None):
         
          
         checkMedia = 0;
@@ -469,13 +469,19 @@ class Question(DeclarativeBase):
                 
         child =[];
         
+        if showResult:
+            dict['type'] = 'view' + dict['type'];
         
         if len( self.child ) >0 : 
             for answer in self.child:
-                for basicText in  answer.basicData.childenText:                    
-                    child.append(basicText.to_json());
+                for basicText in  answer.basicData.childenText:
+                        
+                    child.append(basicText.to_json(showResult=showResult));
                 for basicMedia in  answer.basicData.childenMedia:                    
-                    child.append(basicMedia.to_json());
+                    child.append(basicMedia.to_json(showResult=showResult));
+                
+            
+                    
         
         #radom answer 
         if(randomAnswer):
@@ -1045,12 +1051,21 @@ class BasicTextData(DeclarativeBase):
     def __str__(self):
         return '"%s"' % str(self.id_basic_data )
     
-    def to_json(self):
+    def to_json(self, showResult= None):
         
         dict  = {"id": self.id_basic_data, 
                  "label": self.value,
                  "multi_line": self.multi_line
                  };
+         
+        if showResult:
+             
+            if self.id_basic_data == showResult[1]:
+                dict['choose'] = True;
+                dict['result'] = showResult[2];
+            else :
+                dict['choose'] = False;
+                dict['result'] = None;
                  
         return dict;
     
@@ -1248,13 +1263,21 @@ class BasicMultimediaData(DeclarativeBase):
     def __str__(self):
         return '"%s"' % str(self.value )
     
-    def to_json(self):
+    def to_json(self, showResult= None):
         
         dict  = {"id": self.id_basic_data, 
                  "label": self.value 
                 # , "media_type": self.media_type 
                 # ,"media_path_file": self.media_path_file
                  };
+        print showResult;
+        if showResult:
+            if self.id_basic_data == showResult[1]:
+                dict['choose'] = True;
+                dict['result'] = showResult[2];
+            else :
+                dict['choose'] = False;
+                dict['result'] = None;
                  
         return dict;
     

@@ -27,11 +27,11 @@ Ext.define('survey.view.poption.ListPublicationOption',{
 	       	   		{header: survey.label.name_publication  , dataIndex: 'name_publication',width : '15%' , sortable: false }  ,
 					{header: survey.label.start_date  , dataIndex: 'activate_date',width : '10%' , sortable: false }  ,
 					{header: survey.label.expire_date , dataIndex: 'expire_date',width : '10%' , sortable: false }  ,
-					{header: survey.label.theme , dataIndex: 'theme',width : '25%' , sortable: false }  ,
-					{header: survey.label.view ,  width : '10%',  renderer :main.showbuttonView,  sortable: false  }  ,
+					{header: survey.label.theme , dataIndex: 'theme',width : '24%' , sortable: false }  ,
+					{header: survey.label.view ,  width : '8%',  renderer :main.showbuttonView,  sortable: false  }  ,
 					{header: survey.label.delete  ,  width : '10%',  renderer :main.deletebuttonManage,  sortable: false  } ,
-					{header: survey.label.edit ,  width : '10%',  renderer :main.showbuttonManage,  sortable: false  } ,
-					{header: survey.label.send ,  width : '10%',  renderer :main.sendbuttonManage,  sortable: false  } 
+					{header: survey.label.edit ,  width : '8%',  renderer :main.showbuttonManage,  sortable: false  } ,
+					{header: survey.label.send ,  width : '15%',  renderer :main.sendbuttonManage,  sortable: false  } 
 			  	
  	        ];
     } ,

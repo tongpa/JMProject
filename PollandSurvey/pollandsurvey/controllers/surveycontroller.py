@@ -54,14 +54,14 @@ class SurveyController(BaseController):
     @expose('pollandsurvey.templates.survey.index_new')
     def sampleMVC(self,*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         return dict(page='index')
      
     @expose('json')
     def readstudent(self,*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         self.message = "message from server";
         self.success = True;
@@ -74,19 +74,19 @@ class SurveyController(BaseController):
     @expose('json')
     def createstudent(self,*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         return dict(page='index')
     @expose('json')
     def updatestudent(self,*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         return dict(page='index')
     @expose('json')
     def deletestudent(self,*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         return dict(page='index')
     
@@ -99,7 +99,7 @@ class SurveyController(BaseController):
         """Handle the front-page."""
         reload(sys).setdefaultencoding("utf-8");
         
-        log.info( "survey controller index");
+        log.info("survey controller index");
         
         return dict(page='index')
     
@@ -211,7 +211,7 @@ class SurveyController(BaseController):
         user =  request.identity['user']; 
         project.user_id =  user.user_id;
         
-        log.info( kw );
+        log.info(kw );
         
         
         if 'description' in kw:
@@ -227,7 +227,7 @@ class SurveyController(BaseController):
        
        
         if 'id_question_project' in kw  :
-            project.id_question_project =  kw.get('id_question_project');
+            #project.id_question_project =  kw.get('id_question_project');
             
             project.save();
         
@@ -247,8 +247,8 @@ class SurveyController(BaseController):
         
         df = json.loads(request.body, encoding=request.charset);
         
-        log.info( df);
-        log.info( df.get('id_question') );
+        log.info(df);
+        log.info(df.get('id_question') );
         
         #question = model.Question.loadJson(df);
         
@@ -274,10 +274,10 @@ class SurveyController(BaseController):
         self.result = True;
         
         self.dataValue = kw;
-        log.info( kw);
-        log.info( '----------');
-        log.info( args);
-        log.info( '----------');
+        log.info(kw);
+        log.info('----------');
+        log.info(args);
+        log.info('----------');
         
     
         
@@ -289,7 +289,7 @@ class SurveyController(BaseController):
         user =  request.identity['user']; 
         
         #model.Question.createQuestion(self.dataValue,user.user_id);
-        log.info( "check");
+        log.info("check");
         
         self.isCreate = self.dataValue.get('id_question') is None or ( len(self.dataValue.get('id_question')) == 0 );
         
@@ -297,7 +297,7 @@ class SurveyController(BaseController):
         #create or update question
         question = model.Question();
         if( self.isCreate  ):
-            log.info( "---------- create question---------------------");
+            log.info("---------- create question---------------------");
             question.question = self.dataValue.get('question');
             question.help_message = self.dataValue.get('help_message');
             question.id_question_project = self.dataValue.get('id_question_project');
@@ -311,9 +311,9 @@ class SurveyController(BaseController):
             
             question.save();
             
-            log.info( question.id_question);
+            log.info(question.id_question);
         else:
-            log.info( "---------- update question---------------------");
+            log.info("---------- update question---------------------");
             question = model.Question.getById(self.dataValue.get('id_question'));
             if(question):
                 question.help_message = self.dataValue.get('help_message');
@@ -324,12 +324,12 @@ class SurveyController(BaseController):
                  
                 question.user_id = user.user_id;
             else:
-                log.info( "error question is not found");
+                log.info("error question is not found");
                 self.success = True;
                 self.message = "question is not found";
                 return dict(success=self.success, message = self.message); 
                 
-        log.info( "save Question");
+        log.info("save Question");
             
         # create or update questionMedia    
         imageFile = self.dataValue.get('image_upload');
@@ -337,7 +337,7 @@ class SurveyController(BaseController):
             
             self.file_name = imageFile.filename;
             self.file_data = imageFile.value;
-            self.target_file_name= self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR , str(question.id_question), self.file_name);
+            self.target_file_name = self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR, str(question.id_question), self.file_name);
               
             self.utility.saveFile(self.target_file_name,self.file_data);  
             
@@ -347,23 +347,23 @@ class SurveyController(BaseController):
                 questionMedia.id_question = question.id_question;
             else:
                 self.utility.removeFile(questionMedia.media_path_file);
-                log.info( 'remove file : ' + questionMedia.media_path_file );
+                log.info('remove file : ' + questionMedia.media_path_file );
             questionMedia.value = self.file_name;
             questionMedia.media_type = imageFile.type;
             questionMedia.media_path_file = self.target_file_name;
             questionMedia.save();
             
-            log.info( "save questionMedia"); 
+            log.info("save questionMedia"); 
             
         #Step 2 create         
         datagrid  = json.loads(self.dataValue.get('datagrid'));
         for basic_datas in datagrid:  
-            log.info( basic_datas);
+            log.info(basic_datas);
             self.isCreate = basic_datas.get('id_question') is not None and len( str(basic_datas.get('id_question')).strip() ) > 0 ;
             
             basicData = model.BasicData();
             basicQuestion = model.BasicQuestion();
-            log.info( "-----------------------Basic data-----------------------------------");
+            log.info("-----------------------Basic data-----------------------------------");
             if (not self.isCreate ):
                 log.info ("create basic data");                
                 basicData.id_basic_data_type = self.id_question_type; #image
@@ -378,43 +378,43 @@ class SurveyController(BaseController):
             else:
                 log.info ("update basic data : " + str( basic_datas.get('id_basic_data')) );                
                 basicData.id_basic_data = basic_datas.get('id_basic_data');
-                basicQuestion  = model.BasicQuestion.getByQuestionAndBasic(question.id_question,basicData.id_basic_data);
+                basicQuestion  = model.BasicQuestion.getByQuestionAndBasic(question.id_question, basicData.id_basic_data);
                 if(basicQuestion):
                     basicQuestion.answer =   basic_datas.get('answer') ; 
                     basicQuestion.order = basic_datas.get('seq');    
                 else:
-                    log.info( "error load basicQuestion");
+                    log.info("error load basicQuestion");
            
-            log.info( "------------------------basic Data type----------------------------------" );
-            log.info( 'self.id_question_type : ' + str(self.id_question_type)  + ' type : ' + type(self.id_question_type).__name__ ) ;
+            log.info("------------------------basic Data type----------------------------------" );
+            log.info('self.id_question_type : ' + str(self.id_question_type)  + ' type : ' + type(self.id_question_type).__name__ ) ;
             if (self.id_question_type == '1' or self.id_question_type == '2' or self.id_question_type == '3'):
-                log.info( "case text");
+                log.info("case text");
                 basicText = model.BasicTextData();
                 if (not self.isCreate ):
-                    log.info( "create basic text");
+                    log.info("create basic text");
                     basicText.id_basic_data = basicData.id_basic_data;
                     basicText.value = basic_datas.get('value');
                     basicText.save();
                 else:
-                    log.info( "update basic text");
+                    log.info("update basic text");
                     basicText = model.BasicTextData.getByBasicDataId(basicData.id_basic_data);
                     if(basicText):                
                         basicText.value = basic_datas.get('value');                       
                     else:
-                        log.info( "error load BasicTextData");    
+                        log.info("error load BasicTextData");    
                 
             elif (self.id_question_type == '4'):
-                log.info( "case image");
+                log.info("case image");
                 answerimage = self.dataValue.get('answer_image');
-                log.info( basic_datas.get('answer_image'));
-                log.info( type(answerimage));
+                log.info(basic_datas.get('answer_image'));
+                log.info(type(answerimage));
                 
-                log.info( 'basicData.id_basic_data : ' + str(basicData.id_basic_data));
+                log.info('basicData.id_basic_data : ' + str(basicData.id_basic_data));
                 
                 if (type(answerimage) is types.InstanceType or  type(answerimage) is types.ListType) :
                     if  type(answerimage) is types.InstanceType:
-                        log.info( 'single file');
-                        log.info( answerimage.type);
+                        log.info('single file');
+                        log.info(answerimage.type);
                         file = answerimage;
                         if( self.utility.isPartOf(file.filename,basic_datas.get('answer_image')) ):
                         #if (basic_datas.get('answer_image') == file.filename ) :
@@ -422,19 +422,19 @@ class SurveyController(BaseController):
                             self.file_name = file.filename;
                             self.file_data = file.value;
                             self.media_type = file.type;
-                            self.target_file_name= self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR , str(question.id_question), self.file_name);
+                            self.target_file_name= self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR, str(question.id_question), self.file_name);
                             self.utility.saveFile(self.target_file_name,self.file_data); 
                             
                             if ( not self.utility.isNumber( basic_datas.get('id_basic_data') ) ):
-                                log.info( 'create basic media');
+                                log.info('create basic media');
                                 basicMedia.id_basic_data = basicData.id_basic_data;
                                 basicMedia.value = self.file_name;
                                 basicMedia.media_type = self.media_type;
                                 basicMedia.media_path_file = self.target_file_name;
                                 basicMedia.save();
                             else:
-                                log.info( 'update basic media');
-                                basicMedia = model.BasicMultimediaData.getByBasicDataId( basic_datas.get('id_basic_data') );
+                                log.info('update basic media');
+                                basicMedia = model.BasicMultimediaData.getByBasicDataId(basic_datas.get('id_basic_data') );
                                 self.utility.removeFile(basicMedia.media_path_file);
                                 basicMedia.value = self.file_name;
                                 basicMedia.media_type = self.media_type;
@@ -442,8 +442,8 @@ class SurveyController(BaseController):
                                 
                     else:
                         for file in answerimage:
-                            log.info( 'type list file');
-                            log.info( type(file));
+                            log.info('type list file');
+                            log.info(type(file));
                             if type(file) is not types.UnicodeType:
                                 
                                 #print file.type;
@@ -452,35 +452,35 @@ class SurveyController(BaseController):
                                     self.file_name = file.filename;
                                     self.file_data = file.value;
                                     self.media_type = file.type;
-                                    self.target_file_name= self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR , str(question.id_question), self.file_name);
+                                    self.target_file_name= self.utility.joinPathFileAndCreatePath(self.UPLOAD_DIR, str(question.id_question), self.file_name);
                                     self.utility.saveFile(self.target_file_name,self.file_data); 
                                     basicMedia = model.BasicMultimediaData();
                                     if ( not self.utility.isNumber( basic_datas.get('id_basic_data') ) ):
-                                        log.info( 'create basic media');
+                                        log.info('create basic media');
                                         basicMedia.id_basic_data = basicData.id_basic_data;
                                         basicMedia.value = self.file_name;
                                         basicMedia.media_type = self.media_type;
                                         basicMedia.media_path_file = self.target_file_name;
                                         basicMedia.save();
                                     else:
-                                        log.info( 'update basic media');
-                                        basicMedia = model.BasicMultimediaData.getByBasicDataId( basic_datas.get('id_basic_data') );
+                                        log.info('update basic media');
+                                        basicMedia = model.BasicMultimediaData.getByBasicDataId(basic_datas.get('id_basic_data') );
                                         self.utility.removeFile(basicMedia.media_path_file);
                                         basicMedia.value = self.file_name;
                                         basicMedia.media_type = self.media_type;
                                         basicMedia.media_path_file = self.target_file_name;
                   
                 else:
-                    log.info( "Other type");
+                    log.info("Other type");
                     
                 pass;
              
             
-        log.info( "save object");
+        log.info("save object");
         
         
         
-        return dict(success=self.success, message = self.message,result = self.result);
+        return dict(success=self.success, message = self.message, result = self.result);
     
     
     @expose('json')
@@ -497,7 +497,7 @@ class SurveyController(BaseController):
         return dict(success=self.success, message = self.message);
     
     @expose('json')
-    def updateQuestionData(self  , **kw):
+    def updateQuestionData(self, **kw):
         reload(sys).setdefaultencoding("utf-8");
        
         self.success = True;
@@ -508,16 +508,16 @@ class SurveyController(BaseController):
         
         df = json.loads(request.body, encoding=request.charset);
         for d in df:
-            log.info( d.get('id_question'));
-            log.info( d.get('order'));
+            log.info(d.get('id_question'));
+            log.info(d.get('order'));
             self.success, self.message = model.Question.updateOrderById(d.get('order'), d.get('id_question'));
             
-            log.info( self.success);
-            log.info( self.message);
+            log.info(self.success);
+            log.info(self.message);
             
         #for d in request:
         #    log.info(d);
-        log.info( df);
+        log.info(df);
         log.info('-----------------------');
         log.info(kw);
        
@@ -545,7 +545,7 @@ class SurveyController(BaseController):
         
         df = json.loads(request.body, encoding=request.charset);
         # remark : remove file
-        self.success,self.message =  model.BasicQuestion.deleteData( df.get('id') , deleteBasicQuestion=True) ;
+        self.success,self.message =  model.BasicQuestion.deleteData(df.get('id'), deleteBasicQuestion=True) ;
         
         return dict(success=self.success, message = self.message);
     
@@ -558,14 +558,14 @@ class SurveyController(BaseController):
         log.info('---------1--------------');
          
      
-        log.info( kw);
-        log.info( args);
+        log.info(kw);
+        log.info(args);
         
         
         self.option = model.QuestionOption();   
          
-        if ( not self.utility.isEmpty(kw.get('id_question_option'))):
-            self.option = model.QuestionOption.getId( kw.get('id_question_option')  ); 
+        if(not self.utility.isEmpty(kw.get('id_question_option'))):
+            self.option = model.QuestionOption.getId(kw.get('id_question_option')  ); 
             
             
              
@@ -577,10 +577,10 @@ class SurveyController(BaseController):
         self.option.id_fix_random_type = kw.get('id_fix_random_type');
         
         if (not self.utility.isEmpty(kw.get('activate_date'))):
-            self.option.activate_date =  datetime.strptime(  kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;
+            self.option.activate_date =  datetime.strptime(kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;
         
         if (not self.utility.isEmpty(kw.get('expire_date'))):
-            self.option.expire_date =  datetime.strptime(  kw.get('expire_date')  + ' 23:59:59' , '%d/%m/%Y %H:%M:%S') ;
+            self.option.expire_date =  datetime.strptime(kw.get('expire_date')  + ' 23:59:59' , '%d/%m/%Y %H:%M:%S') ;
        
         
         self.option.id_question_invitation = kw.get("id_question_invitation");
@@ -596,7 +596,7 @@ class SurveyController(BaseController):
         self.option.redirect_url =kw.get('redirect_url');
         
         if (  self.utility.isEmpty(kw.get('id_question_option'))):
-            log.info( "save option");
+            log.info("save option");
             self.option.save();
        
             
@@ -620,8 +620,8 @@ class SurveyController(BaseController):
         
         df = json.loads(request.body, encoding=request.charset);
         
-        log.info( df);
-        log.info( df.get('id_question_option'));
+        log.info(df);
+        log.info(df.get('id_question_option'));
         
          
         idQuestion = df.get('id_question_option');
@@ -629,19 +629,19 @@ class SurveyController(BaseController):
         self.success, self.message = model.QuestionOption.deleteById(idQuestion);
 
         
-        return dict(success=self.success, message = self.message);
+        return dict(success=self.success, message =self.message);
     
     
     @expose('json')
-    def addInvitation(self,**kw):
+    def addInvitation(self, **kw):
         reload(sys).setdefaultencoding('utf8')
         
         print kw;
         print kw.get('id_question_invitation');
         #print kw.get('content');
-        print kw.get('subject');
+        print str(kw.get('subject')).encode('utf-8');
         print kw.get('id_question_project');
-        print kw.get('from_name');
+        print str(kw.get('from_name')).encode('utf-8');
         
         
         self.success = True;
@@ -663,7 +663,7 @@ class SurveyController(BaseController):
             self.template.content = kw.get('content');
             
             if (  self.utility.isEmpty(kw.get('id_question_option'))):
-                log.info( "save email template");
+                log.info("save email template");
                 self.template.save();
         except Exception as e:
             self.result = False;
@@ -671,7 +671,7 @@ class SurveyController(BaseController):
             
         print self.message;        
         
-        return dict(success=self.success, message = self.message,result= self.result);
+        return dict(success=self.success, message = self.message, result= self.result);
     
     
     @expose('json')
@@ -686,7 +686,7 @@ class SurveyController(BaseController):
     
     
     @expose('json')
-    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    @require(predicates.in_any_group('voter', 'managers', msg=l_('Only for voter')))
     def deleteInvitation(self, **kw):
         reload(sys).setdefaultencoding('utf8')
         self.success = True;
@@ -695,8 +695,8 @@ class SurveyController(BaseController):
         try:
             df = json.loads(request.body, encoding=request.charset);
             
-            print( df);
-            print( df.get('id_question_invitation'));
+            print(df);
+            print(df.get('id_question_invitation'));
             
             
             
@@ -707,15 +707,15 @@ class SurveyController(BaseController):
             
             
         except Exception as e:
-            self.result = False;
+            self.result =False;
             self.message = '' + str(e);
             
         
-        return dict(success=self.success, result = self.result , message = self.message);
+        return dict(success=self.success, result =self.result, message =self.message);
     
     
     @expose('json')
-    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    @require(predicates.in_any_group('voter', 'managers', msg=l_('Only for voter')))
     def sendSurvey(self, **kw):
         reload(sys).setdefaultencoding('utf8')
         self.success = True;
@@ -726,14 +726,14 @@ class SurveyController(BaseController):
         try:
             df = json.loads(request.body, encoding=request.charset);
             
-            print( df);
-            print( df.get('id_question_option'));
-            print( df.get('id_question_project'));
-            print( df.get('id_question_invitation'));
+            print(df);
+            print(df.get('id_question_option'));
+            print(df.get('id_question_project'));
+            print(df.get('id_question_invitation'));
             
             self.option = model.QuestionOption.getId(df.get('id_question_option'));
             
-            if self.option.send_status == 0 :
+            if self.option.send_status == 0:
                 
                 self.emailtemplate = model.Invitation.getId(df.get('id_question_invitation'));
                 if(self.emailtemplate is not None):
@@ -744,16 +744,19 @@ class SurveyController(BaseController):
                     
                     user =  request.identity['user'];
                     
-                    self.voters, self.leng= model.Voter.getVoter(user.user_id,page=0, page_size=100); 
+                    self.voters, self.leng =model.Voter.getVoter(user.user_id, page=0, page_size=100); 
         
                     for v in self.voters:
                         #print v;
-                        self.resp = model.Respondents();
-                        self.resp.id_voter = v.id_voter;
-                        self.resp.id_question_project = self.option.id_question_project;
-                        self.resp.id_question_option=self.option.id_question_option;
+                        self.resp = model.Respondents.getByVoterIdAndPublicId(v.id_voter,self.option.id_question_option);
+                        if (self.resp is None):
+                            self.resp = model.Respondents();
+                            self.resp.id_voter = v.id_voter;
+                            self.resp.id_question_project = self.option.id_question_project;
+                            self.resp.id_question_option =self.option.id_question_option;
                         
-                        self.resp.save();
+                            self.resp.save();
+                        
                         
                         
                         self.emailValues={};
@@ -761,21 +764,32 @@ class SurveyController(BaseController):
                         self.emailValues['email'] = v.email;
                         self.emailValues['subject'] = self.emailtemplate.subject;
                         self.emailValues['from'] =  self.emailtemplate.from_name;
+                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ;
+                        self.emailValues['initialDate'] = str(self.option.activate_date);
+                        self.emailValues['finishDate'] = str(self.option.expire_date);
                         
-                        
-                        
-                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(self.option.id_question_project) ,str(self.option.id_question_option) , str(v.id_voter))  ;
+                         
                         
                         template = self.emailtemplate.content;
-                        for k,v in  self.emailValues.iteritems():
-                            template = template.replace('[%s]' % k,v)
+                        for k, va in  self.emailValues.iteritems():
+                            template = template.replace('[%s]' % k, va)
                             
+                        self.sendmail = model.SendMail(id_question_option = self.resp.id_question_option,
+                                                       id_voter = self.resp.id_voter, 
+                                                       user_id =None,
+                                                       sender_name = self.emailtemplate.from_name,
+                                                       receive =  v.email,
+                                                       subject = self.emailtemplate.subject,
+                                                       content = template);
+                                                       
+                        self.sendmail.save();
+                        
                         
                         sendmail  = SendMailService();
-                    
-                        sendmail.sentEmail(self.emailValues,template);
+                        sendmail.sentEmail(self.emailValues, template);
                         
-                       
+                        #self.sendmail.sended_date = datetime.now();
+                        #self.sendmail.status = 'F';
                        
                         
                     
@@ -788,19 +802,21 @@ class SurveyController(BaseController):
                 
                 print "\n send to thread";
             else:
-                self.result =False;
+                self.result = False;
                 self.message = "system found send already"; 
             
             #model.Invitation.deleteById(df.get('id_question_invitation'));
              
             
         except Exception as e:
-            
+            print e;
             self.result = False;
             self.message = '' + str(e);
             
         
-        return dict(success=self.success, result = self.result , message = self.message);
+        return dict(success=self.success, result=self.result, message=self.message);
+    
+     
         
         
         

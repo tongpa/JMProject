@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
 
-from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate  
+from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate   
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates,controllers;
@@ -17,10 +17,10 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
 
-from pollandsurvey.controllers.service import SendMailService,RegisterService
+from pollandsurvey.controllers.service import SendMailService, RegisterService, SendMail, DoCheckin
 from pollandsurvey.controllers.utility import Utility
 
-from pollandsurvey.controllers.register import RegisterController,AccountController;
+from pollandsurvey.controllers.register import RegisterController,AccountController, AccountSysController;
 from pollandsurvey.controllers.surveycontroller import SurveyController;
 from pollandsurvey.controllers.votercontroller import VoterController
 from pollandsurvey.controllers.script import  ScriptController, ScriptModelController, PreviewController, ImagesController;
@@ -31,6 +31,8 @@ from pollandsurvey.controllers.answercontroller import AnswerController;
 from pollandsurvey.controllers.listsurvey import ListSurveyController
 
 from pollandsurvey.controllers.interfaceservicecontroller import InterfaceServiceController
+ 
+
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
 import time
@@ -81,6 +83,8 @@ class RootController(BaseController):
     home = ListSurveyController();
     voter = VoterController();
     
+    #acc = AccountSysController();
+    
     
     webservice = InterfaceServiceController();
     
@@ -99,6 +103,7 @@ class RootController(BaseController):
     @expose('pollandsurvey.templates.metronic')
     def index(self, came_from=lurl('/')):
         
+        print request.scheme   + '://';
         
         return dict(page='metronic') 
     
@@ -332,6 +337,7 @@ class RootController(BaseController):
             # self.emailValues['password'] = self.password;
             self.emailValues['activate_url'] = request.application_url + "/activate/" + str(self.userGenCode.code);
            
+            self.sendMailService = SendMailService();
             self.sendMailService.sendActivate(self.emailValues);
             self.sendMailService.start();
             
@@ -421,13 +427,13 @@ class RootController(BaseController):
             self.emailValues['email'] = self.user.email_address;
             self.emailValues['password'] = newPassword;
              
-            
+            self.sendMailService = SendMailService();
             self.sendMailService.sendForgotPassword(self.emailValues);
             self.sendMailService.start();
              
         else:
             log.info('forget password email : %s can not access',self.email);
-        redirect("/")
+        redirect("/login")
         
     @expose('pollandsurvey.templates.timer')
     def exampletimer(self, **kw):
@@ -450,6 +456,55 @@ class RootController(BaseController):
         
         return dict(historys = '1');
     
+    @expose('json')
+    def sendMailUser(self):
+        
+        #tSendMail = SendMail();
+        #tSendMail.executeMail();
+        ##tSendMail.start();
+        
+        checkin = DoCheckin();
+        checkin.start();
+         
+        return dict(historys = '1');
+    
+    @expose('json')
+    def sendMail(self):
+        log.info("send main")
+        from tgext.mailer import Message, get_mailer, Attachment
+        from tgext.mailer.mailer import Mailer
+        
+        body = Attachment(data="hello, arthur",
+                  transfer_encoding="quoted-printable")
+        html = Attachment(data="<p><H1>hello</H1>, arthur <br> I test. <b>send mail</b></p>",
+                  transfer_encoding="quoted-printable")
+        
+        message = Message(subject="hello world",
+                  sender="Poll",  #tongpama@gmail.com
+                  recipients=["jmperson1@hotmail.com"],
+                  html="<p><H1>hello</H1>, arthur <br> I test. <b>send mail</b></p>" 
+                  )
+        
+        #mailer = get_mailer(request)
+        
+        
+        
+        mailer = Mailer(host="smtp.gmail.com",
+                 port= "587", 
+                 username="padungsandy@gmail.com",
+                 password="tong1234",
+                 tls=True )
+        
+        #mailer.host = "smtp.gmail.com"
+        # mailer.port = "587"
+        #mailer.username = "padungsandy@gmail.com"
+        #mailer.password = "tong1234"
+        
+        mailer.send(message)
+        return dict(historys = '1');
+         
+    
+             
     """
     @expose('pollandsurvey.templates.login')
     def login_old(self, came_from=lurl('/')):

@@ -46,9 +46,71 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
 		
 		main.content = Ext.create('Ext.form.field.HtmlEditor',{name : 'content',enableColors: false, enableAlignments: false});
 		 
+		main.panelButton = Ext.create('Ext.form.Panel',{
+			layout: {
+				type: 'hbox',
+                padding:'5',
+                pack:'start',
+                align:'middle'
+		    },
+		    defaults:{margin:'0 5 0 0'}, 
+		    items: [
+		            				{
+                                        xtype:'button',
+                                        text: 'Volunteers Name',
+                                        handler : function(bt,ev){
+                                        	 
+                                        	main.contentTemp = main.content.getValue();
+                                        	
+                                        	main.contentTemp = main.replaceHtml(main.contentTemp);
+                                        	 
+                                        	 
+                                        	main.contentTemp = main.contentTemp + '[name]';
+                                        	
+                                        	console.log(main.contentTemp);
+                                        	main.content.setValue(main.contentTemp);
+                                        }
+                                    },{
+                                        xtype:'button',
+                                        text: 'Access URL',
+                                        handler : function(bt,ev){
+                                        	 
+                                        	main.contentTemp = main.content.getValue();
+                                        	main.contentTemp = main.replaceHtml(main.contentTemp);
+                                        	
+                                        	main.contentTemp = main.contentTemp + '<a href="[url]">[url]</a>';
+                                        	console.log(main.contentTemp);
+                                        	main.content.setValue(main.contentTemp);
+                                        }
+                                    },{
+                                        xtype:'button',
+                                        text: 'Initial Date',
+                                        handler : function(bt,ev){
+                                        	 
+                                        	main.contentTemp = main.content.getValue();
+                                        	main.contentTemp = main.replaceHtml(main.contentTemp);
+                                        	
+                                        	main.contentTemp = main.contentTemp + '[initialDate]';
+                                        	console.log(main.contentTemp);
+                                        	main.content.setValue(main.contentTemp);
+                                        }
+                                    },{
+                                        xtype:'button',
+                                        text: 'Finish Date',
+                                        handler : function(bt,ev){
+                                        	 
+                                        	main.contentTemp = main.content.getValue();
+                                        	main.contentTemp = main.replaceHtml(main.contentTemp);
+                                        	
+                                        	main.contentTemp = main.contentTemp + '[finishDate]';
+                                        	console.log(main.contentTemp);
+                                        	main.content.setValue(main.contentTemp);
+                                        }
+                                    }
+		        ]
+		});
 		
-		
-		main.items = [main.idquestion,main.idinvitation,main.nameContent,main.subjectinvitation,main.fromName,main.content];
+		main.items = [main.idquestion,main.idinvitation,main.nameContent,main.subjectinvitation,main.fromName,main.content,main.panelButton];
 		
 		main.btsave = Ext.create('Ext.Button',{		 
 			text : survey.label.save,
@@ -127,6 +189,15 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
 		}
 		
 		 
+	},
+	replaceHtml: function (contentTemp){
+		lastindex = contentTemp.lastIndexOf('<br>');
+    	if (lastindex != -1){
+    		firstValue = contentTemp.substring(0,lastindex);
+    		secondValue = contentTemp.substring(lastindex+4,contentTemp.length);
+    		contentTemp = firstValue + secondValue;
+    	}
+    	return contentTemp;
 	}
 });
 

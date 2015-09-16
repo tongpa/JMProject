@@ -17,6 +17,7 @@ class SendMailService(threading.Thread):
         threading.Thread.__init__(self);
         self.sendType =0;
         self.SMTP_SERVER = config['smtp_server'] ;
+        self.SMTP_PORT= config['smtp_port'] ;
         self.SMTP_USER = config['smtp_user'] ;
         self.SMTP_PASSWORD = config['smtp_password'] ;
         
@@ -56,17 +57,19 @@ class SendMailService(threading.Thread):
             msg['Subject'] = email.get('subject');
             msg['From'] = email.get('from');
             msg['To'] = email.get('email');
-            
+            print "email : " ,email.get('from'); 
             
             part1 = MIMEText(template, 'html');
             msg.attach(part1)
             
             
-            server = smtplib.SMTP(self.SMTP_SERVER) 
+            server = smtplib.SMTP(self.SMTP_SERVER,self.SMTP_PORT) 
             server.ehlo()
             server.starttls()
             server.login(self.SMTP_USER, self.SMTP_PASSWORD)
             server.sendmail(self.SMTP_USER, [email.get('email')], msg.as_string())
+            
+            print msg.as_string()
             server.close();
         except Exception as e:
             log.exception(str(e)); 
@@ -88,11 +91,14 @@ class SendMailService(threading.Thread):
             msg.attach(part1)
             
             
-            server = smtplib.SMTP(self.SMTP_SERVER) 
+            server = smtplib.SMTP(self.SMTP_SERVER,self.SMTP_PORT) 
             server.ehlo()
             server.starttls()
             server.login(self.SMTP_USER, self.SMTP_PASSWORD)
             server.sendmail(self.SMTP_USER, [self.email.get('email')], msg.as_string())
+            
+            
+            
             server.close();
         except Exception as e:
             log.exception(e.value); 

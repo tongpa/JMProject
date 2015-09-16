@@ -173,41 +173,69 @@ class PreviewController(BaseController):
     
     @expose('json')
     def getDataPreview(self, came_from=lurl('/'),   *args, **kw): 
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         idProject = kw.get('idProject');
+        idRespondet = None;
+        
+        if( '.' in idProject):
+            self.data =  self.utility.spritValue(idProject,".")
+             
+            idProject = self.data[0];
+            if len(self.data) == 2:
+                idRespondet = self.data[1];
+            
         print args;
         print kw ;
         
         questions = [];
         
-        self.questionOption = model.QuestionOption.getId(idProject);
-        if self.questionOption :
-            self.listQuestions = model.Question.getByProjectId(self.questionOption.id_question_project);
+        
+        question = [];
+        if idRespondet :
+            log.info("Query with respondent");
+            self.listReply = model.RespondentReply.listQuestionForUser(self.data[1]);
             
-            question = [];
-            for self.question in self.listQuestions:
-                #print self.question.id_question;
-                #print self.question.question;
-                #print self.question.question_type.type;
-                #print self.question.order;
-                question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
+            for re in self.listReply:
+                
+                
+                result = model.RespondentReply.getResultByRespondemtAndQuestion(idRespondet,re.question.id_question);
+                              
+                
+                question.append(re.question.to_json(randomAnswer=False, showResult = result));
+                
+               
             
-            
-            questions = [];
+         
+        else :
+            log.info("Query with question");
+            self.questionOption = model.QuestionOption.getId(idProject);
+        
+            if self.questionOption :
+                self.listQuestions = model.Question.getByProjectId(self.questionOption.id_question_project);
+                
+                question = [];
+                for self.question in self.listQuestions:
+                    #print self.question.id_question;
+                    #print self.question.question;
+                    #print self.question.question_type.type;
+                    #print self.question.order;
+                    question.append(self.question.to_json(randomAnswer = self.questionOption.random_answer));
+                
+                
+                 
            
              
             
-            questions.append({'id': idProject, 'question' : question});
+        questions.append({'id': idProject, 'question' : question});
+       
         
         return dict(questions = questions);
     
     
     @expose('pollandsurvey.templates.view.goodbye')
     def saveQuestion(self,id=0 , came_from=lurl('/'),   *args, **kw): 
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
@@ -230,3 +258,69 @@ class PreviewController(BaseController):
         
         return dict(page='goodbye',success=self.success, message = self.message,goodbye = self.goodbye_message,nextQuestion = self.nextQuestion,urlRedirect = self.urlRedirect);
     
+    @expose('pollandsurvey.templates.view.multiquestion')
+    def showResult(self,id=0  ,ready='yes' , came_from=lurl('/'),   *args, **kw): 
+        
+        reload(sys).setdefaultencoding("utf-8");
+        
+        if not request.identity:
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1
+            redirect('/login',   params=dict(came_from=came_from, __logins=login_counter))
+        userid = request.identity['repoze.who.userid']
+        
+        self.data = self.utility.spritValue(id,".")
+        
+        if len(self.data) != 2:
+            return dict(questions = []);
+        
+        log.info('preview id : ' + str(id));
+        log.info('ready : ' + str(ready))
+        
+        self.header = '';
+        self.footer = '';
+        self.nextQuestion ='';
+        self.template ='';
+        self.questionOption = model.QuestionOption.getId(self.data[0]);
+        if self.questionOption : 
+            log.info('expire date : ' + str(self.questionOption.expire_date));
+            log.info('current : ' + str(datetime.now()) );
+            
+            if datetime.now() <= self.questionOption.expire_date:
+                log.info('not expire');
+            else :
+                log.info('expire');
+            
+            
+            if str(ready).lower() == 'no':    
+                #check have welcome page
+                if( not self.utility.isEmpty(self.questionOption.welcome_message) ) :
+                    redirect(request.path_info + '/welcome?id='+ str(self.questionOption.id_question_option) );
+                else:
+                    self.template = self.questionOption.theme.template;
+                    override_template(PreviewController.index, self.template) ;    
+                    
+            elif str(ready).lower() == 'yes':
+                self.header = self.questionOption.header_message;
+                self.footer = self.questionOption.footer_message;
+                self.urlName = self.utility.spritValue(request.path_info,'/');
+                self.template = self.questionOption.theme.template
+                if(len(self.urlName) >= 1 ) :
+                    self.nextQuestion = '/' + self.urlName[0] + '/saveQuestion' + '?id='+ str(self.questionOption.id_question_option);
+                
+                
+                if(self.template is not None and len(self.template) > 0):    
+                    log.info("template used : %s",  self.template );                     
+                    override_template(PreviewController.index, self.template) 
+                    
+                
+        print 'idproject : ', id;     
+        return dict(page='view',header = self.header, 
+                    footer = self.footer, 
+                    action = self.nextQuestion,
+                    template= self.template,
+                    urldata = self.URL_GETDATAQUESTION.format(id) , 
+                    idproject = id ,
+                    shownavigator = bool(self.questionOption.show_navigator),
+                    idresp = ""); 
+    
+     

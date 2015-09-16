@@ -204,28 +204,28 @@ class AnswerController(BaseController):#RestController): #
         
         self.idProject,self.idPublic,self.idVoter,self.redirect = self.__checkExpire(idProject);
         
-        log.info("idProject : %s ", self.idProject);    
-        log.info("idPublic : %s ", self.idPublic);
-        log.info("idVoter : %s ", self.idVoter);
-        log.info("redirect : %s ", self.redirect);
+        log.info("idProject : %s,  idPublic : %s, idVoter : %s, redirect : %s  ", str(self.idProject), str(self.idPublic), str(self.idVoter), str(self.redirect));
+       
         
         self.respondents  = model.Respondents.getByVoterIdAndPublicId(self.idVoter,self.idPublic);    
         self.questionOption = model.QuestionOption.getId(self.idPublic);
         
+        
         #get old question
         self.listReply = model.RespondentReply.listQuestionForUser(self.respondents.id_respondents);
         
-        
+        self.respondents.respondent_data = datetime.now();
         
         question = [];
         log.info("Random Question And Answer : " );
         if( len(self.listReply) >0 ):
-            
+            log.info("Random new");
             question = self.__getQuestionFromReply(self.listReply,self.questionOption);
             question = self.__randomQuestionAndAnswer(question,self.questionOption); #add 
         else:
-            
+             
             question = self.__getQuestion(self.idPublic,self.questionOption);
+            log.info("get new Question and Random new, len question : %s", str(len(question)));
             #save to database
             question = self.__randomQuestionAndAnswer(question,self.questionOption);   #add
             model.RespondentReply.createQuestionForUser(question,self.respondents.id_respondents);
@@ -273,18 +273,20 @@ class AnswerController(BaseController):#RestController): #
                         self.question = model.Question.getById(self.idQuestion);
                         
                         self.respondent.finished = self.finished;
+                        self.respondent.finished_date = datetime.now();
                         if(self.question):
                             self.respondentreply = model.RespondentReply.getByRespondentAndQuestion(self.idResp,self.idQuestion);
                             
-                            
-                            
-                            if (len(self.respondentreply.childenAnswer) == 0):
-                                #save
+                            if (self.respondentreply is None):
                                 self.respondentreply = model.RespondentReply();
                                 self.respondentreply.id_respondents = self.idResp;
                                 self.respondentreply.id_question = self.idQuestion;
                                 self.respondentreply.save();
                                 log.info("save answer respondentreply : " +str( self.respondentreply.id_respondents ) + " and " + str( self.respondentreply.id_question ) + " success");
+                                
+                            
+                            if (len(self.respondentreply.childenAnswer) == 0):
+                                #save
                                 for v in self.values:
                                     self.replyquestion = model.ReplyBasicQuestion(); 
                                     self.replyquestion.id_resp_reply = self.respondentreply.id_resp_reply;
@@ -304,7 +306,9 @@ class AnswerController(BaseController):#RestController): #
                         log.info('find not found respondent id : : %s',self.idResp);
                     
                     
-            if(self.finished):     
+            if(self.finished):  
+                model.Respondents.updateScoreByIdRespondents(self.idResp);
+                
                 self.redirect = self.URL_GOODBYE.format(   self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
                
                     

@@ -1,4 +1,4 @@
-from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate ,RestController ,response
+from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate ,RestController ,response,   session
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates,controllers;
@@ -49,19 +49,49 @@ class InterfaceServiceController(RestController):
         
         #for h in request.headers:
         #    print h ,  request.headers[h];
-         
+        print "body : " ,request.body;
         try:
          
-            #print "body : " ,request.body;
-            if( request.body):
-                self.df = json.loads(request.body, encoding=request.charset);
-                #print self.df;
-                #set keyAuthorize
-                self.df['keyAuthorize'] = "#987654321";
-                samples = self.df;
-            else:
-                samples = {u'userName': u'tong', u'keyAuthorize': None, u'password': u'tong', u'dataTestSurfvey': None, u'passKey': u'#13456789'};
-        
+            if (kw):
+                self.client_id = kw['clientId'];
+                self.client_secret = kw['clientSecret'];
+                
+                self.userClientAhtuen = model.UserClientAuthen.getUserClientAuthen(self.client_id, self.client_secret);
+                samples = kw;
+                print self.userClientAhtuen;
+                if (self.userClientAhtuen):
+                    self.keyAuthorize =   self.utility.my_random_string(15);
+                    samples['keyAuthorize'] =  self.keyAuthorize #; "#987654321";
+                    
+                    self.startDate = self.utility.getCurrentDate();
+                    self.expireDate = self.utility.plusTime(self.startDate, 5)
+                    model.UserSessionAuthen.createSessionAuthen( self.keyAuthorize,self.startDate, self.expireDate  ) ;
+                     
+            else:    
+            
+                if( request.body):
+                    print "get value : request.body"
+                    self.df = json.loads(request.body, encoding=request.charset);
+                    print self.df;
+                    #print self.df;
+                    #set keyAuthorize
+                    self.client_id = self.df['clientId'];
+                    self.client_secret = self.df['clientSecret'];             
+                
+                
+                
+                
+                    samples = self.df;
+                else:
+                    samples = {u'userName': u'tong', u'keyAuthorize': None, u'password': u'tong', u'dataTestSurfvey': None, u'passKey': u'#13456789'};
+                    
+                    self.client_id = kw['clientId'];
+                    self.client_secret = kw['clientSecret'];
+            
+            
+            
+            
+            
         except Exception as e:
             log.error(e);
             if kw:
@@ -85,8 +115,11 @@ class InterfaceServiceController(RestController):
         self.Keyauthorize = request.headers['Keyauthorize'];
         
         samples = kw;
-        if self.Keyauthorize == "#987654321" :
-            
+        
+        print "createTest key authorize : " , self.Keyauthorize;
+        
+        #if model.UserSessionAuthen.currentSessionAuthen(self.Keyauthorize):
+        if  self.Keyauthorize == "459987456":   
             self.userExtenal = model.UseExtenalLink();
             self.userExtenal.id_user =  kw.get("idUser");
             self.userExtenal.user_type =kw.get("userType");
@@ -171,8 +204,11 @@ class InterfaceServiceController(RestController):
         else:
             self.Keyauthorize = '0000000000';
             
-        print "key authorize : " , self.Keyauthorize;
-        if self.Keyauthorize == "#987654321" :
+        print "11 key authorize : " , self.Keyauthorize;
+        
+        
+        
+        if model.UserSessionAuthen.currentSessionAuthen(self.Keyauthorize): #self.Keyauthorize == "#987654321" :
             
             log.info( "idOwnerTest : %s , idTest : %s , idPublic : %s", kw.get("idOwnerTest") , kw.get("idTest"),kw.get("idPublic"));
             
@@ -236,4 +272,12 @@ class InterfaceServiceController(RestController):
         
         return samples;
     
+    
+    @with_trailing_slash
+    @expose('json')
+    def getScore(self,*args,**kw):
+        log.info("getScore")
+        samples = kw;
+        
+        return samples;
             
