@@ -353,6 +353,7 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     var checkboxTemplateFile = '/template/checkboxtpl.html';
 	     var imageTemplateFile = '/template/imagetpl.html';
 	     
+	     var viewimageTemplageFile = '/template/viewradiotpl.html';
 	      
 	     
 	     var getTemplate = function(contentType) {
@@ -370,6 +371,9 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	             case 'image':
 	                 template = imageTemplateFile;
 	                 break;
+	             case 'viewradio' :
+	            	 template = viewimageTemplageFile;
+	            	 break;
 	         }
 
 	         return template;
