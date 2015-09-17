@@ -70,7 +70,7 @@
     packagePath = path + '/packages/' + theme + '/build/';
      
     themePath = packagePath + 'resources/' + theme + (rtl ? '-all-rtl' : '-all');
-
+    console.log(themePath);
     if (includeCSS) {
         document.write('<link rel="stylesheet" type="text/css" href="' +
                             themePath + '-debug.css"/>');
@@ -80,6 +80,9 @@
     
     document.write('<script type="text/javascript" src="' + path + extPrefix +
                             (rtl ? '-rtl' : '') + '.js"></script>');
+    
+    //document.write('<script type="text/javascript" src="'+ path + '/packages/ext-charts/build/ext-charts.js"></script>');
+    
     //console.log( path + extPrefix);
     if (hasOverrides) {
         // since document.write('<script>') does not block execution in IE, we need to 

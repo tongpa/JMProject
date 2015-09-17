@@ -51,7 +51,13 @@ Ext.application({
     	listHistory.resetData();
     	
     	
-    	var addPosition = Ext.create('company.addPosition',{url : '/WebCompanys/job/addPosition'});
+    	var addPosition = Ext.create('company.addPosition',{url : '/WebCompanys/job/addPosition',
+    		listeners : {
+    			refreshOther : function(bt){
+    				listCompany.refreshPosition();
+    				}
+    		}
+    	});
     	
     	//var tabMain = Ext.create('Ext.tab.Panel',{
     	var tabMain = Ext.create('Ext.panel.Panel',{

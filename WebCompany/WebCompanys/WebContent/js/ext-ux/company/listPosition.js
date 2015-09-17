@@ -19,7 +19,7 @@ Ext.define('company.listPosition',{
 	extend: 'Ext.grid.Panel',
 	width : '95%',
 	height :  '100%',	 
-	frame: false,	
+	frame: true,	
 	title: 'Position', 
 	bodyPadding: 10,
 	showClose : true,
@@ -37,18 +37,24 @@ Ext.define('company.listPosition',{
     loadPosition : function(company){
     	
     	this.storeCompany = company;
+    	
+    	console.log(company);
+    	console.log(company.id);
+    	//this.store.
+    	 
     	this.store.load({
     		params : {
     			'keysearch' : company.id
     		},
     		scope:this,
     		callback : function(records,operation,success){
+    			console.log('success');
 	    		if(success){
-	    			//console.log('success');
+	    			console.log('success');
 	    		}
     		}
     	});
-    	
+    	 
     	if (company.id >0){
     		this.addPosition.setDisabled(false);
     	}
@@ -56,19 +62,22 @@ Ext.define('company.listPosition',{
     initComponent: function() {
 		
     	var main = this;
-    	main.store = company.listPosition; 
+    	main.store = company.listPositionStore; 
     	main.columns = [
     	       	       
-    	    	    {header: 'position', dataIndex: 'position',width : '70%' , sortable: false }  ,
+    	    	    {header: 'position', dataIndex: 'position',width : '30%' , sortable: false }  ,
+    	    	    {header: 'position number', dataIndex: 'position_no',width : '15%' , sortable: false }  ,
+    	    	    {header: 'name of source', dataIndex: 'source',width : '15%' , sortable: false }  ,
     	    	    {header: 'post date', dataIndex: 'post_date',width : '10%',   sortable: false,renderer:Ext.util.Format.dateRenderer('d-m-Y') }  ,
-    	    	    {
+    	    	   
+    	            {
     	                xtype:'actioncolumn',
     	                
     	                width:'10%',
     	                items: [{
-    	                   
     	                	iconCls :'img-edit',
     	                	tooltip: 'Edit',
+    	                	
     	                    handler: function(grid, rowIndex, colIndex) {
     	                        var rec = grid.getStore().getAt(rowIndex);
     	                         
@@ -78,6 +87,60 @@ Ext.define('company.listPosition',{
     	                    }
     	                } ]
     	            }
+    	    	    /*,
+    	    	    {
+    	                xtype:'actioncolumn',
+    	                
+    	                width:'10%',
+    	                items: [{
+    	                   
+    	                	iconCls :'img-delete',
+    	                	tooltip: 'Delete',
+    	                    handler: function(grid, rowIndex, colIndex) {
+    	                        var record = grid.getStore().getAt(rowIndex);
+    	                         
+    	                        var datajson = Ext.encode(record.data);
+    		                    
+    		                    //console.log(record);
+    		                    Ext.Msg.show({
+    		    				    title: 'confirm delete',
+    		    				    message: 'Do you want to Delete position : ' + record.data.position+ ' ?',
+    		    				    buttons: Ext.Msg.YESNO,
+    		    				    icon: Ext.Msg.QUESTION,
+    		    				    fn: function(btn) {
+    		    				        if (btn === 'yes') {
+    		    				        	 
+    		    				        	Ext.Ajax.request({
+    		    			              		url		: '/survey/deleteQuestion',
+    		    			                	method  : 'POST',
+    		    			                	jsonData: datajson,	
+    		    			                	success: function(response, opts){
+    		    			                		var resp = Ext.decode(response.responseText); 	
+    		    			                		//console.log(resp);
+    		    			                		if(resp.success){
+    		    			                			grid.getStore().remove(record);
+    		    			                			//main.resetData();
+    		    			                		}
+    		    			                		else{
+    		    			                			Ext.Msg.alert('');
+    		    			                		}
+    		    			                			
+    		    			                			 
+    		    			                		},
+    		    			                	failure: function(response, opts) {
+    		    			                		console.log('server-side failure with status code ' );
+    		    			                	}
+    		    			                	
+    		    				        	});
+    		    				        	 
+    		    				        	 
+    		    				        }  
+    		    				    }
+    		    				}); 
+    	                        
+    	                    }
+    	                } ]
+    	            }*/
     	            
     	        ];
     	        

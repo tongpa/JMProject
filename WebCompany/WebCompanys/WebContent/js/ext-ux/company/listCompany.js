@@ -295,6 +295,7 @@ Ext.define('company.listCompany',{
     parentForm : null,
     
     loadDataRecord : function(company){
+    	this.data = company;
     	this.getForm().loadRecord(company);
     	this.listPosition.loadPosition(company);
 		this.fireEvent('showCompanyName', this,company);
@@ -313,6 +314,9 @@ Ext.define('company.listCompany',{
 		}
 		
 		this.companyname.focus();
+    },
+    refreshPosition : function(){
+    	this.listPosition.loadPosition(this.data);
     },
     searchCompanyByName : function(companyName){
     	
@@ -491,7 +495,13 @@ Ext.define('company.listCompany',{
 		              this.personalcontact,this.phonecontact]
 		});
 		
-		this.listPosition = Ext.create('company.listPosition' );
+		this.listPosition = Ext.create('company.listPosition',{
+			defaults: {
+		        anchor: '100%',
+		        labelWidth: 110,
+		        layout: {   type: 'fix' }
+		    }
+		} );
 		
 		
 		

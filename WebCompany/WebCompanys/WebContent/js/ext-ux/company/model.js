@@ -15,7 +15,7 @@ Ext.define('company.model.position', {
              , 'job_description' 
              , 'experience' 
              , {name: 'post_date', dateFormat:'d/m/Y', type: 'date'} 
-             , 'id_company_data' ] 
+             , 'id_company_data','position_no','source' ] 
     
 });
 
@@ -42,7 +42,7 @@ Ext.define('company.model.company', {
     
 });
 
-company.listPosition = new Ext.data.Store({
+company.listPositionStore= new Ext.data.Store({
 	model : 'company.model.position',
 	storeId : 'listPositionInStore',
 	pageSize: 50,
@@ -63,7 +63,7 @@ company.listPosition = new Ext.data.Store({
 			create : 'POST',
 			read   : 'POST',
 			update : 'POST',
-			destroy : 'POST'
+			destroy : 'DELETE'
 		}
 	},
 	autoSync: false,

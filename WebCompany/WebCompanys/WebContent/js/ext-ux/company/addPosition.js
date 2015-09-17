@@ -68,11 +68,30 @@ Ext.define('company.form.fieldPostDate',{
 	fieldLabel: 'Post Date' ,
 	format: 'd/m/Y',
     submitFormat: 'Y-m-d',
-    value: new Date()
+    value: new Date(),
+    allowBlank: false 
 	
 }); 
 
+Ext.define('company.form.fieldPositionNumber',{
+	extend: 'Ext.form.field.Number',
+	name : 'position_no',
+	fieldLabel: 'number of Positions',
+	value: 1,
+	maxValue: 99,
+    minValue: 0,
+    hideTrigger: true,
+    keyNavEnabled: false,
+    mouseWheelEnabled: false,
+	allowBlank: false 
+});
 
+Ext.define('company.form.fieldSource',{
+	extend: 'Ext.form.field.Text',
+	name : 'source',
+	fieldLabel: 'Name of source',
+	allowBlank: false 
+});
 
 Ext.define('company.addPosition',{
 	//extend : 'Ext.panel.Panel', 	 
@@ -119,11 +138,11 @@ Ext.define('company.addPosition',{
 		this.posose  = Ext.create('company.form.fieldJobPopose' );		
 		this.description  = Ext.create('company.form.fieldJobDescription' );		
 		this.experience =  Ext.create('company.form.fieldExperience' );		
+		this.postnumber = Ext.create('company.form.fieldPositionNumber');
+		this.source = Ext.create('company.form.fieldSource');
 		
 		
-		
-		
-		this.items = [this.idposition,this.idcompany,this.position,this.postdate,
+		this.items = [this.idposition,this.idcompany,this.position,this.postdate,this.postnumber,this.source ,
 		              this.qualification,this.characters,this.posose,this.description,this.experience
 		              ];
 		
@@ -148,6 +167,11 @@ Ext.define('company.addPosition',{
 	                		 main.fireEvent('refreshOther', this);
 	                		 
 	                		 main.closeWindow(main,bt);
+	                		},
+	                	failure: function(response) {
+	                		alert('error');
+	                		//console.log('server-side failure with status code ' + response.status);
+	                		
 	                		}
 	                	});
 	             

@@ -94,7 +94,16 @@ Ext.define('company.ListHistory',{
 		var main = this;
 		main.listHistory =  Ext.create('company.form.listhistory' );
 		main.showTotalCompany = Ext.create('company.form.totalCompany');
-		this.items = [main.showTotalCompany,main.listHistory  ];
+		
+		main.showGraph = Ext.create('Ext.Button', {
+		    text: 'Show Graph',
+		    renderTo: Ext.getBody(),
+		    handler: function() {
+		        window.location = '/WebCompanys/graph/';
+		    }
+		});
+		
+		this.items = [main.showGraph,main.showTotalCompany,main.listHistory  ];
 		
 		this.callParent();
 	}
