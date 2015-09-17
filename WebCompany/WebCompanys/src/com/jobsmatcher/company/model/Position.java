@@ -50,7 +50,11 @@ public class Position {
 	@Type(type="date")
 	private Date create_date;
 	
-	 
+	@Column(name = "position_no") 
+	private int position_no; 
+	
+	@Column(name = "source")
+	private String source;
 	
 	@Override
 	public String toString() {
@@ -118,7 +122,28 @@ public class Position {
 	}
 	public void setCreate_date(Date create_date) {
 		this.create_date = create_date;
+	}
+
+
+	public int getPosition_no() {
+		return position_no;
+	}
+
+
+	public void setPosition_no(int position_no) {
+		this.position_no = position_no;
+	}
+
+
+	public String getSource() {
+		return source;
+	}
+
+
+	public void setSource(String source) {
+		this.source = source;
 	} 
+	
 	
 	
 }

@@ -91,6 +91,8 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		sb.append("update job_position set ");
 		sb.append("position = '" ).append( position.getPosition()  ).append( "'"  ).append( " , ");
 		sb.append("basic_qualification = '"  ).append( position.getBasic_qualification() ).append( "'").append( " , ");
+		sb.append("position_no = '"  ).append( position.getPosition_no() ).append( "'").append( " , ");
+		sb.append("source = '"  ).append( position.getSource() ).append( "'").append( " , ");
 		sb.append("personal_characters = '"  ).append( position.getPersonal_characters() ).append( "'").append( " , ");
 		sb.append("job_popose = '"  ).append( position.getJob_popose()   ).append( "'").append( " , ");
 		sb.append("job_description = '"  ).append( position.getJob_description()).append( "'").append( " , ");
