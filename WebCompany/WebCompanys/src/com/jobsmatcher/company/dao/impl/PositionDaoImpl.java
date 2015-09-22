@@ -15,12 +15,15 @@ import java.util.List;
 
 
 
+
+
+
+import org.hibernate.Query; 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jobsmatcher.company.dao.PositionDao;  
-import com.jobsmatcher.company.model.Position;
-import com.jobsmatcher.company.utility.Util;
+import com.jobsmatcher.company.model.Position; 
 @Repository
 public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implements
 		PositionDao {
@@ -54,15 +57,19 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 	@Override
 	@Transactional(readOnly=true)
 	@SuppressWarnings("unchecked")
-	public List<Position> getPositionByCompany(String id) {
+	public List<Position> getPositionByCompany(String id,int start,int limit, int page) {
 		List<Position> users = new ArrayList<Position>();
 		//System.out.println("company id :" + id); 
 		
 		String sql = "from Position where id_company_data = " + id;
-		users = getCurrentSession()
-			.createQuery(sql)
+		Query query = getCurrentSession().createQuery(sql).setFirstResult(start);
+		
+		if (limit >0){
+			query = query.setMaxResults(limit);
+		}
+		
 			//.setParameter(0, id)
-			.list();
+		users = query.list();
  	
 		 return users;
 	}
@@ -75,7 +82,7 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
 		//System.out.println(v); 
 		 
-		//System.out.println("Delete Positon");
+		System.out.println("Delete Positon : " + v);
 	}
 
 	@Override
@@ -125,6 +132,13 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		//System.out.println(v); 
 		 
 		//System.out.println("Delete Positon");
+	}
+
+	@Override
+	public int getSizePositionByCompany(String id) {
+		String sql = "select count(*) from Position where id_company_data = " + id;
+		int count = ((Long)getCurrentSession().createQuery(sql).uniqueResult()).intValue();
+		return count;
 	}
 	
 	

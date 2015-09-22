@@ -43,8 +43,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
 import com.jobsmatcher.company.dao.CompanyDao;
 import com.jobsmatcher.company.dao.PositionDao;
+import com.jobsmatcher.company.dao.PositionPostDateDao;
 import com.jobsmatcher.company.model.Company;
 import com.jobsmatcher.company.model.Student;
 
@@ -57,6 +60,9 @@ public class CompanyController {
 	private CompanyDao companyDao;
 	@Autowired
 	private PositionDao positionDao;
+	
+	@Autowired
+	private PositionPostDateDao positionPostDateDao;
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView index(HttpServletRequest request, HttpServletResponse response) {
@@ -107,18 +113,25 @@ public class CompanyController {
 	
 	@RequestMapping(value = "search", method = RequestMethod.POST)
 	@ResponseBody
-    public Map<String, List<Company>> search( @RequestParam(value = "keysearch", required=true,defaultValue= "") String keysearch,HttpServletRequest request, HttpServletResponse response,HttpSession sec ) {
+    public Map<String, Object> search( @RequestParam(value = "keysearch", required=true,defaultValue= "") String keysearch,
+    		@RequestParam(value = "start", required=true ) Integer start,
+    		@RequestParam(value = "limit", required=true ) Integer limit,
+    		@RequestParam(value = "page", required=true ) Integer page,
+    		HttpServletRequest request, HttpServletResponse response,HttpSession sec ) {
 		
-		Map<String, List<Company>> books = new HashMap<String, List<Company>>();
+		Map<String, Object> books = new HashMap<String, Object>();
 		 
-		
+		System.out.println("Start : " + start);
+		System.out.println("limit : " + limit);
+		System.out.println("page : " + page);
 		
 		keysearch = keysearch.trim();
 		 
 		
 		if(keysearch.length() > 0){
 			  
-			books.put("company", companyDao.listCompanyByName(  keysearch  ));
+			books.put("total",  companyDao.getSizeByName( keysearch)); 
+			books.put("company", companyDao.listCompanyByName(  keysearch ,start.intValue(),limit.intValue(),page.intValue() ));
 			 
 		}
 		
@@ -155,6 +168,7 @@ public class CompanyController {
 		//System.out.println(company);
 		try {
 	        
+			positionPostDateDao.deleteByCompany(company.getId_company());
 			positionDao.deleteByCompany(company.getId_company());
 			companyDao.deleteById(company);
 	         response.put("success", true);

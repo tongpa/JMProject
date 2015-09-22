@@ -10,7 +10,7 @@ public interface CompanyDao extends AbstractDao<Company, String> {
 	public boolean updateCompany(Company company);
 	
 	
-	public List<Company> listCompanyByName(String name);
+	public List<Company> listCompanyByName(String name,int start,int limit, int page);
 	
 	public Company getCompanyById(String id);
 	public void deleteById(Company company);
@@ -18,6 +18,8 @@ public interface CompanyDao extends AbstractDao<Company, String> {
 	public List<Map<String, String>> listTotalInDate();
 	
 	public List<Map<String, String>>  getTotalComnany();
+	
+	public int getSizeByName(String name);
 	
 	
 }

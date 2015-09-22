@@ -18,6 +18,7 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
@@ -63,15 +64,21 @@ public class CompanyDaoImpl extends AbstractDaoImpl<Company, String> implements 
 	@Override
 	@Transactional(readOnly=true)
 	@SuppressWarnings("unchecked")
-	public List<Company> listCompanyByName(String name) {
+	public List<Company> listCompanyByName(String name,int start,int limit, int page) {
 		List<Company> users = new ArrayList<Company>();
 	 
 		 
-		users = getCurrentSession()
+		Query query =  getCurrentSession()
 			.createQuery("from Company where company_name like ?")
-			.setParameter(0, "%"+name + "%")
-			.list();
- 	
+			.setParameter(0, "%"+name + "%").setFirstResult(start);
+			 
+		if (limit >0){
+			query = query.setMaxResults(limit);
+		}
+		
+			 
+		users = query.list();
+		
 		 return users;
 	}
 
@@ -189,6 +196,13 @@ public class CompanyDaoImpl extends AbstractDaoImpl<Company, String> implements 
 		results = null;
 		sb = null;
 		return data;
+	}
+
+	@Override
+	public int getSizeByName(String name) {
+		String sql = "select count(*) from Company where company_name like '%" + name + "%'";
+		int count = ((Long)getCurrentSession().createQuery(sql).uniqueResult()).intValue();
+		return count;
 	}
 
 }

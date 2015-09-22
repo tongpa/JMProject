@@ -26,6 +26,32 @@ public class Util {
 		return c;
 	}
 	
+	public Date convertDate(String d){
+		Date c = new Date();
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		try{
+			c = df.parse(d);
+		}
+		catch(Exception ex){
+			
+		}
+		
+		return c;
+		
+	}
+	
+	public int convertInteger(String s){
+		int i = 0;
+		try{
+			i = Integer.parseInt(s);
+		}
+		catch(Exception ex){
+			
+		}
+		
+		return i;
+	}
+	
 	
 	public static void main(String[] argv){
 		Date d = new Date();
@@ -37,10 +63,26 @@ public class Util {
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd",Locale.US);
 			Date date = formatter.parse(testDate);
 			
+			
 			System.out.println(formatter.format( d)   );
 			System.out.println(date);
 			
 			System.out.printf("%s %tB %<te, %<tY", "Due date:", date);
+			
+			
+			String dates = String.format("Post Date [  postdate = %TD]",   new Date());
+			System.out.println(dates);
+			String datew = String.format("Post Date [  postdate = %tF]",   new Date());
+			System.out.println(datew);
+			
+			
+			testDate = "09/17/2558";
+			Util u = new Util();
+			System.out.println(testDate);
+			
+			System.out.println(u.convertDate(testDate));
+			
+			
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
