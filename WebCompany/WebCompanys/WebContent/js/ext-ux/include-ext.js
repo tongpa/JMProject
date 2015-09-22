@@ -80,8 +80,8 @@
     
     document.write('<script type="text/javascript" src="' + path + extPrefix +
                             (rtl ? '-rtl' : '') + '.js"></script>');
-    
-    //document.write('<script type="text/javascript" src="'+ path + '/packages/ext-charts/build/ext-charts.js"></script>');
+     
+    document.write('<script type="text/javascript" src="'+ path + '/packages/ext-charts/build/ext-charts.js"></script>');
     
     //console.log( path + extPrefix);
     if (hasOverrides) {

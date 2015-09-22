@@ -45,7 +45,8 @@ Ext.define('company.model.company', {
 company.listPositionStore= new Ext.data.Store({
 	model : 'company.model.position',
 	storeId : 'listPositionInStore',
-	pageSize: 50,
+	autoLoad: {start: 0, limit: 7  },
+    pageSize: 7,
 	proxy : {
 		type : 'ajax',
 		url : '/WebCompanys/jobs/search',
@@ -63,7 +64,7 @@ company.listPositionStore= new Ext.data.Store({
 			create : 'POST',
 			read   : 'POST',
 			update : 'POST',
-			destroy : 'DELETE'
+			destroy : 'POST'
 		}
 	},
 	autoSync: false,
@@ -73,7 +74,8 @@ company.listPositionStore= new Ext.data.Store({
 company.searchCompany = new Ext.data.Store({
 	model : 'company.model.company',
 	storeId : 'listCompanyInStore',
-	pageSize: 50,
+	autoLoad: {start: 0, limit: 10  },
+    pageSize: 10,
 	proxy : {
 		type : 'ajax',
 		url : '/WebCompanys/company/search',
@@ -84,8 +86,8 @@ company.searchCompany = new Ext.data.Store({
 		actionMethods: {
 			create : 'POST',
 			read   : 'POST',
-			update : 'PUT',
-			destroy : 'DELETE'
+			update : 'POST',
+			destroy : 'POST'
 		}
 	},
 	autoLoad : false

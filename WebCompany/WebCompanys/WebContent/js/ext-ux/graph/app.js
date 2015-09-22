@@ -29,7 +29,7 @@ Ext.application({
     	Ext.tip.QuickTipManager.init();
     	
     	
-    	var showGraph = Ext.create('graph.Sample');
+    	var showGraph = Ext.create('graph.report1');
     	
     	Ext.create('Ext.container.Viewport', {
             layout: {

@@ -2,19 +2,19 @@
 (function() {
      
 	var scriptEls = document.getElementsByTagName('script'),
-		path = scriptEls[scriptEls.length - 1].src,
+		url_path = scriptEls[scriptEls.length - 1].src,
 		i=3;
 	//console.log('include-ux');
 	//console.log(path);
 	while (i--) {
-        path = path.substring(0, path.lastIndexOf('/'));
+		url_path = url_path.substring(0, url_path.lastIndexOf('/'));
     }
     // path == root of ext
-    path = path + '/js/ext-ux/graph/'
+    path = url_path + '/js/ext-ux/graph/'
     
 	//console.log(path + 'app.js');
     
-    document.write('<script type="text/javascript" src="/js/extjs/packages/ext-charts/build/ext-charts.js"  charset="UTF-8"></script>');
+   //document.write('<script type="text/javascript" src="/js/extjs/packages/ext-charts/build/ext-charts.js"  charset="UTF-8"></script>');
    /*  
     document.write('<script type="text/javascript" src="' + path + 'model.js"  charset="UTF-8"></script>');
     document.write('<script type="text/javascript" src="' + path + 'addPosition.js"  charset="UTF-8"></script>');

@@ -14,21 +14,26 @@ Ext.define('company.form.btDeletePosition',{
 
 
 Ext.define('company.listPosition',{
-	//extend : 'Ext.panel.Panel', 	 
+	
 	
 	extend: 'Ext.grid.Panel',
 	width : '95%',
-	height :  '100%',	 
-	frame: true,	
+	//height :  '100%',	 
+	 
+	
 	title: 'Position', 
 	bodyPadding: 10,
 	showClose : true,
+	//autoHeight: true,
+	
 	viewConfig: {
         emptyText: 'No images to display'
     },
     isCreate : true,
     parentForm : null,
     collapsible:false ,
+    autoScroll: true,
+     
     resetData : function(){
     	this.addPosition.setDisabled(true);
     	this.store.removeAll();
@@ -65,82 +70,13 @@ Ext.define('company.listPosition',{
     	main.store = company.listPositionStore; 
     	main.columns = [
     	       	       
-    	    	    {header: 'position', dataIndex: 'position',width : '30%' , sortable: false }  ,
-    	    	    {header: 'position number', dataIndex: 'position_no',width : '15%' , sortable: false }  ,
+    	    	    {header: 'position', dataIndex: 'position',width : '20%' , sortable: false }  ,
+    	    	    {header: 'experience', dataIndex: 'experience',width : '20%' , sortable: false }  ,
+    	    	    {header: 'position number', dataIndex: 'position_no',width : '10%' , sortable: false }  ,
     	    	    {header: 'name of source', dataIndex: 'source',width : '15%' , sortable: false }  ,
     	    	    {header: 'post date', dataIndex: 'post_date',width : '10%',   sortable: false,renderer:Ext.util.Format.dateRenderer('d-m-Y') }  ,
-    	    	   
-    	            {
-    	                xtype:'actioncolumn',
-    	                
-    	                width:'10%',
-    	                items: [{
-    	                	iconCls :'img-edit',
-    	                	tooltip: 'Edit',
-    	                	
-    	                    handler: function(grid, rowIndex, colIndex) {
-    	                        var rec = grid.getStore().getAt(rowIndex);
-    	                         
-    	                         
-    	                        main.winAddPosition.show();
-    	           			 	main.winAddPosition.loadDataRecord(rec);
-    	                    }
-    	                } ]
-    	            }
-    	    	    /*,
-    	    	    {
-    	                xtype:'actioncolumn',
-    	                
-    	                width:'10%',
-    	                items: [{
-    	                   
-    	                	iconCls :'img-delete',
-    	                	tooltip: 'Delete',
-    	                    handler: function(grid, rowIndex, colIndex) {
-    	                        var record = grid.getStore().getAt(rowIndex);
-    	                         
-    	                        var datajson = Ext.encode(record.data);
-    		                    
-    		                    //console.log(record);
-    		                    Ext.Msg.show({
-    		    				    title: 'confirm delete',
-    		    				    message: 'Do you want to Delete position : ' + record.data.position+ ' ?',
-    		    				    buttons: Ext.Msg.YESNO,
-    		    				    icon: Ext.Msg.QUESTION,
-    		    				    fn: function(btn) {
-    		    				        if (btn === 'yes') {
-    		    				        	 
-    		    				        	Ext.Ajax.request({
-    		    			              		url		: '/survey/deleteQuestion',
-    		    			                	method  : 'POST',
-    		    			                	jsonData: datajson,	
-    		    			                	success: function(response, opts){
-    		    			                		var resp = Ext.decode(response.responseText); 	
-    		    			                		//console.log(resp);
-    		    			                		if(resp.success){
-    		    			                			grid.getStore().remove(record);
-    		    			                			//main.resetData();
-    		    			                		}
-    		    			                		else{
-    		    			                			Ext.Msg.alert('');
-    		    			                		}
-    		    			                			
-    		    			                			 
-    		    			                		},
-    		    			                	failure: function(response, opts) {
-    		    			                		console.log('server-side failure with status code ' );
-    		    			                	}
-    		    			                	
-    		    				        	});
-    		    				        	 
-    		    				        	 
-    		    				        }  
-    		    				    }
-    		    				}); 
-    	                        
-    	                    }
-    	                } ]
-    	            }*/
+    	    	    {header: 'Edit', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.editPosition }  ,
+    	    	    {header: 'Add Post Date', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.addPostDate }  
     	            
     	        ];
     	        
@@ -152,6 +88,14 @@ Ext.define('company.listPosition',{
 		        }
 		    }
     		
+    	});
+    	
+    	main.winPostDate = Ext.create('company.winAddPositionPostDate',{
+    		listeners : {
+    			refreshOther : function(cmp) {
+		             main.loadPosition(main.storeCompany);
+		        }
+    		}
     	});
     	
     	main.addPosition = Ext.create('company.form.btAddPosition',{
@@ -171,11 +115,34 @@ Ext.define('company.listPosition',{
             scope: this
     	});
     	main.tbar = [main.addPosition,main.deletePosition ] ;
+    	
+    	
+    	main.dockedItems =  [{
+            xtype: 'pagingtoolbar',
+            store: main.store, // same store GridPanel is using
+            dock: 'bottom',
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChangePosition,
+            }
+        }],
+    	
     	this.callParent();
     	
     	this.getSelectionModel().on('selectionchange', this.onSelectChange, this);
     	
     },
+    
+    onBeforeChangePosition : function(paging,page,opt){
+		console.log('beforechange');
+		 
+		 paging.store.loadPage(page,{params : {
+			'keysearch' : this.storeCompany.id}
+		}); 
+		 
+		return false;
+	},
     onSelectChange: function(selModel, selections){
         
        // this.fireEvent('showCompany', selections[0]);
@@ -185,7 +152,7 @@ Ext.define('company.listPosition',{
     },
     onDeleteClick: function(){
     	var selection = this.getView().getSelectionModel().getSelection()[0];
-    	main = this;
+    	var main = this;
         if (selection) {
         	Ext.Msg.show({
     		    title:'Confirm Delete?',
@@ -196,19 +163,81 @@ Ext.define('company.listPosition',{
     		        if (btn === 'yes') {
     		        	
     		        	 
-    		        	main.store.remove(selection);
-    		        	main.store.sync();
+    		        	
+    		        	//main.store.sync();
+    		        	
+    		        	var value = selection.getData();
     		          
+    		        	Ext.Ajax.request({
+                            url        : '/WebCompanys/jobs/delJobs',
+                            method  : 'POST',
+                            jsonData: value,    
+                            success: function(response){
+                               // var grid = Ext.ComponentQuery.query('bookslist')[0];
+                              //  grid.getStore().load();
+                            	//main.store.remove(selection);
+                            	
+                            	main.loadPosition(main.storeCompany);
+                            	 
+                            	Ext.Msg.show({title:"Delete Status.",message:"Delete Success.", icon: Ext.Msg.QUESTION,
+                            	buttons: Ext.Msg.YES}
+                            	);
+                            },
+                            failure: function(response) {
+                            	Ext.Msg.show({title:"Delete Status.",message:"Delete Failure.", icon: Ext.Msg.ERROR,
+                            	buttons: Ext.Msg.YES});
+                  				 
+     				         }
+                            
+                        });
+    		        	
     		            selection = null;
     		        }  
     		    }
     		});
         }
-    	
-    	
-    	
-    	
-        
+    },
+    editPosition :  function(value,m,rec){
+    	var main = this;
+    		 
+		 	var id = Ext.id();
+		 	
+		 	Ext.defer(function () {
+	            Ext.widget('button', {
+	                renderTo: id,
+	                text: "Edit Position" ,// + r.get('name'),
+	               // width: 75,
+	                handler: function () {
+	                	
+	                	main.winAddPosition.show();
+	        		 	main.winAddPosition.loadDataRecord(rec); 
+	                	 
+	                }
+	            });
+	        }, 50);
+    	 
+        return Ext.String.format('<div id="{0}"></div>', id);
+    },
+    addPostDate : function (value,m,rec){
+    	var main = this;
+		 
+	 	var id = Ext.id();
+	 	
+	 	Ext.defer(function () {
+            Ext.widget('button', {
+                renderTo: id,
+                text: "Add Post Date" ,// + r.get('name'),
+               // width: 75,
+                handler: function () {
+                	
+                	main.winPostDate.show();
+        		 	main.winPostDate.loadDataRecord(rec); 
+                	 
+                }
+            });
+        }, 50);
+	 
+    return Ext.String.format('<div id="{0}"></div>', id);
     }
     
 });   

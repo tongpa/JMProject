@@ -261,12 +261,34 @@ Ext.define('company.listSearchCompany',{
     	    	    {header: 'business type', dataIndex: 'business_type',width : '25%',   sortable: false }  
     	            
     	        ];
+    	        
+    	        
+    	main.dockedItems =  [{
+            xtype: 'pagingtoolbar',
+            store: main.store, // same store GridPanel is using
+            dock: 'bottom',
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChangePosition,
+            }
+        }],
     	 
      
 		this.callParent();
 		 
 		this.getSelectionModel().on('selectionchange', this.onSelectChange, this);
     },
+    onBeforeChangePosition : function(paging,page,opt){
+		console.log('beforechange');
+		 /*
+		 paging.store.loadPage(page,{params : {
+			'keysearch' : this.storeCompany.id}
+		}); 
+		 */
+		this.fireEvent('changeDataValue', paging,page); 
+		return false;
+	},
     onSelectChange: function(selModel, selections){
         
         this.fireEvent('showCompany', selections[0]);
@@ -286,8 +308,8 @@ Ext.define('company.listCompany',{
         labelWidth: 120
     },
 	frame: false,
-	
-	height : 200,
+	layout: 'fit',
+	//height : 200,
 	bodyPadding: 10,
 	showClose : true,
     
@@ -321,9 +343,18 @@ Ext.define('company.listCompany',{
     searchCompanyByName : function(companyName){
     	
     	var main = this;
+    	main.valueSearch = companyName;
+    	//clear grid
+    	
+    	 
+    	company.searchCompany.currentPage = 1; 
+    	 
     	company.searchCompany.load({
 			params: {
-        		'keysearch' : companyName//Ext.urlEncode(t.getValue())
+				'limit' : 10,
+				'page' : 1,
+				'start' : 0,
+        		'keysearch' : companyName  
         	},
         	scope:this,
         	callback : function(records, operation, success){
@@ -336,7 +367,10 @@ Ext.define('company.listCompany',{
         					main.loadDataRecord(records[0]);
         					 
         				}
-        				else{	
+        				else{
+        					//reset page	
+        					
+        					
         					main.showSearchCompany.show();
         				}
         			}
@@ -354,6 +388,7 @@ Ext.define('company.listCompany',{
         		}
         	}
 		});
+	 
     },
     searchCompany : function(t,e){
     	search = t.getValue();
@@ -383,12 +418,17 @@ Ext.define('company.listCompany',{
 					//console.log(company);
 					main.loadDataRecord(company);
 					
+				},
+				changeDataValue : function(paging,page){
+					 company.searchCompany.loadPage(page,{params : {
+						'keysearch' :main.valueSearch}
+					}); 
 				}
 			}
 		});
 		this.showSearchCompany = Ext.create('Ext.window.Window',{
 			title : 'Result Search',
-			height : 300,
+			height : 400,
 			width : 500,
 			layout : 'fit',
 			plain : true,
@@ -416,6 +456,7 @@ Ext.define('company.listCompany',{
 		
 		this.idcompany  = Ext.create('company.form.fieldIdCompany' );
 		this.companyname  = Ext.create('company.form.fieldCompanyName' ,{
+		anchor: '100%',
 			enableKeyEvents : true ,
 			listeners : {
 				'blur' : {
@@ -488,25 +529,52 @@ Ext.define('company.listCompany',{
 		    }, 
 		    collapsible: true,
 		    collapsed: true,
-		    items : [this.bussinesstype,
+		    items : [
+		    
+		    this.bussinesstype,
 		              this.address,
 		              this.telephone,
 		              this.telephone,this.fax,this.mobile,this.email,this.website,
 		              this.personalcontact,this.phonecontact]
 		});
 		
+		 
+		
+		
 		this.listPosition = Ext.create('company.listPosition',{
 			defaults: {
 		        anchor: '100%',
-		        labelWidth: 110,
-		        layout: {   type: 'fix' }
-		    }
+		        labelWidth: 110 
+		     //   layout: {   type: 'fix' }
+		    },
+		    height : 400,
+		    minWidth : 350,
+			maxHeight : 500
 		} );
 		
 		
+		this.panelCompanyname = Ext.create('Ext.form.Panel',{
+			// layout: 'fit',
+			 anchor: '100%', 
+			items : [this.idcompany,this.companyname]
+		});
 		
-		this.items = [this.idcompany,this.companyname,this.groupSetField,this.listPosition
-		              ];
+		this.panelListPosition = Ext.create('Ext.form.Panel',{
+			 layout: 'fit',
+			 anchor: '100%',
+			  
+			items : [this.listPosition]
+		});
+		
+		this.panelCompanyname = Ext.create('Ext.panel.Panel',{
+			
+			 anchor: '100%',			 
+			layout:'anchor',
+			autoScroll: true,
+			items : [ this.panelCompanyname,this.groupSetField,this.panelListPosition]
+		});
+		
+		this.items = [this.panelCompanyname		              ];
 		
 		this.btsave = Ext.create('Ext.Button',{		 
 			text : 'Save',
