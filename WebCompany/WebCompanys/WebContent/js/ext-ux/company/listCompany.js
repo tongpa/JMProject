@@ -280,7 +280,7 @@ Ext.define('company.listSearchCompany',{
 		this.getSelectionModel().on('selectionchange', this.onSelectChange, this);
     },
     onBeforeChangePosition : function(paging,page,opt){
-		console.log('beforechange');
+		//console.log('beforechange');
 		 /*
 		 paging.store.loadPage(page,{params : {
 			'keysearch' : this.storeCompany.id}
@@ -485,7 +485,7 @@ Ext.define('company.listCompany',{
 		                	scope:this,	
 		                	success: function(response){
 		                	    	//store.load();
-		                		console.log("sucess");
+		                		//console.log("sucess");
 		                		}
 		                	});
 		                	*/

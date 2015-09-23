@@ -7,6 +7,13 @@ Ext.define('company.model.listHistory',{
 	          ,'num']
 });
 
+Ext.define('company.model.listPositionPostDate',{
+	extend : 'Ext.data.Model',
+	idProperty : 'id_position_post_date',
+	field : ['id_position_post_date', {name: 'post_date', dateFormat:'d/m/Y', type: 'date'}, 'position']
+	
+});
+
 Ext.define('company.model.position', {
     extend: 'Ext.data.Model',
     idProperty: 'id_position',    
@@ -70,6 +77,34 @@ company.listPositionStore= new Ext.data.Store({
 	autoSync: false,
 	autoLoad : false
 });
+
+
+company.listPositionPostDateStore= new Ext.data.Store({
+	model : 'company.model.listPositionPostDate',
+	storeId : 'listPositionPostDateInStore',
+	autoLoad: {start: 0, limit: 7  },
+    pageSize: 7,
+	proxy : {
+		type : 'ajax',
+		url : '/WebCompanys/jobs/searchPostDate',
+		reader : {
+			type : 'json',
+			rootProperty : 'company'
+		},
+		api: {
+            read: '/WebCompanys/jobs/searchPostDate',
+            destroy: '/WebCompanys/jobs/delJobs'
+        }, 
+		actionMethods:{
+			 
+			read   : 'POST', 
+			destroy : 'POST'
+		}
+	},
+	autoSync: false,
+	autoLoad : false
+});
+
 
 company.searchCompany = new Ext.data.Store({
 	model : 'company.model.company',

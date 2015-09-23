@@ -13,6 +13,188 @@ Ext.define('company.form.btDeletePosition',{
 });
 
 
+Ext.define('company.listPositionPostDate',{
+	extend: 'Ext.grid.Panel',
+	bodyPadding : 10,
+	viewConfig: {
+        emptyText: 'No images to display'
+    },
+    isCreate : true,
+    parentForm : null,
+    collapsible:false ,
+    autoScroll: true,
+    loadDataRecord : function(position){
+    	this.positionData = position;
+    	 
+   		this.store.load({
+			params: {
+				'limit' : 10,
+				'page' : 1,
+				'start' : 0,
+        		'keysearch' : position.id  
+        	},
+        	scope:this,
+        	callback : function(records, operation, success){
+        		if(success){ 
+        			 
+        		}
+        	}
+		});
+    	 
+    }, 
+    initComponent: function() {
+		
+    	var main = this;
+     	main.store = company.listPositionPostDateStore; 
+    	main.columns = [
+    	       	       
+    	    	    {header: 'position', dataIndex: 'position',width : '30%' , sortable: false }  ,
+    	    	     
+    	    	    {header: 'post date', dataIndex: 'post_date',width : '30%',   sortable: false,renderer:Ext.util.Format.dateRenderer('d-m-Y') }  ,
+    	    	    {header: 'Delete Post Date', dataIndex: 'source',width : '40%' , sortable: false, renderer :main.delPostDate }  
+    	    	     
+    	            
+    	        ];
+    	        
+    	this.callParent();
+    	        
+   	},
+   	delPostDate : function(value,m,rec) {
+    	var main = this;
+		 
+	 	var id = Ext.id();
+	 	
+	 	Ext.defer(function () {
+            Ext.widget('button', {
+                renderTo: id,
+                text: "Delete Post Date" ,// + r.get('name'),
+               // width: 75,
+                handler: function () {
+                	main.deletePostDate(value,m,rec);
+                 
+                	 
+                }
+            });
+        }, 50);
+        return Ext.String.format('<div id="{0}"></div>', id);
+    },
+    deletePostDate : function(value,m,rec){
+    	var main = this;
+    	 
+    	Ext.Msg.show({
+    		    title:'Confirm Delete?',
+    		    message: 'Do you delete : ' + rec.data.post_date ,
+    		    buttons: Ext.Msg.YESNO,
+    		    icon: Ext.Msg.QUESTION,
+    		    fn: function(btn) {
+    		        if (btn === 'yes') {
+    		        	
+    		        	 
+    		        	
+    		        	//main.store.sync();
+    		        	//debugger;
+    		        	var value = rec.getData();
+    		          
+    		        	Ext.Ajax.request({
+                            url        : '/WebCompanys/jobs/delPostDate',
+                            method  : 'POST',
+                            jsonData: value,    
+                            success: function(response){
+                               
+                            	main.loadDataRecord(main.positionData);
+                            	
+                            	//main.loadPosition(main.storeCompany);
+                            	 
+                            	Ext.Msg.show({title:"Delete Status.",message:"Delete Success.", icon: Ext.Msg.INFO,
+                            	buttons: Ext.Msg.YES}
+                            	);
+                            },
+                            failure: function(response) {
+                            	Ext.Msg.show({title:"Delete Status.",message:"Delete Failure.", icon: Ext.Msg.ERROR,
+                            	buttons: Ext.Msg.YES});
+                  				 
+     				         }
+                            
+                        });
+    		        	
+    		            selection = null;
+    		        }  
+    		    }
+    		});
+    }
+});
+
+
+Ext.define('company.winListPositionPostDate',{
+	extend: 'Ext.window.Window',
+	text : 'Position Post Date',
+	layout: 'fit',
+	 
+	modal : true,
+	width : 400,
+	height : 350,
+	closable: true,
+    closeAction: 'hide',
+    showClose : true,
+    maximizable: true,
+    constrain: true,
+    url : '',
+    //animateTarget: button,
+	header: {
+        titlePosition: 2,
+        titleAlign: 'center' 
+    },
+    loadDataRecord : function(position){
+   		this.panelPosition.loadDataRecord(position);
+    	 
+    }, 
+    initValue : function(company){
+    	this.panelPosition.initValue(company);
+    },
+    
+	initComponent: function() {
+		 
+		var main = this;
+		main.panelPosition = Ext.create('company.listPositionPostDate' ,{
+			//url : main.url,
+			showClose : main.showClose,
+			parentForm : main,
+			listeners : {
+				refreshOther : function(cmp) {
+		            this.parentForm.refreshOther();
+		        } 
+		    }});
+	 	 
+		 
+		main.items = [main.panelPosition]; 
+		
+		main.btclose = Ext.create('Ext.Button',{		 
+			text : 'Close', 
+			formBind: true,  
+	         
+			handler : function(bt,ev){
+				main.hide(bt);
+	            
+			}
+		});
+		
+		 
+	    main.buttons = [main.btclose]
+	    
+		 
+		this.callParent();
+		
+		 
+		 
+	},
+	refreshOther : function( ) {
+        //do some stuff here
+
+        this.fireEvent('refreshOther', this);
+    } 
+});
+
+
 Ext.define('company.listPosition',{
 	
 	
@@ -43,8 +225,7 @@ Ext.define('company.listPosition',{
     	
     	this.storeCompany = company;
     	
-    	console.log(company);
-    	console.log(company.id);
+    	 
     	//this.store.
     	 
     	this.store.load({
@@ -53,9 +234,9 @@ Ext.define('company.listPosition',{
     		},
     		scope:this,
     		callback : function(records,operation,success){
-    			console.log('success');
+    			 
 	    		if(success){
-	    			console.log('success');
+	    			//console.log('success');
 	    		}
     		}
     	});
@@ -70,13 +251,18 @@ Ext.define('company.listPosition',{
     	main.store = company.listPositionStore; 
     	main.columns = [
     	       	       
-    	    	    {header: 'position', dataIndex: 'position',width : '20%' , sortable: false }  ,
-    	    	    {header: 'experience', dataIndex: 'experience',width : '20%' , sortable: false }  ,
+    	    	    {header: 'position', dataIndex: 'position',width : '15%' , sortable: false }  ,
+    	    	    {header: 'experience', dataIndex: 'experience',width : '15%' , sortable: false }  ,
     	    	    {header: 'position number', dataIndex: 'position_no',width : '10%' , sortable: false }  ,
     	    	    {header: 'name of source', dataIndex: 'source',width : '15%' , sortable: false }  ,
     	    	    {header: 'post date', dataIndex: 'post_date',width : '10%',   sortable: false,renderer:Ext.util.Format.dateRenderer('d-m-Y') }  ,
     	    	    {header: 'Edit', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.editPosition }  ,
-    	    	    {header: 'Add Post Date', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.addPostDate }  
+    	    	    {text : 'Post Date', 
+    	    	    	columns : [{header: 'Add Post Date', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.addPostDate } ,
+    	    	    				{header: 'Edit Post Date', dataIndex: 'source',width : '10%' , sortable: false, renderer :main.editPostDate } ]
+    	    	    }
+    	    	    
+    	    	     
     	            
     	        ];
     	        
@@ -94,6 +280,17 @@ Ext.define('company.listPosition',{
     		listeners : {
     			refreshOther : function(cmp) {
 		             main.loadPosition(main.storeCompany);
+		        }
+    		}
+    	});
+    	
+    	main.winListPositionPostDate = Ext.create('company.winListPositionPostDate',{
+    		listeners : {
+    			refreshOther : function(cmp) {
+		         //    main.loadPosition(main.storeCompany);
+		        },
+		        closeWindow : function(cmp){
+		        	
 		        }
     		}
     	});
@@ -135,7 +332,7 @@ Ext.define('company.listPosition',{
     },
     
     onBeforeChangePosition : function(paging,page,opt){
-		console.log('beforechange');
+		 
 		 
 		 paging.store.loadPage(page,{params : {
 			'keysearch' : this.storeCompany.id}
@@ -237,7 +434,27 @@ Ext.define('company.listPosition',{
             });
         }, 50);
 	 
-    return Ext.String.format('<div id="{0}"></div>', id);
+    	return Ext.String.format('<div id="{0}"></div>', id);
+    },
+    editPostDate : function(value,m,rec) {
+    	var main = this;
+		 
+	 	var id = Ext.id();
+	 	
+	 	Ext.defer(function () {
+            Ext.widget('button', {
+                renderTo: id,
+                text: "Edit Post Date" ,// + r.get('name'),
+               // width: 75,
+                handler: function () {
+                	
+                	main.winListPositionPostDate.show();
+                	main.winListPositionPostDate.loadDataRecord(rec); 
+                	 
+                }
+            });
+        }, 50);
+        return Ext.String.format('<div id="{0}"></div>', id);
     }
     
 });   

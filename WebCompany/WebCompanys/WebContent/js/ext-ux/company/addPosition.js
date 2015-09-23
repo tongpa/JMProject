@@ -162,7 +162,7 @@ Ext.define('company.addPosition',{
 	             
 	            	var values = form.getValues();
 	            	
-	            	console.log(values);
+	            	//console.log(values);
 	            	Ext.Ajax.request({
 	              		url		: '/WebCompanys/jobs/addJobs',
 	            		//url : '/WebCompanys/jobs/addPostDate', 
@@ -332,11 +332,9 @@ Ext.define('company.PositionPostDate',{
     autoScroll : true,
     isCreate : true,
     parentForm : null,
-    closeWindow : function(main,bt){
-    	main.parentForm.hide(bt);
-    },
+    
     loadDataRecord : function(position){
-    	console.log(position);
+    	//console.log(position);
     	this.getForm().loadRecord(position);
     	//this.position.focus();
     }, 
@@ -351,11 +349,13 @@ Ext.define('company.PositionPostDate',{
 		var main = this;
 		 
 		var main = this;
-		main.postDate = Ext.create('Ext.form.field.Date' ,{
+		/*main.postDate = Ext.create('Ext.form.field.Date' ,{
 			fieldLabel : 'Post Date',
 			name:'post_date',
 			value : new Date() 
-		});
+		});*/
+
+		main.postDate = Ext.create('company.form.fieldPostDate');
 	 	
 		main.idPosition   = Ext.create('company.form.fieldIdPosition' );	
 		main.idPositionPostDate = Ext.create('company.form.fieldIdPositionPostDate');
@@ -372,7 +372,7 @@ Ext.define('company.PositionPostDate',{
 	             
 	            	var values = form.getValues();
 	            	
-	            	console.log(values);
+	            	 
 	            	 
 	            	Ext.Ajax.request({
 	              		url		: '/WebCompanys/jobs/addPostDate',
@@ -383,7 +383,7 @@ Ext.define('company.PositionPostDate',{
 	                			//company.listPosition();
 	                		 main.fireEvent('refreshOther', this);
 	                		 
-	                		// main.closeWindow(main,bt);
+	                		 
 	                		},
 	                	failure: function(response) {
 	                		alert('error');
@@ -398,8 +398,8 @@ Ext.define('company.PositionPostDate',{
 			}
 		});
 		
-		main.items = [main.idPositionPostDate,main.idPosition,main.postDate  ],
-	    main.buttons = [main.btsave]
+		main.items = [main.idPositionPostDate,main.idPosition,main.postDate  ];
+	    main.buttons = [main.btsave];
 		
 		this.callParent();
     }
@@ -437,7 +437,13 @@ Ext.define('company.winAddPositionPostDate',{
 		
 		 
 		
-		main.showPanel = Ext.create('company.PositionPostDate' );
+		main.showPanel = Ext.create('company.PositionPostDate',{
+			listeners : {
+				refreshOther : function(cmp) {
+		            main.hide(cmp);
+		        }
+		    }});
+		 
 		 
 		main.items =  [main.showPanel];
 		
