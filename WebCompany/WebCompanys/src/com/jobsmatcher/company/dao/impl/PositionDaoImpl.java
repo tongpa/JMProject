@@ -18,17 +18,24 @@ import java.util.List;
 
 
 
+
+
+
+
+import org.apache.log4j.Logger;
 import org.hibernate.Query; 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jobsmatcher.company.dao.PositionDao;  
 import com.jobsmatcher.company.model.Position; 
+import com.jobsmatcher.company.model.PositionPostDate;
+import com.jobsmatcher.company.model.ViewPositionPostDate;
 @Repository
 public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implements
 		PositionDao {
 
-	
+	final static Logger logger = Logger.getLogger(PositionDaoImpl.class); 
 	protected PositionDaoImpl() {
 		
         super(Position.class);
@@ -61,7 +68,7 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		List<Position> users = new ArrayList<Position>();
 		//System.out.println("company id :" + id); 
 		
-		String sql = "from Position where id_company_data = " + id;
+		String sql = "from Position p where p.id_company = " + id;
 		Query query = getCurrentSession().createQuery(sql).setFirstResult(start);
 		
 		if (limit >0){
@@ -82,7 +89,7 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
 		//System.out.println(v); 
 		 
-		System.out.println("Delete Positon : " + v);
+		logger.info("Delete Positon : " + v);
 	}
 
 	@Override
@@ -129,15 +136,60 @@ public  class PositionDaoImpl extends AbstractDaoImpl<Position, String> implemen
 		sb.append("delete from job_position where id_company_data = ").append(id );
 		
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
-		//System.out.println(v); 
-		 
-		//System.out.println("Delete Positon");
+		
+		logger.info("Delete job_position : " + v);
 	}
 
 	@Override
 	public int getSizePositionByCompany(String id) {
 		String sql = "select count(*) from Position where id_company_data = " + id;
 		int count = ((Long)getCurrentSession().createQuery(sql).uniqueResult()).intValue();
+		return count;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ViewPositionPostDate> getPositionPostDateById(int id,int start,int limit, int page) {
+		 
+		String sql = "from Position where id_position = " + id;
+		 sql = "from Position p inner join p.PositionPostDates where p.id_position = " + id;
+		
+		Query query = getCurrentSession().createQuery(sql).setFirstResult(start);
+		
+		if (limit >0){
+			query = query.setMaxResults(limit);
+		}
+		
+		List<Object[]> listResult  = query.list();
+		List<ViewPositionPostDate> listPostDate = new ArrayList<ViewPositionPostDate>();
+		
+		
+		for (Object[] aRow : listResult) {
+			Position position = (Position) aRow[0];
+			PositionPostDate positionPostDate = (PositionPostDate) aRow[1];
+			
+			ViewPositionPostDate viewPositionPostDate = new ViewPositionPostDate();
+			viewPositionPostDate.setPosition(position.getPosition());
+			viewPositionPostDate.setId_position_post_date(positionPostDate.getId_position_post_date());
+			viewPositionPostDate.setPost_date(positionPostDate.getPost_date());
+			
+			listPostDate.add(viewPositionPostDate); 
+		}
+		
+		  
+		
+		
+		return listPostDate;
+	}
+
+	@Override
+	public int getSizePositionPostDateById(int id) {
+		String sql = "select count(*) from PositionPostDate ppd inner join Position p   where p.id_position = " + id;
+		sql = "select count(*) from Position p inner join p.PositionPostDates where p.id_position = " + id;
+		int count = ((Long)getCurrentSession().createQuery(sql).uniqueResult()).intValue();
+		
+		logger.info("count PositionPostDate : " + count); 
+		
 		return count;
 	}
 	

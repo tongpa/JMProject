@@ -1,8 +1,8 @@
 package com.jobsmatcher.company.dao.impl;
 
-import java.io.Serializable;
+ 
 import java.util.ArrayList;
-import java.util.Arrays;
+ 
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,12 +18,11 @@ import java.util.List;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+ 
 import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.criterion.Restrictions; 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +32,7 @@ import com.jobsmatcher.company.model.Company;
 @Repository
 public class CompanyDaoImpl extends AbstractDaoImpl<Company, String> implements CompanyDao {
 	
-	
+	final static Logger logger = Logger.getLogger(CompanyDaoImpl.class); 
 	protected CompanyDaoImpl() {
         super(Company.class);
     }

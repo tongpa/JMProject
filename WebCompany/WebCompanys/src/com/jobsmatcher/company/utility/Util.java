@@ -28,7 +28,9 @@ public class Util {
 	
 	public Date convertDate(String d){
 		Date c = new Date();
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");//("MM/dd/yyyy");
+		
+		
 		try{
 			c = df.parse(d);
 		}

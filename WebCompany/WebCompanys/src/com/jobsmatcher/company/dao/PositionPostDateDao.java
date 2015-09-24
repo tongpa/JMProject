@@ -3,6 +3,7 @@ package com.jobsmatcher.company.dao;
 import java.util.List;
 
 import com.jobsmatcher.company.model.PositionPostDate;
+import com.jobsmatcher.company.model.ViewPositionPostDate;
 
 public interface PositionPostDateDao  extends AbstractDao<PositionPostDate, String>{
 	
@@ -12,5 +13,9 @@ public interface PositionPostDateDao  extends AbstractDao<PositionPostDate, Stri
 	
 	public void deleteByCompany(int id);
 	
+	public void deleteById(int id);
+	
 	public boolean updatePositionPostDate(PositionPostDate positionPostDate);
+	
+	public List<ViewPositionPostDate> getViewPositionPostBateByPosition(String id);
 }

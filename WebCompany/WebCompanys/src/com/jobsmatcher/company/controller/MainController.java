@@ -1,12 +1,9 @@
 package com.jobsmatcher.company.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+ 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+ 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -18,17 +15,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam; 
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jobsmatcher.company.dao.CompanyDao;
-import com.jobsmatcher.company.model.Company;
-import com.jobsmatcher.company.model.Student;
+import com.jobsmatcher.company.dao.CompanyDao; 
 
+import org.apache.log4j.Logger;
 @Controller
 public class MainController {
 	
+	final static Logger logger = Logger.getLogger(MainController.class);
 	@Autowired
 	private CompanyDao companyDao;
 	
@@ -39,7 +35,10 @@ public class MainController {
 		ModelAndView model = new ModelAndView();
 		   
 		  model.setViewName("company/index");
-		  
+		  System.out.println("Test Hello");
+		  logger.info("Test Hello log");
+		  logger.warn("Test Hello log");
+		  logger.error("Test Hello log");
 		 // model.setViewName("company/sample");
 		  //System.out.println("load");
 		  return model;

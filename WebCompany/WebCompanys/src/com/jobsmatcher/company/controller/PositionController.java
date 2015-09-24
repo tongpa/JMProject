@@ -1,9 +1,6 @@
 package com.jobsmatcher.company.controller;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+ 
+import java.util.ArrayList; 
 import java.util.HashMap;
 import java.util.List; 
 import java.util.Map;
@@ -16,12 +13,14 @@ import javax.servlet.http.HttpSession;
  
 
 
-import org.codehaus.jackson.map.ObjectMapper;
+
+
+
+import org.apache.log4j.Logger; 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller; 
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.stereotype.Controller;  
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,12 +43,17 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
+
+
+
 import com.jobsmatcher.company.dao.PositionDao;
 import com.jobsmatcher.company.dao.PositionPostDateDao; 
 
  
 import com.jobsmatcher.company.model.Position;
 import com.jobsmatcher.company.model.PositionPostDate;
+import com.jobsmatcher.company.model.ViewPosition;
+import com.jobsmatcher.company.model.ViewPositionPostDate;
 import com.jobsmatcher.company.utility.Util;
 
  
@@ -57,6 +61,7 @@ import com.jobsmatcher.company.utility.Util;
 @RequestMapping(value = "jobs")
 public class PositionController {
 	
+	final static Logger logger = Logger.getLogger(PositionController.class);
 	private Util util = new Util(); ;
 	
 	@Autowired
@@ -77,6 +82,7 @@ public class PositionController {
 		}
 	
 	@RequestMapping(value = "search", method = RequestMethod.POST)
+	 
 	@ResponseBody
     public Map<String, Object> search( @RequestParam(value = "keysearch", required=true ) Integer keysearch,
     		@RequestParam(value = "start", required=true ) Integer start,
@@ -86,14 +92,35 @@ public class PositionController {
     		HttpServletRequest request, HttpServletResponse response,HttpSession sec) {
 		Map<String, Object> books = new HashMap<String, Object>();
 		List<Position> listposition = new ArrayList<Position>();
-		
-		System.out.println("start : " + start);
-		System.out.println("limit : " + limit);
-		System.out.println("page : " + page);
+		List<ViewPosition> listposition1 = new ArrayList<ViewPosition>();
+		logger.info("start : " + start);
+		logger.info("limit : " + limit);
+		logger.info("page : " + page);
 		
 		
 		listposition = positionDao.getPositionByCompany( keysearch.toString(),start.intValue(),limit.intValue(),page.intValue() );
-		books.put("company", listposition);
+		for (Position position : listposition){
+			ViewPosition viewPosition = new ViewPosition();
+			
+			viewPosition.setBasic_qualification(position.getBasic_qualification());
+			viewPosition.setCreate_date(position.getCreate_date());
+			viewPosition.setExperience(position.getExperience());
+			viewPosition.setId_company(position.getId_company());
+			viewPosition.setId_position( position.getId_position());
+			viewPosition.setJob_description(position.getJob_description());
+			viewPosition.setJob_popose(position.getJob_popose());
+			viewPosition.setPersonal_characters(position.getPersonal_characters());
+			viewPosition.setPosition(position.getPosition());
+			viewPosition.setPosition_no(position.getPosition_no());
+			viewPosition.setPost_date(position.getPost_date());
+			viewPosition.setSource(position.getSource());
+			
+			listposition1.add(viewPosition);
+		}
+		
+		 
+		
+		books.put("company", listposition1);
 		/* 
 		keysearch = keysearch.trim(); 
 		
@@ -111,6 +138,35 @@ public class PositionController {
 		return books;
     }
 	
+	
+	//@RequestMapping(value = "searchPostDate", method = RequestMethod.POST)
+	@RequestMapping(value = "searchPostDate", method = RequestMethod.POST)
+	@ResponseBody
+    public Map<String, Object> searchPostDate( @RequestParam(value = "keysearch", required=true ) Integer keysearch,
+    		@RequestParam(value = "start", required=true ) Integer start,
+    		@RequestParam(value = "limit", required=true ) Integer limit,
+    		@RequestParam(value = "page", required=true ) Integer page,
+    		
+    		HttpServletRequest request, HttpServletResponse response,HttpSession sec) {
+		Map<String, Object> books = new HashMap<String, Object>();
+		List<ViewPositionPostDate> listViewPositionPostDate = new ArrayList<ViewPositionPostDate>();
+		
+		logger.info("start : " + start);
+		logger.info("limit : " + limit);
+		logger.info("page : " + page);
+		
+		
+		listViewPositionPostDate = positionDao.getPositionPostDateById(keysearch,start.intValue(),limit.intValue(),page.intValue());
+		books.put("company", listViewPositionPostDate);
+		 
+		
+		int size =  positionDao.getSizePositionPostDateById(keysearch);
+	 	books.put("total",size);
+	 	
+		return books;
+    }
+	
+	
 	@RequestMapping(value = "addJobss", method = RequestMethod.POST)
 	public @ResponseBody Map<String, Comparable> addJobss(@RequestBody Position position, HttpSession sec) {
 		Map<String, Comparable> response = new HashMap<String, Comparable>();
@@ -127,11 +183,11 @@ public class PositionController {
 			 
 			if(position.getId_position() ==0){
 				
-				System.out.println(position.getPost_date());
+				logger.info(position.getPost_date());
 				 
 				//position.setPost_date(util.convertDate(position.getPost_date()));
 				 
-				System.out.println(position.getPost_date());
+				logger.info(position.getPost_date());
 				
 				
 				positionDao.saveOrUpdate(position);
@@ -157,9 +213,10 @@ public class PositionController {
 			}
 	        response.put("success", true);
 	        response.put("msg", "Welcome tong"  );
-	    } catch(Exception e) {
+	    } catch(Exception ex) {
 	        response.put("success", false);
-	        response.put("msg", e.getMessage());
+	        response.put("msg", ex.getMessage());
+	        logger.error(ex.getMessage());
 	    }
 		return response;
  
@@ -178,9 +235,31 @@ public class PositionController {
 			positionDao.deleteById(position);
 	         responses.put("success", true);
 	         responses.put("msg", "Welcome tong"  );
-	        } catch(Exception e) {
+	        } catch(Exception ex) {
 	         responses.put("success", false);
-	         responses.put("msg", e.getMessage());
+	         responses.put("msg", ex.getMessage());
+	         logger.error(ex.getMessage());
+	        }
+//		
+		return responses;
+	}
+	
+	@RequestMapping(value = "delPostDate", method = RequestMethod.POST)
+	public @ResponseBody Map<String, Comparable> delPostDate(@RequestBody ViewPositionPostDate position,HttpSession sec){
+		Map<String, Comparable> responses = new HashMap<String, Comparable>();
+		
+		//System.out.println(position.getId_position());
+//		System.out.println(id_position);
+		try {
+	        
+			positionPostDateDao.deleteById(position.getId_position_post_date());
+			 
+	         responses.put("success", true);
+	         responses.put("msg", "Welcome tong"  );
+	        } catch(Exception ex) {
+	         responses.put("success", false);
+	         responses.put("msg", ex.getMessage());
+	         logger.error(ex.getMessage());
 	        }
 //		
 		return responses;
@@ -197,7 +276,7 @@ public class PositionController {
 			//ObjectMapper mapper = new ObjectMapper();
 			
 			//PositionPostDate positionPostDate = mapper.readValue(position, PositionPostDate.class);
-			System.out.println(position);
+			logger.info(position);
 			 
 			 
 			JSONParser parser = new JSONParser();
@@ -205,7 +284,7 @@ public class PositionController {
 			JSONObject jsonObject = (JSONObject) obj;
 			
 			String name = (String) jsonObject.get("post_date");
-			System.out.println(name);
+			logger.info(name);
 			
 			PositionPostDate positionPostDate = new PositionPostDate();
 			
@@ -217,9 +296,10 @@ public class PositionController {
 			
 	        response.put("success", true);
 	        response.put("msg", "Welcome tong"  );
-	    } catch(Exception e) {
+	    } catch(Exception ex) {
 	        response.put("success", false);
-	        response.put("msg", e.getMessage());
+	        response.put("msg", ex.getMessage());
+	        logger.error(ex.getMessage());
 	    }
 		return response;
  

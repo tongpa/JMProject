@@ -5,15 +5,18 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jobsmatcher.company.model.Position;
 import com.jobsmatcher.company.model.PositionPostDate;
+import com.jobsmatcher.company.model.ViewPositionPostDate;
 import com.jobsmatcher.company.dao.PositionPostDateDao;
 @Repository
 public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, String> implements PositionPostDateDao{
-
+	
+	final static Logger logger = Logger.getLogger(PositionPostDateImpl.class); 
 	protected PositionPostDateImpl() {
 		
         super(PositionPostDate.class);
@@ -25,7 +28,7 @@ public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, Stri
 	@Transactional(readOnly=true)
 	@Override
 	public List<PositionPostDate> findAll() {
-		return (List<PositionPostDate>) getCurrentSession().createQuery("from PositionPostDate").list(); 
+		return (List<PositionPostDate>) getCurrentSession().createQuery("from PositionPostDate c  order by c.post_date desc").list(); 
 	}
 
 	@Override
@@ -41,7 +44,7 @@ public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, Stri
 		List<PositionPostDate> users = new ArrayList<PositionPostDate>();
 		//System.out.println("company id :" + id); 
 		
-		String sql = "from PositionPostDate where id_position = " + id;
+		String sql = "from PositionPostDate c where id_position = " + id + " order by c.post_date desc ";
 		users = getCurrentSession()
 			.createQuery(sql)
 			//.setParameter(0, id)
@@ -57,6 +60,7 @@ public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, Stri
 		
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
 		
+		logger.info("Delete job_position_post_date : " + v);
 	}
 
 	@Override
@@ -65,13 +69,13 @@ public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, Stri
 		sb.append("delete from job_position_post_date where id_position = ").append(id);
 		
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
-		System.out.println("delete : " + v);
+		logger.info("delete job_position_post_date : " + v);
 		
 	}
 
 	@Override
 	public boolean updatePositionPostDate(PositionPostDate positionPostDate) {
-DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 	   
 		
 		StringBuffer sb = new StringBuffer();
@@ -99,7 +103,24 @@ DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		sb.append("delete from  job_position_post_date  where job_position_post_date.id_position in  (select job_position.id_position from job_position where job_position.id_company_data = ").append(id).append(")");
 		
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
-		System.out.println("delete : " + v);
+		logger.info("delete job_position_post_date : " + v);
+		
+	}
+
+	@Override
+	public List<ViewPositionPostDate> getViewPositionPostBateByPosition(
+			String id) {
+		
+		return null;
+	}
+
+	@Override
+	public void deleteById(int id) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("delete from job_position_post_date where id_position_post_date = ").append(id);
+		
+		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
+		logger.info("delete job_position_post_date : " + v);
 		
 	}
  

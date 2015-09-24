@@ -1,20 +1,16 @@
 package com.jobsmatcher.company.controller;
-
-import java.nio.charset.Charset;
+ 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map; 
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import org.apache.log4j.Logger; 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.stereotype.Controller; 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,39 +19,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
  
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 
 import com.jobsmatcher.company.dao.CompanyDao;
 import com.jobsmatcher.company.dao.PositionDao;
 import com.jobsmatcher.company.dao.PositionPostDateDao;
-import com.jobsmatcher.company.model.Company;
-import com.jobsmatcher.company.model.Student;
+import com.jobsmatcher.company.model.Company; 
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+//import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Controller
 @RequestMapping(value = "company")
 public class CompanyController {
 	
+	final static Logger logger = Logger.getLogger(CompanyController.class);
 	@Autowired
 	private CompanyDao companyDao;
 	@Autowired
@@ -74,7 +51,8 @@ public class CompanyController {
 			
 			}
 		catch(Exception ex){
-			ex.printStackTrace();
+			//ex.printStackTrace();
+			logger.error(ex.getMessage());
 		}
 		ModelAndView model = new ModelAndView( );
 		
@@ -121,9 +99,9 @@ public class CompanyController {
 		
 		Map<String, Object> books = new HashMap<String, Object>();
 		 
-		System.out.println("Start : " + start);
-		System.out.println("limit : " + limit);
-		System.out.println("page : " + page);
+		logger.info("Start : " + start);
+		logger.info("limit : " + limit);
+		logger.info("page : " + page);
 		
 		keysearch = keysearch.trim();
 		 
@@ -153,9 +131,10 @@ public class CompanyController {
 			}
 	         response.put("success", true);
 	         response.put("msg", "Welcome tong"  );
-	        } catch(Exception e) {
+	        } catch(Exception ex) {
 	         response.put("success", false);
-	         response.put("msg", e.getMessage());
+	         response.put("msg", ex.getMessage());
+	         logger.error(ex.getMessage());
 	        }
 		
 		return response;
@@ -173,9 +152,10 @@ public class CompanyController {
 			companyDao.deleteById(company);
 	         response.put("success", true);
 	         response.put("msg", "Welcome tong"  );
-	        } catch(Exception e) {
+	        } catch(Exception ex) {
 	         response.put("success", false);
-	         response.put("msg", e.getMessage());
+	         response.put("msg", ex.getMessage());
+	         logger.error(ex.getMessage());
 	        }
 		
 		return response;

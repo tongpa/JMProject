@@ -1,5 +1,6 @@
 package com.jobsmatcher.company.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -7,14 +8,23 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.CascadeType; 
+import javax.persistence.FetchType;
 
 import org.hibernate.annotations.Type;
 
 
 @Entity
 @Table(name = "job_position_post_date" )
-public class PositionPostDate {
+public class PositionPostDate  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@Column(name = "id_position_post_date", unique = true, nullable = false )	
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +36,12 @@ public class PositionPostDate {
 	@Column(name = "post_date")
 	@Type(type="date")
 	private Date post_date;
+	
+	//@ManyToOne
+    //@JoinColumn(name = "id_position")
+	@ManyToOne(cascade=CascadeType.ALL, optional=true, fetch=FetchType.EAGER)  
+    @JoinColumn(name="id_position", referencedColumnName = "id_position", insertable = false, updatable = false)  
+	private Position position;
 	
 	/*@Column(name = "create_date")
 	@Type(type="date")
@@ -71,6 +87,16 @@ public class PositionPostDate {
 		this.post_date = post_date;
 	}
 
+
+	public Position getPosition() {
+		return position;
+	}
+
+
+	public void setPosition(Position position) {
+		this.position = position;
+	}
+
 /*
 	public Date getCreate_date() {
 		return create_date;
@@ -92,4 +118,6 @@ public class PositionPostDate {
 	}
 	
 	 */
+
+	
 }
