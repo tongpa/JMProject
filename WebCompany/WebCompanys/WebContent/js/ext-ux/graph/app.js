@@ -1,4 +1,5 @@
 Ext.namespace("graph");
+Ext.namespace("company");
 Ext.Loader.setConfig({enabled: true});
 
 

@@ -23,6 +23,7 @@
 
     document.write('<script type="text/javascript" src="' + path + 'listHistory.js"  charset="UTF-8"></script>');
 */
+    document.write('<script type="text/javascript" src="' + url_path + '/js/ext-ux/company/model.js"  charset="UTF-8"></script>');
     document.write('<script type="text/javascript" src="' + path + 'report1.js"  charset="UTF-8"></script>');
     document.write('<script type="text/javascript" src="' + path + 'app.js"  charset="UTF-8"></script>');
 

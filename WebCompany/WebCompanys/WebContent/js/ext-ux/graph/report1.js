@@ -32,23 +32,7 @@ Ext.define('graph.Sample',{
     initComponent: function() {
         var me = this;
 
-        this.myDataStore = Ext.create('Ext.data.JsonStore', {
-            fields: ['month', 'data1' ],
-            data: [
-                { month: 'Jan', data1: 20 },
-                { month: 'Feb', data1: 20 },
-                { month: 'Mar', data1: 19 },
-                { month: 'Apr', data1: 18 },
-                { month: 'May', data1: 18 },
-                { month: 'Jun', data1: 17 },
-                { month: 'Jul', data1: 16 },
-                { month: 'Aug', data1: 16 },
-                { month: 'Sep', data1: 16 },
-                { month: 'Oct', data1: 16 },
-                { month: 'Nov', data1: 15 },
-                { month: 'Dec', data1: 15 }
-            ]
-        });
+     
 
         //<example>
         me.dockedItems = [{
@@ -81,10 +65,10 @@ Ext.define('graph.Sample',{
             insetPadding: 40,
             animate: true,
             shadow: false,
-            store: this.myDataStore,
+            store: company.listHistorys,
             items: [{
                 type  : 'text',
-                text  : 'Column Charts - Basic Column',
+                text  : 'Column Charts',
                 font  : '22px Helvetica',
                 width : 100,
                 height: 30,
@@ -94,6 +78,7 @@ Ext.define('graph.Sample',{
                 type: 'text',
                 text: 'Data: Browser Stats 2012',
                 font: '10px Helvetica',
+                
                 x: 12,
                 y: 380
             }, {
@@ -106,16 +91,26 @@ Ext.define('graph.Sample',{
             axes: [{
                 type: 'Numeric',
                 position: 'left',
-                fields: ['data1'],
-                label: {
-                    renderer: function(v) { return v + '%'; }
+                minimum: 0,
+                adjustMinimumByMajorUnit: 0,
+                fields: ['num'] ,
+                increment :10,
+               label: {
+                    renderer: function(v) {
+                    		var value = v+"";
+                    		if(value.indexOf('.') == -1){
+                    			console.log(value);
+                    			return  value  ;
+                    		}
+                    		return '';
+                    }
                 },
-                grid: true,
-                minimum: 0
+                grid: true
+                
             }, {
                 type: 'Category',
                 position: 'bottom',
-                fields: ['month'],
+                fields: ['date_string'],
                 grid: true,
                 label: {
                     rotate: {
@@ -126,8 +121,8 @@ Ext.define('graph.Sample',{
             series: [{
                 type: 'column',
                 axis: 'left',
-                xField: 'month',
-                yField: 'data1',
+                xField: 'date_string',
+                yField: 'num',
                 style: {
                     opacity: 0.80
                 },
@@ -141,29 +136,16 @@ Ext.define('graph.Sample',{
                     style: 'background: #FFF',
                     height: 20,
                     renderer: function(storeItem, item) {
-                        this.setTitle(storeItem.get('month') + ': ' + storeItem.get('data1') + '%');
+                        this.setTitle(storeItem.get('date_string') + ': ' + storeItem.get('num') + '');
                     }
                 }
             }]
         //<example>
-        }, {
-            style: 'padding-top: 10px;',
-            xtype: 'gridpanel',
-            columns : {
-                defaults: {
-                    sortable: false,
-                    menuDisabled: true
-                },
-                items: [
-                    { text: '2012', dataIndex: 'month' },
-                    { text: 'IE', dataIndex: 'data1', renderer: function(v) { return v + '%'; } }
-                ]
-            },
-            store: this.myDataStore,
-            width: '100%'
-        //</example>
-        }];
-
+        } ];
+        
+        console.log("list Historys");
+        company.listHistorys.load();
+        
         this.callParent();
     }
 });
