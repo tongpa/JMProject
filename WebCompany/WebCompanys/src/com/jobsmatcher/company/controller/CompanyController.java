@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
  
 
 
+
 import com.jobsmatcher.company.dao.CompanyDao;
 import com.jobsmatcher.company.dao.PositionDao;
 import com.jobsmatcher.company.dao.PositionPostDateDao;
@@ -80,8 +81,13 @@ public class CompanyController {
 	
 	@RequestMapping(value = "history", method = RequestMethod.GET)
 	@ResponseBody
-	public   Map<String, List<Map<String, String>> > showHistory( HttpServletRequest request, HttpServletResponse response, HttpSession sec){
-		List<Map<String, String>> book = companyDao.listTotalInDate();
+	public   Map<String, List<Map<String, String>> > showHistory( 
+			@RequestParam(value = "start", required=true ) Integer start,
+    		@RequestParam(value = "limit", required=true ) Integer limit,
+    		@RequestParam(value = "page", required=true ) Integer page,
+			
+			HttpServletRequest request, HttpServletResponse response, HttpSession sec){
+		List<Map<String, String>> book = companyDao.listTotalInDate(null, null, start.intValue(),limit.intValue(),page.intValue());
 		Map<String, List<Map<String, String>> > books = new HashMap<String, List<Map<String, String>> >();
 		if(book.size() > 0){
 			books.put("history",   book);

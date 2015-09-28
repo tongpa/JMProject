@@ -153,30 +153,7 @@ public class CompanyDaoImpl extends AbstractDaoImpl<Company, String> implements 
 		
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Map<String, String>> listTotalInDate() {
-		StringBuffer sb = new StringBuffer();
-		sb.append("select  DATE_FORMAT(create_date,'%d-%m-%Y') as date_string, count(create_date) as num from company_data ")
-		.append(" GROUP BY DATE_FORMAT(create_date,'%d-%m-%Y') ") 
-		.append(" ORDER BY create_date DESC limit 35 ");
- 
-		List<Object[]> results = getCurrentSession().createSQLQuery(sb.toString()).list();
-		List<Map<String, String>>  data = new ArrayList<Map<String, String>> (); 
-		for (Object[] arr  : results) {
-			//System.out.println(Arrays.toString(arr));
-			//System.out.println(arr[0] + " " + arr[1]);
-			
-			Map<String, String>  sa = new HashMap<String, String>();
-			sa.put("date_string", String.valueOf(arr[0] ));
-			sa.put("num",String.valueOf(arr[1]));
-			data.add(sa);
-			arr = null;
-		} 
-		results = null;
-		sb = null;
-		return data;
-	}
+	 
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -198,10 +175,54 @@ public class CompanyDaoImpl extends AbstractDaoImpl<Company, String> implements 
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public int getSizeByName(String name) {
 		String sql = "select count(*) from Company where company_name like '%" + name + "%'";
 		int count = ((Long)getCurrentSession().createQuery(sql).uniqueResult()).intValue();
 		return count;
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	 
+	public List<Map<String, String>> listTotalInDate(String startDate, String StopDate, int start, int limit, int page) {
+		
+		
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select  DATE_FORMAT(create_date,'%d-%m-%Y') as date_string, count(create_date) as num from company_data ");
+		
+		if(startDate != null && StopDate != null){
+			sb.append("where create_date BETWEEN '" + startDate + "' and '" + StopDate + "' ");
+		}
+		
+		sb.append(" GROUP BY DATE_FORMAT(create_date,'%d-%m-%Y') ") ;
+		sb.append(" ORDER BY create_date DESC  ");
+ 
+		Query query =  getCurrentSession().createSQLQuery(sb.toString()).setFirstResult(start);
+		
+		if (limit >0){
+			query = query.setMaxResults(limit);
+		}
+		
+		List<Object[]> results = query.list();
+		List<Map<String, String>>  data = new ArrayList<Map<String, String>> (); 
+		for (Object[] arr  : results) {
+			//System.out.println(Arrays.toString(arr));
+			//System.out.println(arr[0] + " " + arr[1]);
+			
+			Map<String, String>  sa = new HashMap<String, String>();
+			sa.put("date_string", String.valueOf(arr[0] ));
+			sa.put("num",String.valueOf(arr[1]));
+			data.add(sa);
+			arr = null;
+		} 
+		results = null;
+		sb = null;
+		return data;
+		
+		
+		 
 	}
 
 }
