@@ -50,7 +50,10 @@ install_requires=[
     "tw2.bootstrap.forms",
     "webhelpers",
     "python-memcached",
-    "Flask-Social"
+	"Flask-OAuth",
+	"Flask-Security",
+    "Flask-Social",
+    "tgext.mailer"
 	
     #"tw2.captcha",
     ]
