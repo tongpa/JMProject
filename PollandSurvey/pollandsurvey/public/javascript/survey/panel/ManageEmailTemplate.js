@@ -18,14 +18,14 @@ Ext.define('survey.panel.ManageEmailTemplate',{
     
     isCreate : true,
     parentForm : null,
-    loadData : function (projectRecord){
+    loadData : function (projectRecord,page=1){
     	
     	this.projectid = '';
     	this.record = projectRecord;
     	if (projectRecord != null && projectRecord.id != null) {
     		
     		this.projectid = projectRecord.id;
-    		survey.listInvitationData.load({
+    		this.showListOption.store.loadPage(page,{
 				params : {
 	    			projectid : projectRecord.id
 	    		},
@@ -44,9 +44,7 @@ Ext.define('survey.panel.ManageEmailTemplate',{
 			titleAlign : 'left',
 			listeners : {
 				refreshOther : function(cmp) {
-					//survey.listProject.reload();
 					
-					//main.setLoad(main.record);
 					main.loadData(main.record);
 		        }
 			}
@@ -65,11 +63,16 @@ Ext.define('survey.panel.ManageEmailTemplate',{
         }];
 		
 		main.showListOption = Ext.create('survey.view.pemailtemplate.ListEmailTemplate',{
+			store : main.store,
 			listeners : {
 				showManageOption : function(grid,optionsrecord) {
 					main.showWindowsOption.show();
 				 	main.showWindowsOption.setLoadData(main.record,optionsrecord );
 					 
+		        },
+		        changeDataValue : function(paging,page){
+		        	main.loadData(main.record,page);
+		        	console.log("onBeforeChange");
 		        }
 			}
 		});

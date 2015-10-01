@@ -33,8 +33,9 @@ Ext.define('survey.view.poption.PublicationOptionView',{
     			
     			main.btsave.setHidden(true);
     		}
+    		console.log(main.store1.data.length);
+    		main.lenghtQuestion = main.store1.data.length;
     		
-    		main.lenghtQuestion = survey.listQuestionsData.data.length;
     		main.useQuestionNo.setMaxValue(main.lenghtQuestion);
     		main.useQuestionNo.setMinValue( 0 );
     	//	console.log(main.lenghtQuestion);
@@ -97,8 +98,16 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 			editable : false,
 			value : 1, allowBlank : false});
 		
+		main.closeType = Ext.create('Ext.form.ComboBox',{name : 'id_close_type',fieldLabel : survey.label.close_type,
+			store: survey.listCloseType,
+			queryMode: 'local',
+			displayField: 'description',
+			valueField: 'id_close_type',
+			editable : false,
+			value : 1, allowBlank : false});
+		
 		main.emailTemplate = Ext.create('Ext.form.ComboBox',{name : 'id_question_invitation',fieldLabel : survey.label.email_template,
-			store: survey.listInvitationData,
+			store: main.store,
 			queryMode: 'local',
 			displayField: 'name_content',
 			valueField: 'id_question_invitation',
@@ -213,6 +222,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		
 		main.tabMessage = Ext.create('Ext.tab.Panel', {
 			height: 150,
+			frame : true,
 			items: [
 			        {
 			        	title : survey.label.welcome_message ,
@@ -239,7 +249,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		});
 		
 		
-		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.RandomType,main.randomAnswer,main.showQuestionNo,main.ShowDurationTime ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
+		main.items = [main.idoptions,main.idquestion,main.optionName,main.showTheme,main.showNavigator,main.showScore,main.closeType,main.RandomType,main.randomAnswer,main.showQuestionNo,main.ShowDurationTime ,main.emailTemplate,main.startDate,main.finishDate,main.redirectURL,main.tabMessage];
 		
 		
 		main.btsave = Ext.create('Ext.Button',{		 

@@ -8,7 +8,7 @@ Ext.define('survey.view.pvoters.ListVoters',{
         emptyText: 'No images to display'
     },
     collapsible:false ,
-	store: survey.listVoterData,
+	 
 	hideHeaders : true,
     getHeaderColumn : function(){
     	
@@ -61,9 +61,18 @@ Ext.define('survey.view.pvoters.ListVoters',{
             xtype: 'pagingtoolbar',
             store: main.store, // same store GridPanel is using
             dock: 'bottom',
-            displayInfo: true
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChange,
+            }
         }]
     },
+    onBeforeChange : function(paging,page,opt){
+    	var main = this;
+    	main.fireEvent('changeDataValue', paging,page); 
+		return false;
+	},
 	initComponent : function(){
 		main = this;
     	main.columns = main.getHeaderColumn();

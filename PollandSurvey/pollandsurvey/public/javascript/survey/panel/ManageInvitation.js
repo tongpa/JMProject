@@ -26,12 +26,12 @@ Ext.define('survey.panel.ManageVariable',{
     	if (projectRecord != null && projectRecord.id != null) {
     		
     		this.projectid = projectRecord.id;
-	    	survey.listOptions.load({
+	    	/*survey.listOptions.load({
 				params : {
 	    			projectid : projectRecord.id
 	    		},
 	    		scope : this
-			});
+			});*/
     	}
     	
     },

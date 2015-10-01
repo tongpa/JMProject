@@ -54,7 +54,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 		//console.log(questionrecord);
 		
 		//load grid question
-		form.answerCardPanel.setLoadData(questionrecord,questiontyperecord);
+		form.answerCardPanel.setLoadData(projectrecord,questionrecord,questiontyperecord);
 		//form.answerCardPanel.choose.setLoadData(questionrecord);
     },
 	createHtmlEditor : function(fieldName){

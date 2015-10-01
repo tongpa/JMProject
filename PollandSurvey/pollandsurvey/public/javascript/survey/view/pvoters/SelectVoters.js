@@ -9,7 +9,7 @@ Ext.define('survey.view.pvoters.SelectVoters',{
 	//msgTarget: 'side',
 	fromTitle : survey.label.contact,
     toTitle : survey.label.voters,
-    store: survey.listVoterData,
+     
     displayField: 'name',
     valueField: 'id_voter',
 	initComponent : function(){

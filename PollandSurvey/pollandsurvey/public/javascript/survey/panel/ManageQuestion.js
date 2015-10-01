@@ -26,13 +26,14 @@ Ext.define('survey.panel.ManageQuestion',{
     	if (projectRecord != null && projectRecord.id != null) {
     		
     		this.projectid = projectRecord.id;
-	    	survey.listQuestionsData.load({
+    		this.gridQuestion.store.load({
 				params : {
 	    			projectid : projectRecord.id
 	    		},
 	    		scope : this
 			});
     	}
+    	//debugger;
     	
     },
     initComponent: function() {
@@ -50,7 +51,7 @@ Ext.define('survey.panel.ManageQuestion',{
 			titleAlign : 'left',
 			listeners : {
 				refreshOther : function(cmp) {
-					//survey.listProject.reload();
+					
 					main.setLoad(main.record);
 		        }
 			}
@@ -72,13 +73,16 @@ Ext.define('survey.panel.ManageQuestion',{
  
 		
 		main.gridQuestion = Ext.create('survey.view.pquestion.ListQuestions',{
+			store : main.store, 
 			listeners : {
 				showEditQuestion : function(cmp,record) {
 					
 					main.winAddQuestion.show();
-					//console.log(record);
+					
 					main.winAddQuestion.setLoadData(main.record,  record, null);
-					//survey.listProject.reload();
+					
+					main.winAddQuestion.setTitle( survey.label.create_question + '-' + record.data.question_type_name);
+					
 		        }
 			}
 		}); 

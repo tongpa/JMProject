@@ -15,7 +15,9 @@ from pollandsurvey.controllers.utility import Utility
 from pollandsurvey import model
 
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+
+from logsurvey import LogDBHandler 
+ 
 class UserObject(object):
     def __init__(self):
         self.fullname = None;

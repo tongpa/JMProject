@@ -26,7 +26,7 @@ Ext.define('survey.panel.ManageVoters',{
 		
 		
 		
-		survey.listVoterData.load();
+		main.store.load();
 		main.selectVoters = Ext.create(
 				//'Ext.ux.form.ItemSelector' 
 				//'survey.view.PVoters.ShowVoters'
@@ -34,6 +34,7 @@ Ext.define('survey.panel.ManageVoters',{
 				,{
 			name: 'itemselector',
             id: 'itemselector-field',
+            store : main.store,
             listeners : {
             	editVoters : function(panel,record){
             		console.log('editVoters');
@@ -51,7 +52,7 @@ Ext.define('survey.panel.ManageVoters',{
 				refreshOther : function(cmp) {
 					 
 		            //main.refreshOther();
-		            survey.listVoterData.load();
+					main.selectVoters.store.load();
 		        }
 		    }
 			

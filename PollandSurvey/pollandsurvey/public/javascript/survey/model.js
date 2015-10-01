@@ -19,6 +19,12 @@ Ext.define('survey.model.RandomType',{
     fields: ['id_fix_random_type',   'description' , 'active' ] 
 });
 
+Ext.define('survey.model.CloseType',{
+	extend: 'Ext.data.Model',
+    idProperty: 'id_close_type',    
+    fields: ['id_close_type',   'description' , 'active' ] 
+});
+
 
 Ext.define('survey.model.listProjectid', {
     extend: 'Ext.data.Model',
@@ -99,7 +105,7 @@ Ext.define('survey.MasterStore',{
 	alias: ['widget.MasterStore'],
 	autoLoad : false,
 	autoSync : false,
-	pageSize: 50,
+	pageSize: 10,
 	proxy : {
 		reader:{
         	type: 'json',
@@ -171,10 +177,10 @@ survey.listProject = Ext.create('survey.MasterStore', {
 	proxy : {
 		 
 		type: 'ajax',
-		url : '/survey/getProjectByUser',    	
+		url : '/model/getProjectByUser',    	
 		api: {
-            read: '/survey/getProjectByUser',
-            create: '/survey/getProjectByUser',
+            read: '/model/getProjectByUser',
+            create: '/model/getProjectByUser',
             update: '/survey/updateProject',
             destroy: '/survey/deleteProject'
         } ,
@@ -213,7 +219,7 @@ survey.listBasicData = Ext.create('survey.MasterStore', {
         } 
 	} 
 });
-
+/*
 survey.listQuestionsData = Ext.create('survey.MasterStore', {
 	model : 'survey.model.listQuestions',
 	storeId : 'listQuestionsDataInStore',
@@ -239,6 +245,37 @@ survey.listQuestionsData = Ext.create('survey.MasterStore', {
 	}, 
 	autoLoad : true
 });
+*/
+
+Ext.define('survey.listQuestionsData',{
+	//extend : 'Ext.panel.Panel', 	 
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listQuestionsData'],
+	model : 'survey.model.listQuestions',
+	storeId : 'listQuestionsDataInStore', 
+	proxy : {
+		 
+		type: 'ajax',
+		url : '/model/getQuestionsData',    	
+		api: {
+            read: '/model/getQuestionsData',
+            create: '/survey/createQuestionData',
+            update: '/survey/updateQuestionData',
+            destroy: '/survey/deleteQuestionData'
+        }, 
+         
+        writer: {
+        	type: 'json' 
+        	 
+           // writeAllFields: false ,
+           // allowSingle :false 
+             
+        } 
+	}
+});
+
+
+
 
 survey.listQuestionType = Ext.create('survey.MasterStore', {
 	model : 'survey.model.listQuestionType',
@@ -297,6 +334,19 @@ survey.listRandomType  = Ext.create('survey.MasterStore', {
 	} 
 });
  
+survey.listCloseType  = Ext.create('survey.MasterStore', {
+	model : 'survey.model.CloseType',
+	storeId : 'listCloseTypeInStore',
+	 
+	proxy : {
+		type : 'ajax',
+		url : '/model/getCloseType',
+		reader : {
+			type : 'json',
+			rootProperty : 'survey'
+		}
+	} 
+});
 
 survey.listBasicMediaData = Ext.create('survey.MasterStore', {
 	model : 'survey.model.listAnswerData',
@@ -324,88 +374,90 @@ survey.listBasicMediaData = Ext.create('survey.MasterStore', {
 	} 
 });
 
-survey.listOptions = Ext.create('survey.MasterStore', {
+/**-------------------------------------------------------------**/ 
+
+Ext.define('survey.listOptionsData',{	 
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listOptionsData'],
 	model : 'survey.model.listOptions',
-	storeId:'listOptionsInStore',	 
+	storeId:'listOptionsDataInStore',	 
 	proxy : {
 		 
 		type: 'ajax',
 		url : '/model/getOptionsProject',    	
 		api: {
             read: '/model/getOptionsProject'
-            //,create: '/survey/createBasicData'
-            //,update: '/model/createBasicData'
-            //,destroy: '/model/deleteBasicData'
+           
         } ,
         writer: {
         	type: 'json' ,
-        	writeAllFields: true
-        	 
-           // writeAllFields: false ,
-           // allowSingle :false 
-             
-        } 
-	} 
-});
-
-survey.listVoterData = Ext.create('survey.MasterStore', {
-	model : 'survey.model.listVoters',
-	storeId:'listVoterDataInStore',
-	proxy : {
-		 
-		type: 'ajax',
-		url : '/model/getVotersData',    	
-		api: {
-            read: '/model/getVotersData',
-            destroy: '/voter/deleteVoter' 
-           
+        	writeAllFields: true 
         }
 	}
 });
 
-survey.listInvitationData = Ext.create('survey.MasterStore', {
+
+
+Ext.define('survey.listVoterData',{ 
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listVoterData'],
+	model : 'survey.model.listVoters',
+	storeId:'listVoterDataInStore',
+	proxy : {		 
+		type: 'ajax',
+		url : '/model/getVotersData',    	
+		api: {
+            read: '/model/getVotersData',
+            destroy: '/voter/deleteVoter'            
+        }
+	}
+});
+
+Ext.define('survey.listInvitationData',{
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listInvitationData'],
 	model : 'survey.model.Invitation',
-	storeId:'listInvitationDataInStore',
-	proxy : {
-		 
+	storeId : 'listInvitationDataInStore', 
+	proxy : {		 
 		type: 'ajax',
 		url : '/model/getInvitationData',    	
 		api: {
             read: '/model/getInvitationData',
-            destroy: '/voter/deleteInvitation' 
-           
+            destroy: '/voter/deleteInvitation'            
         } 
 	}
 });
 
-survey.listInvitationNumberData = Ext.create('survey.MasterStore', {
+
+Ext.define('survey.listInvitationNumberData',{ 	 
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listInvitationNumberData'],
 	model : 'survey.model.InvitationNumber',
 	storeId:'listInvitationNumberData',
-	proxy : {
-		 
+	proxy : {		 
 		type: 'ajax',
 		url : '/model/getInvitationNumberData',    	
 		api: {
-            read: '/model/getInvitationNumberData' 
-           
+            read: '/model/getInvitationNumberData'            
         } 
 	}
 });
 
-survey.listTrackVoterData = Ext.create('survey.MasterStore', {
+
+
+Ext.define('survey.listTrackVoterData',{ 	 
+	extend : 'survey.MasterStore',
+	alias: ['widget.survey.listInvitationNumberData'],
 	model : 'survey.model.TrackVoter',
 	storeId:'listTrackVoterData',
-	proxy : {
-		 
+	proxy : {		 
 		type: 'ajax',
 		url : '/model/getListTrackVosterData',    	
 		api: {
-            read: '/model/getListTrackVosterData' 
-           
+            read: '/model/getListTrackVosterData'            
         } 
 	}
 });
-
 
 /*
 survey.listInvitationData = new Ext.data.Store({

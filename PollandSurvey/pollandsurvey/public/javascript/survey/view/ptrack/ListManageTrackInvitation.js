@@ -8,7 +8,7 @@ Ext.define('survey.view.ptrack.ListManageTrackInvitation',{
         emptyText: 'No images to display'
     },
     collapsible:false ,
-	store: survey.listInvitationNumberData,
+	
 	hideHeaders : false,
     getHeaderColumn : function(){
     	
@@ -31,9 +31,9 @@ Ext.define('survey.view.ptrack.ListManageTrackInvitation',{
             displayInfo: true ,
             listeners:{
 		         scope: main,
-		         'beforechange' : function(pagingtoolsbar,params){
+		         'beforechange' : function(paging,page,opt){
 		        	 console.log("before reload");
-		        	 main.reloadData(main.ipOption);
+		        	 main.reloadData(main.ipOption,page);
 		        	 return false;
 		         }
             }
@@ -41,10 +41,10 @@ Ext.define('survey.view.ptrack.ListManageTrackInvitation',{
 
         }]
     },
-    reloadData : function(idOption){
+    reloadData : function(idOption,page=1){
     	var main = this;
     	main.ipOption = idOption;
-    	 main.store.load({
+    	 main.store.loadPage(page,{
 			params : {
 				idOption : idOption
     		},

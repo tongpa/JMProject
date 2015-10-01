@@ -7,7 +7,6 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 	width : '100%',
 	height :  '100%',
 	 
-	store : survey.listQuestionsData,
 	bufferedRenderer: false,
 	loadMask: true,
 	invalidateScrollerOnRefresh: false,
@@ -25,6 +24,8 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
     	var main = this;
     	
     },
+    
+    
     htmlTemplate : function(){
  	   return '<tpl for=".">' +
         				'<div class="patient-source"><table><tbody>' +
@@ -187,6 +188,8 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 	initComponent: function() {
 		var main = this;
 		
+		 
+		//main.store = Ext.create('survey.listQuestionsData');
 		var group1 = this.id + 'group1' ;
 		main.viewConfig =  {
 			    plugins: {
@@ -254,15 +257,14 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		this.callParent(arguments);  
 	},
 	clickOpenQuenstion : function(){
-		//console.log('click1'); 
-		
-		survey.listQuestionsData.each(function(record){ 
+		console.log('click1'); 
+		this.store.each(function(record){ 
 			 
 			//console.log(record) ; 
 		});
+		this.store.sync();
 		
-		survey.listQuestionsData.sync();
-		//debugger;
+
 	},
     listeners: {
     	render: function(c,m){

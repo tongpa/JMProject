@@ -27,7 +27,7 @@ import tw2.core
 import logging;
 from datetime import datetime ;
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 __all__ = ['AccountSysController']
 
 

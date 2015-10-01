@@ -25,8 +25,31 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
                'Ext.form.field.Text',
                'Ext.toolbar.TextItem'
            ],
-    
-    setLoadData : function(questionrecord) {
+    setVisibleColumnScore : function(visible){
+    	console.log("setVisibleColumnScore"); 
+    	 
+  
+    	
+    	this.columns[3].setVisible(visible);
+    	this.columns[4].setVisible(!visible);
+    	
+  
+    	
+    },
+    setLoadData : function(projectrecord,questionrecord) {
+    	
+    	/**set show header*/
+		if(projectrecord.data.id_question_project_type == 3){
+			this.setVisibleColumnScore(false);
+			console.log("show answer ");
+	   	}else
+	   	{	this.setVisibleColumnScore(true);
+	   		console.log("show score ");
+	   		 
+	   	}
+	 
+	   	
+    	
     	//console.log('survey.view.list.GridAnswer'); 
     	survey.listBasicData.removeAll();
     	this.getStore().removeAll();
@@ -47,7 +70,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 	    	});
 	    	
     	}
-    	//debugger;
+    	 
     },
     initComponent: function() {
     	
@@ -66,15 +89,17 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		    	    	   		field : { type : 'textfield' },
 		    	    	   		//editor: 'textfield',  
 		    	    	   		width : '60%',   sortable: false,menuDisabled: true}  , 
-		    	    	   	{header: 'Score', width : '10%', sortable: false, dataIndex: 'score',menuDisabled: true,
+		    	    	   	{header: 'Score', width : '10%', 
+		    	    	   			//id: 'score_column',
+		    	    	   			sortable: false, dataIndex: 'score',menuDisabled: true,
 		    	    	   			field : { type : 'textfield' }},	
 		    	    	   	{
 		        	            xtype: 'checkcolumn',
 		        	            header: survey.label.answer,
 		        	            dataIndex: 'answer',
 		        	            width: '20%',
-		        	           
-		        	            sortable: false,
+		        	             //id: 'answer_column',
+		        	            // hidden : true,
 		        	           
 		        	             sortable: false ,
 		        	             handler : function(){

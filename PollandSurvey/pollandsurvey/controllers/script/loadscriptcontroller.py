@@ -19,7 +19,7 @@ from tg.configuration import AppConfig, config
 
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 __all__ = ['ScriptController']
 
 import logging;

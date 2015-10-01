@@ -26,7 +26,7 @@ from pollandsurvey.widget.movie_form import create_movie_form
 
 import logging;
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from logsurvey import LogDBHandler
 __all__ = ['SurveyController']
 
 
@@ -549,6 +549,7 @@ class SurveyController(BaseController):
         
         return dict(success=self.success, message = self.message);
     
+    
     @expose('json')
     def addOptions(self, came_from=lurl('/'), *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
@@ -572,7 +573,7 @@ class SurveyController(BaseController):
         self.option.id_question_project = kw.get('id_question_project');        
         self.option.id_question_theme = kw.get('id_question_theme'); 
         self.option.name_publication = kw.get('name_publication');
-        
+        self.option.id_close_type = kw.get('id_close_type');
         
         self.option.id_fix_random_type = kw.get('id_fix_random_type');
         

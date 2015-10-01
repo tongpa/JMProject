@@ -23,30 +23,14 @@ Ext.define('survey.panel.ManageTrackInvitation',{
 		
 		var main = this;
 		
-		//main.select = Ext.create('survey.view.ptrack.ListPublication');
-		main.select =   Ext.create('Ext.form.ComboBox',{name : 'id_question_theme',
-			fieldLabel : survey.label.theme,
-			store: survey.listOptionTheme,
-			queryMode: 'local',
-			displayField: 'description',
-			valueField: 'id_question_theme',
-			editable : false,
-			value : 1, 
-			allowBlank : false,
-			listeners:{
-		         scope: main,
-		         'select': function ( combo, record, eOpts ){
-		        	 console.log(record);
-		         }
-		    }
-		});
-		main.panel  = Ext.create('survey.view.ptrack.ListManageTrackInvitation'  );
+		 
+		main.panel  = Ext.create('survey.view.ptrack.ListManageTrackInvitation' ,{store : main.store}  );
 		
 		main.tbar =  [{
             xtype:'combobox',
             name : 'id_question_theme',
 			fieldLabel : survey.label.create_publication,
-			store: survey.listOptions,
+			store: main.store1,
 			queryMode: 'local',
 			displayField: 'name_publication',
 			valueField: 'id_question_option',

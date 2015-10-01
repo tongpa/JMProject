@@ -16,7 +16,7 @@ Ext.define('survey.view.poption.ListPublicationOption',{
         }
     },
     collapsible:false ,
-	store: survey.listOptions,
+ 
 	 
 	bufferedRenderer: false,
 	disableSelection : true,
@@ -41,12 +41,22 @@ Ext.define('survey.view.poption.ListPublicationOption',{
             xtype: 'pagingtoolbar',
             store: main.store, // same store GridPanel is using
             dock: 'bottom',
-            displayInfo: true
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChange,
+            }
         }]
     },
+    onBeforeChange : function(paging,page,opt){
+    	var main = this;
+    	main.fireEvent('changeDataValue', paging,page); 
+		return false;
+	},
     initComponent : function(){
     	 
 		var main = this;
+		
 		main.columns = main.getHeaderColumn();
     	main.dockedItems = main.getPagingToolsBar();
     	main.callParent();

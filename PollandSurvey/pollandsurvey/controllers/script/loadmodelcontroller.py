@@ -23,7 +23,7 @@ from pollandsurvey.widget.movie_form import create_movie_form
 import logging;
 #from model.survey import BasicQuestion
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 __all__ = ['ScriptModelController']
 
 
@@ -93,10 +93,16 @@ class ScriptModelController(BaseController):
     @expose('json')
     def getOptionsProject(self, *args, **kw):
         pid = kw.get('projectid');
-        print pid;
-        question = model.QuestionOption.getByProject(pid)
         
-        return dict(survey=question , total = len(question));
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit');    
+        
+        
+        question,total = model.QuestionOption.getByProject(pid,page=int(self.page)-1, page_size=int(self.limit))
+        
+        print total;
+        return dict(survey=question , total = total);
     
     @expose('json')
     def getOptionTheme(self, *args, **kw):
@@ -109,6 +115,13 @@ class ScriptModelController(BaseController):
     def getDefficultyLevel(self, *args, **kw):
          
         question = model.DifficultyLevel.getAll(1);
+        
+        return dict(survey=question , total = len(question));
+    
+    @expose('json')
+    def getCloseType(self, *args, **kw):
+         
+        question = model.CloseType.getAll(1);
         
         return dict(survey=question , total = len(question));
     
@@ -128,7 +141,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getVotersData(self, *args, **kw):
-        
+        reload(sys).setdefaultencoding("utf-8");
         user =  request.identity['user'];
         
         self.page = kw.get('page');
@@ -137,7 +150,7 @@ class ScriptModelController(BaseController):
         print args;
         print kw;
         
-        question,total = model.Voter.getListVoterByOwner(user.user_id,page=int(self.start) ,  page_size=int(self.limit));
+        question,total = model.Voter.getListVoterByOwner(user.user_id,page=int(self.page)-1 ,  page_size=int(self.limit));
    
         
         return dict(survey=question , total = total);
@@ -145,7 +158,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getInvitationData(self, *args, **kw):
-        
+        reload(sys).setdefaultencoding("utf-8");
        
         
         self.page = kw.get('page');
@@ -156,7 +169,7 @@ class ScriptModelController(BaseController):
         print args;
         print kw;
         
-        question,total = model.Invitation.getByidProject(self.projectid,page=int(self.start) ,  page_size=int(self.limit));
+        question,total = model.Invitation.getByidProject(self.projectid,page=int(self.page)-1 ,  page_size=int(self.limit));
    
         
         return dict(survey=question , total = total);
@@ -164,7 +177,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getVariableTemplateData(self, *args, **kw):
-        
+        reload(sys).setdefaultencoding("utf-8");
         question = [];
         question.append({'id':1,'name': 'age'});
         question.append({'id':2,'name': 'gender'});
@@ -175,7 +188,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getInvitationNumberData(self, *args, **kw):
-        
+        reload(sys).setdefaultencoding("utf-8");
         user =  request.identity['user'];
         self.idOption = kw.get('idOption');
         self.page = kw.get('page');
@@ -184,7 +197,7 @@ class ScriptModelController(BaseController):
         print args;
         print kw;
         
-        result,question,total = model.SendMail.getInvitationNumberByPublicId(self.idOption ,page=int(self.start) ,  page_size=int(self.limit));
+        result,question,total = model.SendMail.getInvitationNumberByPublicId(self.idOption ,page=int(self.page)-1 ,  page_size=int(self.limit));
         
         
         return dict(survey=question , total = total);
@@ -193,7 +206,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getListTrackVosterData(self, *args, **kw):
-        
+        reload(sys).setdefaultencoding("utf-8");
         user =  request.identity['user'];
         self.idOption = kw.get('idOption');
         self.page = kw.get('page');
@@ -202,13 +215,36 @@ class ScriptModelController(BaseController):
         print args;
         print kw;
         
-        result,question,total = model.Respondents.getListByPublicId(self.idOption ,page=int(self.start) ,  page_size=int(self.limit));
+        result,question,total = model.Respondents.getListByPublicId(self.idOption ,page=int(self.page)-1 ,  page_size=int(self.limit));
         
         
         return dict(survey=question , total = total);
     
      
-    
+    @expose('json')
+    @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
+    def getProjectByUser(self,  *args, **kw):
+        reload(sys).setdefaultencoding("utf-8");
+        
+        self.page = kw.get('page');
+        self.start = kw.get('start');
+        self.limit = kw.get('limit'); 
+        
+        
+        if request.identity:
+            user =  request.identity['user']; 
+            quest_project,total = model.QuestionProject.getAllByUser(1,user.user_id, page= int(self.page)-1, page_size = int(self.limit));
+        else:
+            quest_project = [];
+            total = 0;  
+        log.info("getProjectByUser");
+        
+         
+        
+        #for p in quest_project:
+        #    print p;
+        
+        return dict(survey=quest_project , total = total);
     
     
     

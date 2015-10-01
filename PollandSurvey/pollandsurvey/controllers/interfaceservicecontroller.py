@@ -12,7 +12,7 @@ from tg.configuration import AppConfig, config
 
   
 from pollandsurvey.controllers.error import ErrorController
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 from datetime import datetime,timedelta
 #from dateutil.relativedelta import relativedelta
 
@@ -23,7 +23,7 @@ import sys
 import json 
 from collections import namedtuple
  
-from  survey import LogDBHandler;
+ 
 import logging;
 from _mysql import NULL
 log = logging.getLogger(__name__);

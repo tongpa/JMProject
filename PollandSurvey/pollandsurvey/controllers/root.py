@@ -40,7 +40,7 @@ import sys
  
 
  
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 
 
 import logging;
@@ -503,7 +503,72 @@ class RootController(BaseController):
         mailer.send(message)
         return dict(historys = '1');
          
-    
+    @expose('json') 
+    def showpassword(self):
+        if not request.identity:
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1
+            redirect('/login',
+                params=dict(came_from=came_from, __logins=login_counter))
+        
+        user =  request.identity['user']; 
+        
+        password = user.password.encode('utf-8');
+        
+        print 'old password : %s ' %(user.password);
+        
+        print 'new password : %s ' %(password);
+        
+        password = 'tong123456';
+        from hashlib import sha256
+        import os
+        
+        salt = sha256()
+        salt.update(os.urandom(60))
+        salt = salt.hexdigest()
+        
+        print 'salt : %s , length : %s ' %(salt, str(len(salt)));
+        
+        hash = sha256()
+        # Make sure password is a str because we cannot hash unicode objects
+        
+        print "orig : %s , salt : %s "   %(password, salt);
+        hash.update((password + salt).encode('utf-8'))
+        
+        #0101877a2d04060e2b34b96fbd4f14d59db5e4b3495bcaa53ee10530556b714f  =
+        
+        hash = hash.hexdigest()
+        
+        print 'hash2 : %s ' %(hash);
+        
+        password = salt + hash
+
+        print 'password : %s ' %(password);
+        
+        enpassword = password[64:];
+        print 'password : %s ' %(enpassword);
+        
+        repassword = sha256();
+        repassword.update(enpassword);
+        
+        out = repassword.digest().encode('hex');
+        print 'repassword : %s ' %(out);
+        #check
+        newpassword = 'tong123456'
+        hash = sha256()
+        hash.update((newpassword + password[:64]).encode('utf-8'));
+        
+        print 'old : %s'  %password[64:];
+        print 'new : %s' %hash.hexdigest();
+        
+        
+        # Make sure the hashed password is a unicode object at the end of the
+        # process because SQLAlchemy _wants_ unicode objects for Unicode cols
+        password = password.decode('utf-8')
+        
+        
+        return dict(password = password)
+        
+        
              
     """
     @expose('pollandsurvey.templates.login')

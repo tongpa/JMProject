@@ -10,7 +10,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
 	bufferedRenderer: false,
 	disableSelection : true,
 	forceFit: true,
-	store: survey.listInvitationData,
+	
 	viewConfig: {
         emptyText: 'No images to display'
     },
@@ -29,7 +29,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
     initComponent: function() {
     	 
     	var main = this;
-    	main.store = survey.listInvitationData; 
+    	//main.store = Ext.create('survey.listInvitationData'); 
     	main.columns = main.getHeaderColumn();
       
     	main.dockedItems = main.getPagingToolsBar(); 
@@ -58,10 +58,10 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
                 	    
                 	  
                 		var datajson = Ext.encode(r.data);
-	                    //console.log(record);
+	                    
 	                    Ext.Msg.show({
 	    				    title: survey.message.confirm_delete ,
-	    				    message: survey.message.confirm_delete  + r.data.name_publication,
+	    				    message: survey.message.confirm_delete  + r.data.name_content,
 	    				    buttons: Ext.Msg.YESNO,
 	    				    icon: Ext.Msg.QUESTION,
 	    				    fn: function(btn) {
@@ -131,9 +131,18 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
             xtype: 'pagingtoolbar',
             store: main.store, // same store GridPanel is using
             dock: 'bottom',
-            displayInfo: true
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChange,
+            }
         }]
-    }
+    },
+    onBeforeChange : function(paging,page,opt){
+    	var main = this;
+    	main.fireEvent('changeDataValue', paging,page); 
+		return false;
+	}
 });
 
    

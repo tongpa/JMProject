@@ -9,7 +9,8 @@ from pollandsurvey import model
 from tg import request
 
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+
+from logsurvey import LogDBHandler 
 __all__ = ['SendMailService'] 
 class SendMailService(threading.Thread):
 

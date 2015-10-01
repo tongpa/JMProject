@@ -246,9 +246,20 @@ Ext.define('survey.view.pproject.ListProject',{
             xtype: 'pagingtoolbar',
             store: main.store, // same store GridPanel is using
             dock: 'bottom',
-            displayInfo: true
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChange,
+            }
         }]
-    }
+    },
+    onBeforeChange : function(paging,page,opt){
+    	var main = this;
+    	//main.fireEvent('changeDataValue', paging,page); 
+    	
+    	main.store.loadPage(page );
+		return false;
+	}
 });
 
    

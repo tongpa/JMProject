@@ -9,6 +9,7 @@ Ext.define('survey.view.pquestion.questiontype.imagepanel.UploadImagePanel',{
 	height : '100%',
 	accept: ['jpg', 'png', 'gif',  'bmp', 'tif'],  
 	fileslist: [],   
+	visiableColumns : [true,true,false,true,true],
 	imageUrl : '',
 	record :   new survey.model.listAnswerData({      		 
 				value: 'answer',
@@ -96,13 +97,14 @@ initComponent: function() {
 			 margin: '5 0 0 5' ,
 			 hideLabel : true,
 			 anchor: '100%',
-			 
+			 hidden : !main.visiableColumns[2],
 			 value : main.record.get('score')
 		});
 		main.checkbox = Ext.create('Ext.form.field.Checkbox',{
 			name: 'answer',
 			 margin: '5 0 0 5' ,
 			 value : main.record.get('answer'),
+			 hidden : !main.visiableColumns[3],
              listeners : {
             	 'change' :   
             		 function ( ch, newValue, oldValue, eOpts) {
@@ -186,6 +188,7 @@ initComponent: function() {
 			   {
 				   columnWidth: 0.15,
 				   layout: 'fit',
+				   
 				   items : [main.score]
 			   },
 			   {

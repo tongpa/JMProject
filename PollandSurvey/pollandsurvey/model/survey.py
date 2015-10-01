@@ -25,7 +25,7 @@ from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
 import random; 
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
-           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType']
+           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType','CloseType']
 
 
 
@@ -77,6 +77,23 @@ class RandomType(DeclarativeBase):
     __tablename__ = 'sur_fix_random_type';
     
     id_fix_random_type =  Column(Integer, autoincrement=True, primary_key=True);
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(DateTime, default=datetime.now);
+    update_date = Column(DateTime ,onupdate=sql.func.utc_timestamp());
+    
+    def __init__(self):
+        self.active = 1;
+        self.create_date =  datetime.now();
+        
+    @classmethod
+    def getAll(cls,active):
+        return DBSession.query(cls).filter(cls.active == str(active).decode('utf-8')).all();
+    
+class CloseType(DeclarativeBase):
+    __tablename__ = 'sur_fix_close_type';
+    
+    id_close_type =  Column(Integer, autoincrement=True, primary_key=True);
     description = Column(String(255), nullable=True);
     active  = Column(BIT, nullable=True, default=1);
     create_date = Column(DateTime, default=datetime.now);
@@ -378,17 +395,31 @@ class QuestionProject(DeclarativeBase):
         return DBSession.query(cls).get(act); 
            
     @classmethod
-    def getAllByUser(cls,act=1,userid=0):
-        list =[];
+    def getAllByUser(cls,act=1,userid=0,page=0, page_size=None):
+         
         if act is not None:
-            list =  DBSession.query(cls).filter(cls.active == str(act).decode('utf-8'),cls.user_id == str(userid).decode('utf-8')).all();
+            query =  DBSession.query(cls).filter(cls.active == str(act).decode('utf-8'),cls.user_id == str(userid).decode('utf-8'));
             #return DBSession.query(cls).get(act); 
         else:
-            list =  DBSession.query(cls).all();
+            query =  DBSession.query(cls);
         
-        for i in list:
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+        
+         
+        
+        for i in values:
             i.question_project_type;
-        return list;
+            
+        return values,total;
     @classmethod
     def getAll(cls,act):
         list =[];
@@ -1112,7 +1143,8 @@ class QuestionOption(DeclarativeBase):
     id_fix_random_type=   Column(   BigInteger,ForeignKey('sur_fix_random_type.id_fix_random_type'), nullable=False, index=True) ;
     randomType = relation('RandomType', backref='sur_question_option_id_fix_random_type');
     
-    
+    id_close_type=   Column(   BigInteger,ForeignKey('sur_fix_close_type.id_close_type'), nullable=False, index=True) ;
+    closeType = relation('RandomType', backref='sur_question_option_id_close_type');
     
     
     name_publication  = Column(String(255),  nullable=True);
@@ -1208,13 +1240,25 @@ class QuestionOption(DeclarativeBase):
         return option;
     
     @classmethod
-    def getByProject(cls,idProject):
+    def getByProject(cls,idProject,page=0, page_size=None):
         
-        option =DBSession.query(cls).filter(cls.id_question_project == str(idProject)  ).all();
-        value = [];
-        for op in option:
-            value.append(op.to_json()); 
-        return value;
+        query =DBSession.query(cls).filter(cls.id_question_project == str(idProject)  ) ;
+        
+        query_total = query;
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+            
+        values = query.all();  
+        total = query_total.count();
+        
+        data  = [];
+        for op in values:
+            data .append(op.to_json()); 
+            
+        return data,total ;
     
     @classmethod
     def deleteById(cls,id):

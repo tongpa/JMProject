@@ -8,6 +8,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
                'survey.view.pquestion.questiontype.imagepanel.UploadImagePanel' 
                
     ],
+    visiableColumns : [true,true,false,true,true],
 	store :survey.listBasicMediaData,
 	width : '100%',
 	height : '100%',
@@ -18,9 +19,31 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     idFileUploads : [],
     rowAt : 0,
 	frame: false,
-	setLoadData : function(questionrecord) {
-    	//console.log('survey.view.gui.questiontype.ImagePanel'); 
-    	//survey.listBasicData.removeAll();
+	setVisiableColumns : function (visiableColumns){
+		
+		/*this.headScore.setVisible(!visiableColumns[2]);
+		this.headAnswer.setVisible(!visiableColumns[3]) ;
+		
+		Ext.getCmp( 'column_layout_score' ).setVisible(!visiableColumns[2]);
+		Ext.getCmp( 'column_layout_answer' ).setVisible(!visiableColumns[3]);
+		*/
+		this.visiableColumns = visiableColumns;
+		
+		//this.addHeader(this);
+		
+	},
+	setLoadData : function(projectrecord,questionrecord) {
+    	
+		/**set show header*/
+		if(projectrecord.data.id_question_project_type == 3){
+			this.visiableColumns = [true,true,false,true,true] ; 
+	   	}else
+	   	{	this.visiableColumns = [true,true,true,false,true] ; 
+	   		 
+	    
+	   	}
+		
+		
     	this.record = questionrecord;
     	//debugger;
     	this.haveData = false;
@@ -74,11 +97,11 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     	//this.fileUpload.setLoadData(questionrecord);
     },
 	addHeader : function(parent){
-		
+		 
 		parent.headImage = Ext.create('Ext.form.Label',{text: survey.label.image ,margin: '5 0 0 5' });
 		parent.headUpload = Ext.create('Ext.form.Label',{text: survey.label.upload  ,margin: '5 0 0 5' });
-		parent.headScore = Ext.create('Ext.form.Label',{text: survey.label.score  ,margin: '5 0 0 5' });
-		parent.headAnswer = Ext.create('Ext.form.Label',{text: survey.label.answer  ,margin: '5 0 0 5' });
+		parent.headScore = Ext.create('Ext.form.Label',{text: survey.label.score  ,margin: '5 0 0 5', hidden : !this.visiableColumns[2] });
+		parent.headAnswer = Ext.create('Ext.form.Label',{text: survey.label.answer  ,margin: '5 0 0 5', hidden : !this.visiableColumns[3] });
 		parent.headDelete = Ext.create('Ext.form.Label',{text: survey.label.delete  ,margin: '5 0 0 5' });
 		var panelColumn = Ext.create('Ext.panel.Panel',{
 			layout : 'column',
@@ -92,12 +115,12 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 				   columnWidth: 0.2,frame : true,
 				   items : [parent.headUpload]
 			   },
-			   {
-				   columnWidth: 0.15,frame : true,
+			   {   id : 'column_layout_score',
+				   columnWidth: 0.15,frame : true,hidden : !this.visiableColumns[2],
 				   items : [parent.headScore]
 			   } ,
-			   {
-				   columnWidth: 0.15,frame : true,
+			   {   id : 'column_layout_answer',	
+				   columnWidth: 0.15,frame : true,hidden : !this.visiableColumns[3],
 				   items : [parent.headAnswer]
 			   } ,
 			   {
@@ -111,13 +134,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 	initComponent: function() {
     	
     	var main = this;
-    	//main.fileUpload = Ext.create('survey.view.gui.questiontype.ImagePanel.UploadImagePanel',{parentMain : main,store:main.store});
-    	
-    	
-		
-    	 
-    	
-    	//main.items = [ main.fileUpload ]; 
+    
     	
     	main.dockedItems = [{
             xtype: 'toolbar',
@@ -140,10 +157,6 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     		bt.parent.id_question = bt.parent.record.get('id_question');
     		 
     	}
-    	
-    	
-    	
-    	 
     	bt.parent.addFileUpload(bt.parent,null,null);
     	
         
@@ -185,6 +198,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     		parentMain : parent,
     		store:parent.store,
     		record: r,
+    		visiableColumns : parent.visiableColumns,
     		imageUrl : urlImage,
     		hiddenImage : listAnswerData == null ,
     		listeners : {

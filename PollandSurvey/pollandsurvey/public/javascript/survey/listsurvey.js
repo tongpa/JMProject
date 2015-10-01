@@ -82,7 +82,7 @@ Ext.require([
              
          ]);
  
- 
+Ext.tip.QuickTipManager.init(); 
 
 
 Ext.application({
@@ -92,9 +92,13 @@ Ext.application({
     	Ext.tip.QuickTipManager.init();
     	
     	
+    	
+    	
     	survey.listOptionTheme.load();
     	survey.listDifficultyLevel.load();
     	survey.listRandomType.load();
+    	survey.listCloseType.load();
+    	
     	//survey.listProject.load();
     	var contact_view = Ext.create('Ext.form.Panel',{
     		title : survey.label.contact,//'Contacts',
@@ -130,6 +134,13 @@ Ext.application({
 					if (!addAlready){
 					 
 						
+						var listInvitationData = Ext.create('survey.listInvitationData'); 
+						var listQuestionsData = Ext.create('survey.listQuestionsData');
+						var listOptionsData = Ext.create('survey.listOptionsData');
+						var listInvitationNumberData = Ext.create('survey.listInvitationNumberData');
+						var listTrackVoterData = Ext.create('survey.listTrackVoterData');
+						var listVoterData = Ext.create('survey.listVoterData');
+						
 						//manage project 
 				    	var manage_project = Ext.create('survey.panel.ManageProject',{   		 
 				    		width: '100%',				    	     
@@ -141,6 +152,7 @@ Ext.application({
 				    	var manage_question = Ext.create('survey.panel.ManageQuestion',{
 				    		width: '100%',   		
 				    		title : survey.label.create_question,
+				    		store : listQuestionsData,
 				    		iconMask: true,
 			        		iconCls: "icon-question"
 				    	});
@@ -155,6 +167,9 @@ Ext.application({
 				    	var manage_option = Ext.create('survey.panel.ManagePublicationOption',{
 				    		width: '100%',   		
 				    		title : survey.label.create_publication,
+				    		store : listOptionsData,
+				    		store1 : listInvitationData,
+				    		store2 : listQuestionsData,
 				    		iconMask: true,
 				    		iconCls: "icon-publication"
 				    	});
@@ -163,21 +178,26 @@ Ext.application({
 				    			//'survey.view.list.Project.PManageInvitations',{
 				    		width: '100%',   		
 				    		title : survey.label.create_invitation,
+				    		store : listInvitationData,
 				    		iconMask: true,
 			        		iconCls: "icon-invitation"
 				    	});
+				    	
 				    	manage_invitation.loadData(record); 
 				    	
 				    	var manage_voter = Ext.create('survey.panel.ManageVoters',{
 				    		width: '100%',   		
-				    		title : 'Voter',
+				    		title : survey.label.create_voter,
+				    		store : listVoterData,
 				    		iconMask: true,
 			        		iconCls: "icon-list-voter"
 				    	});
 				    	
 				    	var manage_sendInvitation = Ext.create('survey.panel.ManageTrackInvitation',{
 				    		width: '100%',   		
-				    		title : 'send Invitation',
+				    		title : survey.label.viewed_invitation,
+				    		store : listInvitationNumberData,
+				    		store1 : listOptionsData,
 				    		iconMask: true,
 			        		iconCls: "icon-send-invitation"
 				    	});
@@ -185,7 +205,9 @@ Ext.application({
 				    	
 				    	var manage_trackRespondets = Ext.create('survey.panel.ManageTrackRespondents',{
 				    		width : '100%',
-				    		title : 'manage Track Voters',
+				    		title : survey.label.track_result,
+				    		store : listTrackVoterData,
+				    		store1 : listOptionsData,
 				    			iconMask: true,
 				        		iconCls: "icon-send-invitation"	
 				    	});
@@ -220,6 +242,11 @@ Ext.application({
 				    		items : [manage_project,tab_manage]
 				    	});
 						
+				    	
+				    	var id = Ext.id();
+				    	console.log(id);
+				    	 
+				    	
 				    	manage_question.setLoad(record);
 				    	manage_option.setLoad(record);
 				    	

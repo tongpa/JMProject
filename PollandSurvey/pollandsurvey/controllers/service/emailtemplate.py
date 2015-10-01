@@ -11,7 +11,7 @@ from tg.configuration import AppConfig, config
 from tg import request
   
 log = logging.getLogger(__name__); 
-from  survey import LogDBHandler;
+from logsurvey import LogDBHandler
 class EmailTemplate(object):
 
 

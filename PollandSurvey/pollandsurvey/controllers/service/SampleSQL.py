@@ -9,7 +9,7 @@ from sqlalchemy import create_engine#, BoundMetaData,Table
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import update
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from logsurvey import LogDBHandler
 
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText 

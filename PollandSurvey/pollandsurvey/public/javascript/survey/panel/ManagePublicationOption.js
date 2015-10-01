@@ -18,14 +18,15 @@ Ext.define('survey.panel.ManagePublicationOption',{
     
     isCreate : true,
     parentForm : null,
-    setLoad : function (projectRecord){
+    setLoad : function (projectRecord,page =1){
     	
     	this.projectid = '';
     	this.record = projectRecord;
     	if (projectRecord != null && projectRecord.id != null) {
     		
     		this.projectid = projectRecord.id;
-	    	survey.listOptions.load({
+    		 
+    		this.showListOption.store.loadPage(page,{
 				params : {
 	    			projectid : projectRecord.id
 	    		},
@@ -42,10 +43,12 @@ Ext.define('survey.panel.ManagePublicationOption',{
 			url : '/survey/addOptions',
 			title : survey.label.create_publication ,
 			titleAlign : 'left',
+			store : main.store1,
+			store1 : main.store2,
 			listeners : {
 				refreshOther : function(cmp) {
-					//survey.listProject.reload();
-					console.log("refresh other from win");
+					
+					
 					main.setLoad(main.record);
 		        }
 			}
@@ -65,6 +68,7 @@ Ext.define('survey.panel.ManagePublicationOption',{
         }];
 		
 		main.showListOption = Ext.create('survey.view.poption.ListPublicationOption',{
+			store : main.store,
 			listeners : {
 				showManageOption : function(grid,optionsrecord) {
 					main.showWindowsOption.show();
@@ -73,6 +77,9 @@ Ext.define('survey.panel.ManagePublicationOption',{
 		        },
 		        refreshOther : function(cmp){
 		        	main.setLoad(main.record);
+		        },
+		        changeDataValue : function(paging,page){
+		        	main.setLoad(main.record,page);
 		        }
 			}
 		});

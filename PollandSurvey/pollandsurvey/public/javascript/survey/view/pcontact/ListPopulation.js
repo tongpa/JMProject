@@ -8,7 +8,7 @@ Ext.define('survey.view.pcoters.ListPopulation',{
         emptyText: 'No images to display'
     },
     collapsible:false ,
-	store: survey.listVoterData,
+	 
 	hideHeaders : true,
     getHeaderColumn : function(){
     	

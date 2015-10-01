@@ -25,7 +25,7 @@ from pollandsurvey.widget.movie_form import create_movie_form
 
 import logging;
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from logsurvey import LogDBHandler
 __all__ = ['VoterController']
 
 

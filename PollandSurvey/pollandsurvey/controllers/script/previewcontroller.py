@@ -23,7 +23,7 @@ from tg import tmpl_context
 from tg.configuration import AppConfig, config
 import logging;
 from symbol import decorators
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 log = logging.getLogger(__name__);
 
 __all__ = ['PreviewController']

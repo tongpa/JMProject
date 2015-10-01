@@ -23,7 +23,7 @@ Ext.define('survey.view.pquestion.questiontype.CardQuestionTypePanel',{
                'survey.view.pquestion.questiontype.QuestionListAnswerPanel'
                
     ],
-    setLoadData : function(questionrecord,questiontyperecord){
+    setLoadData : function(projectrecord,questionrecord,questiontyperecord){
    	
 	   	if(( questiontyperecord != null &&  questiontyperecord.data.type.toLowerCase().search("image") >=0) || 
 	   		(questionrecord!=null && questionrecord.data.question_type_name.toLowerCase().search("image") >=0)  ){
@@ -34,20 +34,19 @@ Ext.define('survey.view.pquestion.questiontype.CardQuestionTypePanel',{
 	   		this.layoutpanel.getLayout().setActiveItem(1);
 	   	}
 	   	
+	   	this.choose.setLoadData(projectrecord,questionrecord);
+	   	 
+	   	this.images.setLoadData(projectrecord,questionrecord);
 	   	
-	   	this.choose.setLoadData(questionrecord);
-	   	//console.log('call from survey.view.gui.questiontype.CardPanel');
-	   	this.images.setLoadData(questionrecord);
+	    
    },
    	
    	initComponent: function() {
        	
        	var main = this;
        	
-       	main.images = Ext.create('survey.view.pquestion.questiontype.QuestionImageAnswerPanel');
-       	//main.images = Ext.create('survey.view.gui.questiontype.GridImage');
-       	
-       	main.choose = Ext.create('survey.view.pquestion.questiontype.QuestionListAnswerPanel'); //survey.view.gui.questiontype.GridAnswer
+       	main.images =  Ext.create('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{visiableColumns : [true,true,true,true,true]});
+       	main.choose = Ext.create('survey.view.pquestion.questiontype.QuestionListAnswerPanel');  
        	
        	main.layoutpanel = Ext.create('Ext.panel.Panel',{
        		layout : 'card',
@@ -56,12 +55,13 @@ Ext.define('survey.view.pquestion.questiontype.CardQuestionTypePanel',{
        	
        	main.items = [main.layoutpanel];
        	
-       		
-       	
        	//main.layoutpanel.getLayout().setActiveItem(1);
        	this.callParent();
        	
-   	}
+   	},
+   createQuestionImage : function(visiableColumns){
+	   return Ext.create('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{visiableColumns : visiableColumns});
+   }
 });
 
    

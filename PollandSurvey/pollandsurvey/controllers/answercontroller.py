@@ -29,7 +29,7 @@ import logging;
 import random; 
 log = logging.getLogger(__name__);
 
-from  survey import LogDBHandler;
+from  logsurvey import LogDBHandler;
 
 __all__ = ['AnswerController']
 

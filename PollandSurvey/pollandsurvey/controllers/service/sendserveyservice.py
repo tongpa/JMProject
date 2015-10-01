@@ -12,7 +12,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import update
 
 log = logging.getLogger(__name__);
-from  survey import LogDBHandler;
+from logsurvey import LogDBHandler 
 __all__ = ['SendSurveyService'] 
 class SendSurveyService(threading.Thread):
     

@@ -8,7 +8,7 @@ Ext.define('survey.view.ptrack.ListManageTrackRespondents',{
         emptyText: 'No images to display'
     },
     collapsible:false ,
-	store: survey.listTrackVoterData,
+	//store: survey.listTrackVoterData,
 	hideHeaders : false,
     getHeaderColumn : function(){
     	
@@ -35,18 +35,18 @@ Ext.define('survey.view.ptrack.ListManageTrackRespondents',{
             displayInfo: true,
             listeners:{
 		         scope: main,
-		         'beforechange' : function(pagingtoolsbar,params){
+		         'beforechange' : function(paging,page,opt){
 		        	 console.log("before reload");
-		        	 main.reloadData(main.ipOption);
+		        	 main.reloadData(main.ipOption,page);
 		        	 return false;
 		         }
            }
         }]
     },
-    reloadData : function(idOption){
+    reloadData : function(idOption,page=1){
     	var main = this;
     	main.ipOption = idOption;
-    	 main.store.load({
+    	 main.store.loadPage(page,{
 			params : {
 				idOption : idOption
     		},
