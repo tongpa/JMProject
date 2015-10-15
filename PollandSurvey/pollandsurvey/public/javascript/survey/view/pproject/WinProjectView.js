@@ -37,7 +37,11 @@ Ext.define('survey.view.pproject.WinProjectView',{
 			parentForm : main,
 			listeners : {
 				refreshOther : function(cmp) {
-		            this.parentForm.refreshOther();
+					
+		            main.refreshOther();
+		            
+		            main.closeWindow(cmp);
+		            
 		        }
 		    }});
 	 	 
@@ -54,7 +58,14 @@ Ext.define('survey.view.pproject.WinProjectView',{
         //do some stuff here
 		
         this.fireEvent('refreshOther', this);
-    } 
+    } ,
+    closeWindow : function ( bt){
+		
+		var main = this;
+		mian.hide();
+
+			
+	}
 });
 
  

@@ -51,7 +51,7 @@ Ext.define('survey.view.pcoters.PopulationView',{
 	                    	
 	                    	//main.closeWindow(main,bt);
 	                    	//form.reset();
-	                    	console.log(action);
+	                    	 
 	                    	if( action.result.result){
 	                    		Ext.Msg.alert(survey.message.success, action.result.message);
 	                    		main.ownerCt.hide(bt);
@@ -66,7 +66,7 @@ Ext.define('survey.view.pcoters.PopulationView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	 
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);

@@ -32,7 +32,7 @@ Ext.define('survey.view.ptrack.ListManageTrackInvitation',{
             listeners:{
 		         scope: main,
 		         'beforechange' : function(paging,page,opt){
-		        	 console.log("before reload");
+		        	  
 		        	 main.reloadData(main.ipOption,page);
 		        	 return false;
 		         }
@@ -41,7 +41,11 @@ Ext.define('survey.view.ptrack.ListManageTrackInvitation',{
 
         }]
     },
-    reloadData : function(idOption,page=1){
+    reloadData : function(idOption,page){
+    	
+    	page = typeof page !== 'undefined' ? page : 1;
+    	
+    	 
     	var main = this;
     	main.ipOption = idOption;
     	 main.store.loadPage(page,{

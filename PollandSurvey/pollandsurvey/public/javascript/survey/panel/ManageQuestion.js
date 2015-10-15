@@ -128,7 +128,7 @@ Ext.define('survey.panel.ManageQuestion',{
     	 
     	bt.parentForm.winAddQuestion.show();
     	
-    	//console.log('Add Question');
+     
     	 
     	 
     	bt.parentForm.winAddQuestion.setLoadData(bt.parentForm.record, null, bt.record,bt.parentForm.gridQuestion.getStore().data.length +1);

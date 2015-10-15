@@ -65,7 +65,7 @@ initComponent: function() {
 	            'change': function(button, value){
 	            	//debugger;
 	            	//var parent = this.up('form');  
-	            	//console.log(value);
+	            	 
 	            	if (!button.parent.isReset) {
 	            		var IsValid = button.parent.fileValidiation(button,value);
 	            		 
@@ -108,13 +108,13 @@ initComponent: function() {
              listeners : {
             	 'change' :   
             		 function ( ch, newValue, oldValue, eOpts) {
-            		 //console.log("set other answer is false");
+            	 
             		  
             		 
             		 	if (oldValue == false)
             		 	{	
             		 		var len = main.store.data.length;
-            		 		//console.log(len);
+            		 
             		 		var len = main.store.data.length;
             		 		
             		 		
@@ -124,14 +124,14 @@ initComponent: function() {
                     		 		record.set('answer', 1);
                     		 	    record.modified = false;
                     		 	    record.endEdit();
-                    		 	    //console.log("set other answer is true");
+                     
             		 			}
             		 			else{
             		 				record.beginEdit();
                     		 		record.set('answer', 0);
                     		 	    record.modified = false;
                     		 	    record.endEdit();
-                    		 	    //console.log("set other answer is false");
+                    		 	     
             		 			}
                 		 		
                 		 	});
@@ -145,7 +145,7 @@ initComponent: function() {
             		 		record.set('answer', false);
             		 	    record.modified = false;
             		 	    record.endEdit();
-            		 	    console.log("set other answer is false");
+            		 	   
             		 	});*/
             			//debugger; 
             		  //	main.store.getAt(rowIndex).set('answer', true);
@@ -218,7 +218,7 @@ initComponent: function() {
 		this.callParent();
 	},
 	onDeleteClick : function(bt,ev){
-		//console.log('onDeleteClick');
+	 
 		main = this;
 		Ext.Msg.show({
 		    title:survey.message.confirm_delete,
@@ -227,10 +227,7 @@ initComponent: function() {
 		    icon: Ext.Msg.QUESTION,
 		    fn: function(btn) {
 		        if (btn === 'yes') {
-		        	
-		        	//console.log(bt.parent.record.get('id_basic_data'));
-		        	
-		        	
+		        	 
 		        	 
 		        	Ext.Ajax.request({
 	              		url		: '/survey/deleteQuestionData',
@@ -239,7 +236,7 @@ initComponent: function() {
 	                    params : Ext.JSON.encode( {'id' : bt.parent.record.get('id_basic_data') } ),
 	                	success: function(response, opts){
 	                		var resp = Ext.decode(response.responseText); 	
-	                		//console.log(resp);
+	                	 
 	                		if(resp.success){
 	                			bt.parent.fireEvent('removePanelAnswer',bt.parent);
 	                			bt.parent.parentMain.remove(bt.parent);

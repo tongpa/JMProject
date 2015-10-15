@@ -20,12 +20,12 @@ Ext.define('survey.view.pquestion.ImageView',{
  
     	form.fileUpload.reset();
 		form.wrappedImage.setSrc('');
-		//console.log('load image');
+	 
 		
 		  
     	if(questionrecord != null  ){
     		//&& (questionrecord.data.question_type_name.toLowerCase().search("image") >=0 )
-    		//console.log("setShow");
+    		 
     		form.wrappedImage.setHidden(false);
     		form.wrappedImage.setSrc('/images/getImage?id=' + questionrecord.data.id_question);
     		
@@ -55,8 +55,7 @@ Ext.define('survey.view.pquestion.ImageView',{
     		listeners: {
 				scope: this,
 	            'change': function(button, value){
-	            	//debugger;
-	            	//console.log(value);
+	             
 	            	if (!button.parent.isReset) {
 	            		var IsValid = button.parent.fileValidiation(button,value);
 	            		 
@@ -111,7 +110,7 @@ Ext.define('survey.view.pquestion.ImageView',{
     	this.callParent();
     },
 	onDeleteClick : function(bt,ev){
-		//console.log('onDeleteClick');
+	 
 		var form = this;
 
 		Ext.Ajax.request({
@@ -121,7 +120,7 @@ Ext.define('survey.view.pquestion.ImageView',{
            params : Ext.JSON.encode( {'id' : this.record.get('id_question')} ),
 		   success: function(response, opts) {
 		      var obj = Ext.decode(response.responseText);
-		      //console.log(obj);
+ 
 		   },
 		   failure: function(response, opts) {
 		      console.log('server-side failure with status code ' + response.status);
@@ -156,7 +155,7 @@ Ext.define('survey.view.pquestion.ImageView',{
 	         //var erroMsg = Ext.String.format('Please upload files with an extension of {0} only!', this.accept.join());
 	         erroMsg = Ext.String.format(survey.message.error_upload_without_extention , this.accept.join()); 
 	         //me.setActiveError(erroMsg);
-	         //console.log(erroMsg);
+	 
 	         // Let the user know why the field is red and blank!  
 	         messageBox = Ext.MessageBox.show({  
 	           title: survey.message.upload,  
@@ -172,7 +171,7 @@ Ext.define('survey.view.pquestion.ImageView',{
 	         if (this.fileslist[i].indexOf(filename) !== -1) {  
 	        	 isValid = false;  
 	        	 erroMsg = Ext.String.format(survey.message.upload_success, filename);  
-	           //console.log(erroMsg);
+	         
 	            messageBox = Ext.MessageBox.show({  
 	             title: survey.message.upload,  
 	             msg: erroMsg,  

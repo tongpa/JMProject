@@ -18,7 +18,9 @@ Ext.define('survey.panel.ManagePublicationOption',{
     
     isCreate : true,
     parentForm : null,
-    setLoad : function (projectRecord,page =1){
+    setLoad : function (projectRecord,page){
+    	
+    	page = typeof page !== 'undefined' ? page : 1;
     	
     	this.projectid = '';
     	this.record = projectRecord;
@@ -61,7 +63,7 @@ Ext.define('survey.panel.ManagePublicationOption',{
             //iconCls: 'add16',
             handler: function(bt,ev){
             	main.showWindowsOption.show();
-				//console.log(record);
+			 
 			 	main.showWindowsOption.setLoadData(main.record );
             }
             //,            menu: [{text: 'Menu Button 1'}]

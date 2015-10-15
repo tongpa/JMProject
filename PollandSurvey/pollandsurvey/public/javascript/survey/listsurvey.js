@@ -243,8 +243,8 @@ Ext.application({
 				    	});
 						
 				    	
-				    	var id = Ext.id();
-				    	console.log(id);
+				    	//var id = Ext.id();
+				    	 
 				    	 
 				    	
 				    	manage_question.setLoad(record);

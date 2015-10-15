@@ -27,8 +27,7 @@ Ext.define('survey.panel.ManageTrackRespondents',{
 				store : main.store,
 				listeners : {
 					viewResult : function(panel,record){
-	            		console.log('viewResult');
-	            		console.log(record);
+	            		 
 	            		//main.showAddVoters.show(panel);
 	            		window.open(  "/preview/showResult?id=" + record.data.id_question_option+"."+ record.data.id_respondents,"_blank");
 	            	}
@@ -47,12 +46,13 @@ Ext.define('survey.panel.ManageTrackRespondents',{
 			allowBlank : false,
 			listeners:{
 		         scope: main,
-		         'select': function ( combo, record, eOpts ){
-		        	 console.log(record);
+		         'select': function ( combo, records, eOpts ){
+		        	 if(records.length ==1)
+		        		 main.panel.reloadData(records[0].id);
 		         },
 		         afterrender: function(combo) {
 		        	 if(combo.getStore().count() > 0){
-		        		 console.log("after render ");
+		        		  
 		        		 
 		        		 var recordSelected = combo.getStore().getAt(0);                     
 		        		 combo.setValue(recordSelected.get('id_question_option'));

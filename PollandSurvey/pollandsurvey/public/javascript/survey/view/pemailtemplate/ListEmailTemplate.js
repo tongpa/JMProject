@@ -41,7 +41,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
     } ,
     listeners: {
         'selectionchange': function(view, records) {
-        	console.log('selectionchange');
+        	 
           //  grid.down('#removeEmployee').setDisabled(!records.length);
         }
     } ,
@@ -74,7 +74,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
 	    			                	jsonData: datajson,	
 	    			                	success: function(response, opts){
 	    			                		var resp = Ext.decode(response.responseText); 	
-	    			                		//console.log(resp);
+	    			                 
 	    			                		
 	    			                		if(resp.result){
 	    			                			
@@ -113,7 +113,7 @@ Ext.define('survey.view.pemailtemplate.ListEmailTemplate',{
                 handler: function () {
                 	//Ext.Msg.alert('Info', r.get('name'));  
                 	//main.showManage(r);
-                	console.log('showManageOption');
+                	 
                 	main.fireEvent('showManageOption', this, r);
                 }
             });

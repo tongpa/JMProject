@@ -19,7 +19,7 @@ Ext.define('survey.view.ptrack.ListManageTrackRespondents',{
     	        	{header: 'Name', dataIndex: 'name',  width : '20%',   sortable: false,menuDisabled: true}   ,
     	        	{header: 'Date', dataIndex: 'respondent_data',  width : '15%',   sortable: false,menuDisabled: true}   ,
     	        	{header: 'IP', dataIndex: 'response_ip',  width : '10%',   sortable: false,menuDisabled: true}   ,
-    	        	 
+    	        	{header: 'Score', dataIndex: 'score_exam',  width : '10%',   sortable: false,menuDisabled: true}   ,
     	        	 
     	        	{ header: 'View',dataIndex: 'status',  width : '10%',   sortable: false, menuDisabled: true, 
     	        			renderer: main.showResult
@@ -36,14 +36,17 @@ Ext.define('survey.view.ptrack.ListManageTrackRespondents',{
             listeners:{
 		         scope: main,
 		         'beforechange' : function(paging,page,opt){
-		        	 console.log("before reload");
+		        	  
 		        	 main.reloadData(main.ipOption,page);
 		        	 return false;
 		         }
            }
         }]
     },
-    reloadData : function(idOption,page=1){
+    reloadData : function(idOption,page){
+    	
+    	page = typeof page !== 'undefined' ? page : 1;
+    	
     	var main = this;
     	main.ipOption = idOption;
     	 main.store.loadPage(page,{

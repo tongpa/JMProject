@@ -67,7 +67,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
                                         	 
                                         	main.contentTemp = main.contentTemp + '[name]';
                                         	
-                                        	console.log(main.contentTemp);
+                                        	 
                                         	main.content.setValue(main.contentTemp);
                                         }
                                     },{
@@ -79,7 +79,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
                                         	main.contentTemp = main.replaceHtml(main.contentTemp);
                                         	
                                         	main.contentTemp = main.contentTemp + '<a href="[url]">[url]</a>';
-                                        	console.log(main.contentTemp);
+                                        	 
                                         	main.content.setValue(main.contentTemp);
                                         }
                                     },{
@@ -91,7 +91,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
                                         	main.contentTemp = main.replaceHtml(main.contentTemp);
                                         	
                                         	main.contentTemp = main.contentTemp + '[initialDate]';
-                                        	console.log(main.contentTemp);
+                                        	 
                                         	main.content.setValue(main.contentTemp);
                                         }
                                     },{
@@ -103,7 +103,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
                                         	main.contentTemp = main.replaceHtml(main.contentTemp);
                                         	
                                         	main.contentTemp = main.contentTemp + '[finishDate]';
-                                        	console.log(main.contentTemp);
+                                        	 
                                         	main.content.setValue(main.contentTemp);
                                         }
                                     }
@@ -129,7 +129,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
 	                    success: function(form, action) {
 	                    	
 	                    	
-	                    	console.log(action);
+	                    	 
 	                    	if( action.result.result){
 	                    		
 	                    		main.closeWindow(bt);
@@ -147,7 +147,7 @@ Ext.define('survey.view.pemailtemplate.EmailTemplateView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	  
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);

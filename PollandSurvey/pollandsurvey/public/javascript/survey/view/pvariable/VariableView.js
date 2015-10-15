@@ -16,7 +16,7 @@ Ext.define('survey.view.pvariable.VariableView',{
     setDefaultField : function(){
     	var main = this;
     	 
-    	console.log('setDefaultField');
+    	 
     	 
     	 
     },

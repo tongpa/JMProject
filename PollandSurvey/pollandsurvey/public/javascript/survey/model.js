@@ -95,7 +95,7 @@ Ext.define('survey.model.InvitationNumber',{
 Ext.define('survey.model.TrackVoter',{
 	extend: 'Ext.data.Model',
     idProperty: 'email',    
-    fields: ['id_respondents','email','name','response_ip', 'create_date','status','respondent_data' ] 
+    fields: ['id_respondents','email','name','response_ip', 'create_date','status','respondent_data','score_exam' ] 
 }); 
 
 

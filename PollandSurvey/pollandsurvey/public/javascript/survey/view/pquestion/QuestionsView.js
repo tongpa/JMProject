@@ -20,7 +20,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
     parentForm : null,
     setLoadData : function (projectrecord,questionrecord, questiontyperecord,numberorder){
     	
-    	//console.log('survey.view.list.Project.PAddQuestion');
+    	 
     	 
     	var form = this;
     	form.projectrecord = projectrecord;
@@ -50,8 +50,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 		
 		
  
-		//console.log("set data add question");
-		//console.log(questionrecord);
+	 
 		
 		//load grid question
 		form.answerCardPanel.setLoadData(projectrecord,questionrecord,questiontyperecord);
@@ -62,7 +61,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	},
 	initComponent : function(){
 		var main = this;
-		console.log("init Question View");
+		 
 		main.questionid = Ext.create('Ext.form.field.Hidden',{name: 'id_question',msgTarget: 'side'});
 		main.question = Ext.create('Ext.form.field.TextArea',{name : 'question', fieldLabel: survey.label.question  , allowBlank: false,msgTarget: 'side'});
 		main.order = Ext.create('Ext.form.field.Hidden',{name : 'order',msgTarget: 'side',value:'0'});
@@ -124,7 +123,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	            	var items = survey.listBasicData.data.items;
 	            	var len = items.length;
 	            	
-	            	console.log('Get Data From Store');
+	            	 
 	            	survey.listBasicData.each(function(record){ 	        	            		 		 
         		 	   data.push(record.data);
         		 	});
@@ -141,7 +140,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	            	
 	        		len = survey.listBasicMediaData.data.length;
 	        		
-	        		//console.log('survey.listBasicMediaData.data.length : ' + survey.listBasicMediaData.data.length);
+	        	 
         		 	
 	        		
 	        		
@@ -161,7 +160,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	        			 
 	        			
 	        			
-	        			//console.log(d);
+	        		 
 	        			data.push(d);
 	        			d = null; 
         		 	}
@@ -170,8 +169,8 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	        		
 	        		main.dataGrid.setValue( Ext.encode(data));
 	            	
-	            	
-	            	
+	        		console.log(main.dataGrid);
+	            	console.log(data);
 	            	
 	            	
 	                form.submit({
@@ -182,7 +181,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	                    success: function(form, action) {
 	                    	
 	                    	
-	                    	console.log(action);
+	                    	 
 	                    	if( action.result.result){
 	                    		
 	                    		
@@ -200,7 +199,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	 
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);

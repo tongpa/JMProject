@@ -50,10 +50,10 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 			            },
 			            afterrender : function( g, eOpts ){
 			            	 
-			            	//console.log('afterrender');
+			       
 			            },
 			            move: function( g, component, prevIndex, newIndex, eOpts ){
-			            	//console.log('move template column');
+			            	 
 			            	//debugger;
 			            	
 			            	//main.viewConfig.plugins.dragText = g.tpl;
@@ -84,7 +84,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    
 		                    var datajson = Ext.encode(record.data);
 		                    
-		                    //console.log(record);
+		                    
 		                    Ext.Msg.show({
 		    				    title: survey.message.confirm_delete,
 		    				    message: survey.message.confirm_delete + record.data.question,
@@ -99,7 +99,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		    			                	jsonData: datajson,	
 		    			                	success: function(response, opts){
 		    			                		var resp = Ext.decode(response.responseText); 	
-		    			                		//console.log(resp);
+		    			                	 
 		    			                		if(resp.success){
 		    			                			grid.getStore().remove(record);
 		    			                			//main.resetData();
@@ -145,10 +145,10 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    if(index < 1) return;
 		                    var id = row.data.id;
 		                    var old = index ;
-		                    console.log('orig : ' + (old +1)  );
+		                     
 		                    //index--;
 		                    index = index -1;
-		                    console.log('new  : ' + (index+1));
+		                 
 		                     
 		                    grid.store.remove(row, true);
 		                    grid.getStore().insert(index, row);
@@ -157,7 +157,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    grid.getStore().data.items[old].set('order', (old+1));
 		                    grid.getStore().data.items[index].set('order', (index+1) );
 		                    grid.getStore().sync();
-		                    console.log (id + ' is move up from ' + row.data.order + ' to ' + (index+1));
+		                    
 		                }
 		            }, '->',
 		            {
@@ -168,9 +168,9 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    if(index >= grid.all.endIndex)  return;
 		                    //index++;
 		                    var old = index ;
-		                    console.log('orig : ' + index);
+		                     
 		                    index = index +1;
-		                    console.log('new  : ' + index);
+		                    
 		                    
 		                    grid.store.remove(row, true);
 		                    grid.getStore().insert(index, row);
@@ -178,7 +178,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    grid.getStore().data.items[old].set('order', (old+1));
 		                    grid.getStore().data.items[index].set('order', (index+1) );
 		                    grid.getStore().sync();
-		                    console.log (id + ' is move down from ' + row.data.order + ' to ' + (index-1));
+		                     
 		                }
 		            }]
 		        } 
@@ -217,15 +217,15 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 	             		      })
 	             	},
 	                 drop: function(node, data, overModel, dropPosition, eOpts) {
-	                	 //console.log('drop');
+	                	 
 	                	
 	                	
 	                	if(dropPosition == 'before'){
-	                		//console.log('before');
+	                		 
 	                	}
 	                	else {
 	                		if (dropPosition == 'after'){
-	                			//console.log('after');
+	                			 
 	                		}
 	                	}
 	                	count_order =1;
@@ -238,7 +238,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 	            		});
 	                	
 	                	this.store.sync();
-	            		console.log('count_order : '+ count_order);
+	            		 
 	                	
 	                	
 	                	 
@@ -257,7 +257,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		this.callParent(arguments);  
 	},
 	clickOpenQuenstion : function(){
-		console.log('click1'); 
+		 
 		this.store.each(function(record){ 
 			 
 			//console.log(record) ; 

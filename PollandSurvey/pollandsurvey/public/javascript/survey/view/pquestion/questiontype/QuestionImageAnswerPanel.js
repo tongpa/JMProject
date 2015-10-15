@@ -35,8 +35,8 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 	setLoadData : function(projectrecord,questionrecord) {
     	
 		/**set show header*/
-		if(projectrecord.data.id_question_project_type == 3){
-			this.visiableColumns = [true,true,false,true,true] ; 
+		if(projectrecord.data.id_question_project_type == 3){  //test and exam
+			this.visiableColumns = [true,true,true,true,true] ; 
 	   	}else
 	   	{	this.visiableColumns = [true,true,true,false,true] ; 
 	   		 
@@ -54,10 +54,10 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     	
     	this.addHeader(this);
     	this.rowAt =0;
-    	//console.log('start rowAt : ' + this.rowAt); 
+    
     	if(questionrecord != null){
     		
-    		//console.log('lenght : ' + survey.listBasicMediaData.data.length);
+    	 
     		
     		survey.listBasicMediaData.load({
 	    		params : {
@@ -69,21 +69,20 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
 	    			if(success){
 	    				 
 	    				this.haveData = records.length > 0;
-	    				//console.log(' records.length '  +  records.length); 
-	    				//console.log('have Data '  + (this.haveData)); 
+	    				 
 	    				for(var i = 0; i < records.length; i++){
 
 	    					var imageUrl = '/images/getSubImage?id=' + records[i].data.id_basic_data;
 	    					
 	    					this.addFileUpload(this,imageUrl,records[i]);
 	    				}
-	    				//console.log('lenght : ' + survey.listBasicMediaData.data.length);
+	    				 
 	    			}
 	    			
-	    			//console.log('Add File Upload '  + (!this.haveData)); 
+	    			 
 	    	    	
 	    	    	if (!this.haveData){
-	    	    		 //console.log('Add field upload');
+	    	    		 
 	    	    		//this.addFileUpload(this);
 	    	    	}
 	    			
@@ -162,7 +161,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
         
     },
     addFileUpload : function(parent,urlImage,listAnswerData){
-    	//console.log('add data to listAnswerData') ;
+    	 
     	Survey.model.listAnswerData
     	parent.rowAt = parent.rowAt +1;
     	var r = new survey.model.listAnswerData({      		 
@@ -174,8 +173,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     	});    	 
     	
     	//rows = survey.listBasicMediaData.insert(survey.listBasicMediaData.data.length, r);
-    	//console.log('rowAt : ' + parent.rowAt);
-    	//console.log(r) ;
+     
     	var id_FileUpload = Ext.id();
     	var urlImage = '';
     	if (listAnswerData != null) {
@@ -227,7 +225,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionImageAnswerPanel',{
     	//debugger;
     },
     removePanelAnswer: function(fileUpload){
-    	//console.log('removePanelAnswer');
+   
     
     	for(var i=0; i < this.parentMain.idFileUploads.length ;i++){
     		var fileUploadPanel  = Ext.getCmp(this.parentMain.idFileUploads[i]);

@@ -25,12 +25,12 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
                'Ext.form.field.Text',
                'Ext.toolbar.TextItem'
            ],
-    setVisibleColumnScore : function(visible){
-    	console.log("setVisibleColumnScore"); 
+    setVisibleColumnAnswer : function(visible){
+    	 
     	 
   
     	
-    	this.columns[3].setVisible(visible);
+    	//this.columns[3].setVisible(visible);
     	this.columns[4].setVisible(!visible);
     	
   
@@ -39,22 +39,19 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
     setLoadData : function(projectrecord,questionrecord) {
     	
     	/**set show header*/
-		if(projectrecord.data.id_question_project_type == 3){
-			this.setVisibleColumnScore(false);
-			console.log("show answer ");
+		if(projectrecord.data.id_question_project_type == 3){//test and exam
+			this.setVisibleColumnAnswer(false);
+			 
 	   	}else
-	   	{	this.setVisibleColumnScore(true);
-	   		console.log("show score ");
+	   	{	this.setVisibleColumnAnswer(true);
+	   		 
 	   		 
 	   	}
 	 
 	   	
-    	
-    	//console.log('survey.view.list.GridAnswer'); 
+    	 
     	survey.listBasicData.removeAll();
     	this.getStore().removeAll();
-    	 
-    	//console.log('survey.listBasicData.data.length : ' + survey.listBasicData.data.length );
     	this.record = questionrecord;
     	
     	//this.getStore().data = Ext.create("Ext.util.Collection");
@@ -103,7 +100,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		        	           
 		        	             sortable: false ,
 		        	             handler : function(){
-		        	            	 //console.log("click");
+		        	            	  
 		        	             },
 		        	             listeners : {
 		        	            	 checkChange :  
@@ -114,11 +111,13 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		        	            		 		 
 		        	            		 		record.beginEdit();
 		        	            		 		record.set('answer', 0);
+		        	            		 		
 		        	            		 	    //record.modified = false;
 		        	            		 	    record.endEdit();
 		        	            		 	});
 		        	            		 	
 		        	            		 	survey.listBasicData.getAt(rowIndex).set('answer', 1);
+		        	            		 	survey.listBasicData.getAt(rowIndex).set('score', 1);
 		  
 		        	            		 }
 		        	            	  
@@ -186,7 +185,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
     },
     onDeleteClick : function(bt,ev){
     	
-    	//console.log('delete from cell');
+    	 
     	 
     	Ext.Msg.show({
 		    title: survey.message.confirm_delete,
@@ -198,7 +197,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		        	
 		        	var recordSelected = bt.parent.getView().getSelectionModel().getSelection()[0];
 		        	if (recordSelected){
-			        	//console.log(recordSelected.get('id_basic_data'));
+			         
 			        	Ext.Ajax.request({
 		              		url		: '/survey/deleteQuestionData',
 		              		method: 'POST',
@@ -206,7 +205,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		                    params : Ext.JSON.encode( {'id' : recordSelected.get('id_basic_data') } ),
 		                	success: function(response, opts){
 		                		var resp = Ext.decode(response.responseText); 	
-		                		//console.log(resp);
+		                	 
 		                		if(resp.success){
 		                			bt.parent.store.remove(recordSelected);
 		                		}
@@ -217,7 +216,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		                			 
 		                		},
 		                	failure: function(response, opts) {
-		                		//console.log('server-side failure with status code ' );
+		                		console.log('server-side failure with status code ' );
 		                	}
 		                	
 			        	});

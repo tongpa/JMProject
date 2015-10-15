@@ -35,19 +35,23 @@ Ext.define('survey.panel.ManageTrackInvitation',{
 			displayField: 'name_publication',
 			valueField: 'id_question_option',
 			editable : false,
-			 
+		 
+		    forceSelection: true, 
 			allowBlank : false,
 			listeners:{
 		         scope: main,
-		         'select': function ( combo, record, eOpts ){
-		        	 console.log(record);
+		         'select': function ( combo, records, eOpts ){
+		        	 
+		        	 if(records.length ==1)
+		        		 main.panel.reloadData(records[0].id);
+		        	 
 		         },
 		         afterrender: function(combo) {
 		        	 if(combo.getStore().count() > 0){
-		        		 console.log("after render ");
+		        		  
 		        		 
 		        		 var recordSelected = combo.getStore().getAt(0);      
-		        		 console.log(recordSelected);
+		        		  
 		        		 combo.setValue(recordSelected.get('id_question_option'));
 		        		 main.panel.reloadData( recordSelected.get('id_question_option') );
 		        		 

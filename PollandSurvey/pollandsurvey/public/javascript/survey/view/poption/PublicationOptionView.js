@@ -20,8 +20,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
     	main.record = optionsrecord;
     	main.getForm().reset();
 		
-		console.log(projectRecord);
-    	console.log(optionsrecord);
+		 
     	
     	if(optionsrecord != null && optionsrecord.id != null){
     		//show only have option
@@ -33,12 +32,12 @@ Ext.define('survey.view.poption.PublicationOptionView',{
     			
     			main.btsave.setHidden(true);
     		}
-    		console.log(main.store1.data.length);
+    		 
     		main.lenghtQuestion = main.store1.data.length;
     		
     		main.useQuestionNo.setMaxValue(main.lenghtQuestion);
     		main.useQuestionNo.setMinValue( 0 );
-    	//	console.log(main.lenghtQuestion);
+    	 
     		
     		main.labelAllQuestion.setText( main.getQuestionNo(main.lenghtQuestion) );
     	}
@@ -269,7 +268,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 	                    success: function(form, action) {
 	                    	
 	                    	
-	                    	console.log(action);
+	                    	 
 	                    	if( action.result.result){
 	                    		
 	                    		main.closeWindow(bt);
@@ -287,7 +286,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	 
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);
@@ -317,7 +316,7 @@ Ext.define('survey.view.poption.PublicationOptionView',{
 		this.callParent();
 	},
 	refreshOther : function(){
-		console.log("refresh other from panel");
+		 
 		this.fireEvent('refreshOther', this);
 		
 	},

@@ -18,7 +18,9 @@ Ext.define('survey.panel.ManageEmailTemplate',{
     
     isCreate : true,
     parentForm : null,
-    loadData : function (projectRecord,page=1){
+    loadData : function (projectRecord,page ){
+    	
+    	page = typeof page !== 'undefined' ? page : 1;
     	
     	this.projectid = '';
     	this.record = projectRecord;
@@ -56,7 +58,7 @@ Ext.define('survey.panel.ManageEmailTemplate',{
             iconCls: 'project-add',
             handler: function(bt,ev){
             	main.showWindowsOption.show();
-				console.log(main.record);
+				 
 			 	main.showWindowsOption.setLoadData(main.record );
             }
             //,            menu: [{text: 'Menu Button 1'}]
@@ -72,7 +74,7 @@ Ext.define('survey.panel.ManageEmailTemplate',{
 		        },
 		        changeDataValue : function(paging,page){
 		        	main.loadData(main.record,page);
-		        	console.log("onBeforeChange");
+		        	 
 		        }
 			}
 		});

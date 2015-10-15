@@ -37,7 +37,7 @@ Ext.define('survey.panel.ManageVoters',{
             store : main.store,
             listeners : {
             	editVoters : function(panel,record){
-            		console.log('editVoters');
+            		 
             		main.showAddVoters.show(panel);
             	}
             }
@@ -81,10 +81,10 @@ Ext.define('survey.panel.ManageVoters',{
 		    items : [main.panelVoters],
 		    listeners:{
                 'close':function(win){
-                         //console.info('bye');
+                         
                  },
 			    'hide':function(win){
-	                console.info('hide');
+	                 
 	        }
 		    }
 		}); 

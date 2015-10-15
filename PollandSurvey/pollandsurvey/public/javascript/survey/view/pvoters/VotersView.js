@@ -69,7 +69,7 @@ Ext.define('survey.view.pvoters.VotersView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	 
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);

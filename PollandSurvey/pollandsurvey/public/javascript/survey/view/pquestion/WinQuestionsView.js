@@ -31,7 +31,7 @@ Ext.define('survey.view.pquestion.WinQuestionsView',{
     
 	initComponent: function() {
 		
-		console.log("init component");
+		 
 		var main = this;
 		main.panelView = Ext.create('survey.view.pquestion.QuestionsView' ,{
 			url : main.url,

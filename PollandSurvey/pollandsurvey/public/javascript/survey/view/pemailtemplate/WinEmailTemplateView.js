@@ -24,7 +24,7 @@ Ext.define('survey.view.pemailtemplate.WinEmailTemplateView',{
     },
     
     setLoadData : function(projectrecord,optionsrecord ){
-    	//console.log('survey.view.list.Project.winAddQuestion');
+     
      	this.panelView.setLoadData(projectrecord,optionsrecord );
     },
     

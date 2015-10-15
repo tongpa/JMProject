@@ -16,7 +16,7 @@ Ext.define('survey.view.pproject.ProjectView',{
     setDefaultField : function(){
     	var main = this;
     	 
-    	console.log('setDefaultField');
+    	 
     	 
     	 main.fieldSets.setHidden(true);
     	 main.btsave.setDisabled(false);
@@ -121,12 +121,16 @@ Ext.define('survey.view.pproject.ProjectView',{
 	                    success: function(form, action) {
 	                    	
 	                    	
-	                    	console.log(action);
-	                    	if( action.result.result){
+	                    	 
+	                    	
+	                    	 
+	                    	if( action.result.success){
 	                    		
-	                    		main.closeWindow(bt);
+	                    		//main.closeWindow(bt);
+	                    		
+	                    		main.refreshOther();
 		                    	Ext.Msg.alert( survey.message.success , action.result.message);
-		                    	main.refreshOther();
+		                    	
 	                    		
 	                    		
 	                    		
@@ -139,7 +143,7 @@ Ext.define('survey.view.pproject.ProjectView',{
 	                    	//main.refreshOther();
 	                    },
 	                    failure: function(form, action) {
-	                    	console.log(action); 
+	                    	 
 	                    	if (action.response.status = '404'){
 	                    		
 	                    		Ext.Msg.alert(survey.message.failed, action.response.statusText);
@@ -169,6 +173,7 @@ Ext.define('survey.view.pproject.ProjectView',{
 		this.callParent();
 	},
 	refreshOther : function(){
+		 
 		this.fireEvent('refreshOther', this);
 		
 	},

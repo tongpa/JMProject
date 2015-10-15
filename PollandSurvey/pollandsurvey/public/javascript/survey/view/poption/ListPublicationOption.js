@@ -81,7 +81,7 @@ Ext.define('survey.view.poption.ListPublicationOption',{
                 	    
                 	  
                 		var datajson = Ext.encode(r.data);
-	                    //console.log(record);
+	                 
 	                    Ext.Msg.show({
 	    				    title: survey.message.confirm_delete ,
 	    				    message: survey.message.confirm_delete  + r.data.name_publication,
@@ -97,7 +97,7 @@ Ext.define('survey.view.poption.ListPublicationOption',{
 	    			                	jsonData: datajson,	
 	    			                	success: function(response, opts){
 	    			                		var resp = Ext.decode(response.responseText); 	
-	    			                		//console.log(resp);
+	    			                 
 	    			                		if(resp.success){
 	    			                			
 	    			                			main.getStore().remove(r);
@@ -135,7 +135,7 @@ Ext.define('survey.view.poption.ListPublicationOption',{
                 handler: function () {
                 	//Ext.Msg.alert('Info', r.get('name'));  
                 	//main.showManage(r);
-                	console.log('showManageOption');
+                	 
                 	main.fireEvent('showManageOption', this, r);
                 }
             });
@@ -155,7 +155,6 @@ Ext.define('survey.view.poption.ListPublicationOption',{
                 handler: function () {
                 //	debugger;
                 	main.openUrl =  window.location.origin +"/";// window.location.protocol + window.location.host + "/"; 
-                	console.log(main.openUrl);	
                 	 
                 	window.open(  "/preview?id=" + r.data.id_question_option,"_blank");
                 	 
@@ -189,7 +188,7 @@ Ext.define('survey.view.poption.ListPublicationOption',{
 				                		var resp = Ext.decode(response.responseText); 	
 				                		 
 				                		if(resp.result){
-				                			console.log(resp)
+				                			 
 				                			Ext.Msg.alert(survey.message.success, resp.message);
 				                			main.fireEvent('refreshOther', this);
 				                		}

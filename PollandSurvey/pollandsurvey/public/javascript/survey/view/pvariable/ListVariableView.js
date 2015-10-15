@@ -32,7 +32,7 @@ Ext.define('survey.view.pvariable.ListVariableView',{
     setDefaultField : function(){
     	var main = this;
     	 
-    	console.log('setDefaultField');
+    	 
     	 
       
     },

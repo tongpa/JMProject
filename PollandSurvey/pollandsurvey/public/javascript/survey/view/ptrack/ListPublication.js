@@ -34,7 +34,7 @@ Ext.define('survey.view.ptrack.ListPublication',{
 			listeners:{
 		         scope: main,
 		         'select': function ( combo, record, eOpts ){
-		        	 console.log(record);
+		        	  
 		         }
 		    }
 		});
@@ -48,7 +48,7 @@ Ext.define('survey.view.ptrack.ListPublication',{
 		this.callParent();
 	},
 	refreshOther : function(){
-		console.log("refresh other from panel");
+		 
 		this.fireEvent('refreshOther', this);
 		
 	} 

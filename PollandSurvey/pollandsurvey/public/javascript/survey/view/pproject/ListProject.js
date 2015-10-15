@@ -37,6 +37,19 @@ Ext.define('survey.view.pproject.ListProject',{
 	            
 	        ] ;
     },
+    reloadData : function(page){
+    	var main = this;
+    	
+    	main.page = typeof page !== 'undefined' ? page : 1;
+    	
+    	 
+    	
+    
+    	 main.store.loadPage(main.page,{
+			
+    		scope : this
+		});
+    },
     initComponent: function() {
     	 
     	var main = this;
@@ -52,7 +65,9 @@ Ext.define('survey.view.pproject.ListProject',{
     		//height : 500,
 			listeners : {
 				refreshOther : function(cmp) {
-					survey.listProject.reload();
+					 
+					main.reloadData(main.page); 
+					
 		        }
 			}
     	} ) ;
@@ -142,7 +157,7 @@ Ext.define('survey.view.pproject.ListProject',{
     	//survey.listProject.remove(r);
     	var datajson =  Ext.encode(record.data);
     	
-    	console.log(datajson);
+    	 
     	
     	Ext.Msg.show({
 		    title: survey.message.confirm_delete,
@@ -174,7 +189,7 @@ Ext.define('survey.view.pproject.ListProject',{
     } ,
     listeners: {
         'selectionchange': function(view, records) {
-        	console.log('selectionchange');
+        	 
         	grid.down('#removeEmployee').setDisabled(!records.length);
           //  grid.down('#removeEmployee').setDisabled(!records.length);
         }
@@ -192,7 +207,7 @@ Ext.define('survey.view.pproject.ListProject',{
                 	    
                 	  
                 		var datajson = Ext.encode(r.data);
-	                    //console.log(record);
+	                     
 	                    Ext.Msg.show({
 	    				    title: survey.message.confirm_delete ,
 	    				    message: survey.message.confirm_delete  + r.data.name_publication,
@@ -208,7 +223,7 @@ Ext.define('survey.view.pproject.ListProject',{
 	    			                	jsonData: datajson,	
 	    			                	success: function(response, opts){
 	    			                		var resp = Ext.decode(response.responseText); 	
-	    			                		//console.log(resp);
+	    			                		 
 	    			                		if(resp.success){
 	    			                			
 	    			                			main.getStore().remove(r);
@@ -256,8 +271,8 @@ Ext.define('survey.view.pproject.ListProject',{
     onBeforeChange : function(paging,page,opt){
     	var main = this;
     	//main.fireEvent('changeDataValue', paging,page); 
-    	
-    	main.store.loadPage(page );
+    	main.reloadData(page);
+    	//main.store.loadPage(page );
 		return false;
 	}
 });
