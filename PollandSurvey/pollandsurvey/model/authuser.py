@@ -27,7 +27,7 @@ __all__ = ['UserService','UserGenCode' ,'UserSocialNetwork' , 'ClientProject', '
 
  
 
-class UserService(User):
+class UserService( DeclarativeBase): #User,
     """
     User definition.
 

@@ -14,7 +14,7 @@ from hashlib import sha256
 
 
 from sqlalchemy import Table, ForeignKey, Column,and_
-from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger
+from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger,BLOB
 
 from sqlalchemy.util import KeyedTuple;
 from sqlalchemy.orm import relation, synonym, Bundle
@@ -522,6 +522,7 @@ class Respondents(DeclarativeBase):
     id_question_option = Column(   BigInteger,ForeignKey('sur_question_option.id_question_option'), nullable=False, index=True) ;
     question_option = relation('QuestionOption', backref='sur_respondents_id_question_option');
     
+    image_file = Column(BLOB, nullable=True);
     finished  = Column(BIT, nullable=True, default=0);
     finished_date =  Column(DateTime, nullable=True );
     score_exam =   Column(Integer, nullable=True, default=0);
@@ -560,7 +561,7 @@ class Respondents(DeclarativeBase):
                 , "create_date": self.create_date };
         else:
             return {"id_respondents": self.id_respondents, "email": self.voter.email, "name": str(self.voter.prefix+' '+self.voter.firstname+' '+self.voter.lastname) , "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
-                , "create_date": self.create_date, 'status' : self.finished, 'respondent_data': self.respondent_data };
+                , "create_date": self.create_date, 'status' : self.finished, 'respondent_data': self.respondent_data,"score_exam" : self.score_exam };
     def to_dict(self):
         return {"id_respondents": self.id_respondents, "id_voter": self.id_voter, "response_ip": self.response_ip, "id_question_project": self.id_question_project , "id_question_option": self.id_question_option
                 , "create_date": self.create_date };
@@ -579,7 +580,7 @@ class Respondents(DeclarativeBase):
                     set a_respondents.score_exam =  ( 
                     
                      select 
-                    SUM(sur_basic_question.answer)  as sum_answer 
+                    SUM(sur_basic_question.score)  as sum_answer 
                     from   sur_resp_reply  
                       INNER JOIN sur_reply_basic_question on sur_resp_reply.id_resp_reply = sur_reply_basic_question.id_resp_reply
                       INNER JOIN sur_basic_question on (sur_basic_question.id_question = sur_resp_reply.id_question and sur_basic_question.id_basic_data = sur_reply_basic_question.id_basic_data )
@@ -590,8 +591,20 @@ class Respondents(DeclarativeBase):
                     where a_respondents.id_respondents = '""" + str(id_respondents) + """'  """;
                     
         result = DBSession.execute(sql);
-        DBSession.flush() ;  
+         
+    @classmethod
+    def getScoreByIdRespondents(cls,id_respondents):
+        sql = """ select 
+                    SUM(sur_basic_question.score)  as sum_answer 
+                    from   sur_resp_reply  
+                      INNER JOIN sur_reply_basic_question on sur_resp_reply.id_resp_reply = sur_reply_basic_question.id_resp_reply
+                      INNER JOIN sur_basic_question on (sur_basic_question.id_question = sur_resp_reply.id_question and sur_basic_question.id_basic_data = sur_reply_basic_question.id_basic_data )
+                    where sur_resp_reply.id_respondents = '""" + str(id_respondents) + """'  """;
+        result = DBSession.execute(sql).first();
         
+        return result[0];
+        
+          
     @classmethod
     def getListByPublicId(cls,idpublic,page=0, page_size=None):
          

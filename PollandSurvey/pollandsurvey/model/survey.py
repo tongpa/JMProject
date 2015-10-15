@@ -1090,13 +1090,15 @@ class BasicTextData(DeclarativeBase):
                  };
          
         if showResult:
-             
+            
+            dict['choose'] = False;
+            dict['result'] = None;
+                 
             if self.id_basic_data == showResult[1]:
                 dict['choose'] = True;
                 dict['result'] = showResult[2];
-            else :
-                dict['choose'] = False;
-                dict['result'] = None;
+             
+                
                  
         return dict;
     
