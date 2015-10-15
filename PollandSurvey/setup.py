@@ -53,8 +53,13 @@ install_requires=[
 	"Flask-OAuth",
 	"Flask-Security",
     "Flask-Social",
-    "tgext.mailer"
-	
+    "tgext.mailer",
+    "reportlab",
+	"html5lib",
+    "pypdf",
+    "xhtml2pdf",
+   # "Wand"
+    
     #"tw2.captcha",
     ]
 
