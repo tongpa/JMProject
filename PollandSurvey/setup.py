@@ -54,9 +54,9 @@ install_requires=[
 	"Flask-Security",
     "Flask-Social",
     "tgext.mailer",
-    "reportlab",
-	"html5lib",
-    "pypdf",
+    #"reportlab",
+	#"html5lib",
+    #"pypdf",
     "xhtml2pdf",
    # "Wand"
     
