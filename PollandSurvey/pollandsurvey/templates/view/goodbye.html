@@ -47,9 +47,13 @@
 						<div id="container" >
 							<div class="well">
 			                     <form name="nextQuestion" action="${nextQuestion}" method ="POST">
-			                    <div class="input-group clearfix"> 	 
-				                    	<div>
-				                          
+			                    <div  py:if="option.show_score == 1 and projectType == 3">
+			                    			<center><img src="/images/getImageScore?id=${imageId}" width="350" height="260"/></center>
+			                    		</div>
+			                    <br/>
+			                     	 
+			                    <div class="input-group clearfix">
+			                    		<div>
 				                        <span class="code">${Markup(goodbye)} </span>
 				                   		</div>
 				                   		
