@@ -84,7 +84,7 @@ class ScriptModelController(BaseController):
     @expose('json')
     def getQuestionsData(self, *args, **kw):
         pid = kw.get('projectid');
-        print pid;
+        #print pid;
         question = model.Question.getQuestionByProjectId(pid);
         
         return dict(survey=question , total = len(question));
@@ -101,7 +101,7 @@ class ScriptModelController(BaseController):
         
         question,total = model.QuestionOption.getByProject(pid,page=int(self.page)-1, page_size=int(self.limit))
         
-        print total;
+        #print total;
         return dict(survey=question , total = total);
     
     @expose('json')
@@ -147,8 +147,8 @@ class ScriptModelController(BaseController):
         self.page = kw.get('page');
         self.start = kw.get('start');
         self.limit = kw.get('limit');        
-        print args;
-        print kw;
+        #print args;
+        #print kw;
         
         question,total = model.Voter.getListVoterByOwner(user.user_id,page=int(self.page)-1 ,  page_size=int(self.limit));
    
@@ -166,8 +166,8 @@ class ScriptModelController(BaseController):
         self.limit = kw.get('limit');   
         self.projectid = kw.get('projectid');
              
-        print args;
-        print kw;
+        #print args;
+        #print kw;
         
         question,total = model.Invitation.getByidProject(self.projectid,page=int(self.page)-1 ,  page_size=int(self.limit));
    
@@ -194,8 +194,8 @@ class ScriptModelController(BaseController):
         self.page = kw.get('page');
         self.start = kw.get('start');
         self.limit = kw.get('limit');        
-        print args;
-        print kw;
+        #print args;
+        #print kw;
         
         result,question,total = model.SendMail.getInvitationNumberByPublicId(self.idOption ,page=int(self.page)-1 ,  page_size=int(self.limit));
         
@@ -212,8 +212,8 @@ class ScriptModelController(BaseController):
         self.page = kw.get('page');
         self.start = kw.get('start');
         self.limit = kw.get('limit');        
-        print args;
-        print kw;
+        #print args;
+        #print kw;
         
         result,question,total = model.Respondents.getListByPublicId(self.idOption ,page=int(self.page)-1 ,  page_size=int(self.limit));
         

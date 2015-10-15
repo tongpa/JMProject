@@ -68,15 +68,15 @@ class RegisterController(BaseController):
     
     @expose('json')
     def create(self,*args,**kw):
-        print kw;
-        
+        #print kw;
+        log.info(kw);
         self.email = kw.get('email');
         self.password = kw.get('password');
         self.rpassword = kw.get('rpassword');
         
         self.success= True;
         self.message = "create success";
-        self.urlServer =  model.SysTemEnvironment.getServerUrl();
+        self.urlServer =  model.SystemEnvironment.getServerUrl();
         
         u = model.User.by_email_address(self.email);
         if u is None:
@@ -119,7 +119,7 @@ class RegisterController(BaseController):
     
     @expose( )
     def checkUserEmail(self,*args,**kw):
-        print kw;
+        #print kw;
         self.email = kw.get('email');
         u = model.User.by_email_address(self.email);
         if u is None:
@@ -146,29 +146,30 @@ class RegisterController(BaseController):
         if u is None:
             u = model.User.by_user_name(user);
             if u is None:
-                print password;
-                print confirm_password;
+                log.info("password : " +  password + " , confirm password : " + confirm_password);
+                 
                 if( str(password) is  str(confirm_password) ):
-                    print "create user";
+                    
+                    log.info("same password")
                     u= model.User();
                     u.user_name = user
                     u.display_name = display
                     u.email_address = email
                     u.password = password
                     
-                    print "save user";
+                    
                     #model.DBSession.add(u)
                     model.DBSession.flush()
-                    print "save user success";
+                    log.info( "save user success");
                 else:
                     msg ="password not same";
-                    print "password not same";
+                    log.info( "password not same");
             else:
                 msg = "user have already";
-                print "user have already";
+                log.info( "user have already");
         else:
             msg = "email have already";
-            print "email have already";
-        pass;
+            log.info( "email have already");
+        
  
     

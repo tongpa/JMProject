@@ -92,7 +92,7 @@ class PreviewController(BaseController):
                     override_template(PreviewController.index, self.template) 
                     
                 
-        print 'idproject : ', id;     
+        #print 'idproject : ', id;     
         return dict(page='view',header = self.header, 
                     footer = self.footer, 
                     action = self.nextQuestion,
@@ -106,9 +106,9 @@ class PreviewController(BaseController):
     
     @expose ("genshi:pollandsurvey.templates.view.firstTemplate")
     def sampleTemplate(self,id=0, **kw):        
-        print id;
+        #print id;
         if(str(id) == str(2)):
-            print id;
+            #print id;
             override_template(PreviewController.sampleTemplate, 'genshi:pollandsurvey.templates.view.changeTemplate') 
         return dict(title="Foobar", mybool=False, someval="foo"  ) #,tg_template="pollandsurvey.templates.view.changeTemplate"
         
@@ -185,8 +185,8 @@ class PreviewController(BaseController):
             if len(self.data) == 2:
                 idRespondet = self.data[1];
             
-        print args;
-        print kw ;
+        #print args;
+        #print kw ;
         
         questions = [];
         
@@ -194,6 +194,7 @@ class PreviewController(BaseController):
         question = [];
         if idRespondet :
             log.info("Query with respondent");
+             
             self.listReply = model.RespondentReply.listQuestionForUser(self.data[1]);
             
             for re in self.listReply:
@@ -209,6 +210,7 @@ class PreviewController(BaseController):
          
         else :
             log.info("Query with question");
+             
             self.questionOption = model.QuestionOption.getId(idProject);
         
             if self.questionOption :
@@ -247,9 +249,7 @@ class PreviewController(BaseController):
         self.message = "success";
         self.goodbye_message = '';
         self.nextQuestion = '';
-        print "project id : " + str(id);
-        print kw;
-        print args;
+         
         
         self.questionOption = model.QuestionOption.getId(id);
         if(self.questionOption):
@@ -266,15 +266,16 @@ class PreviewController(BaseController):
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
             redirect('/login',   params=dict(came_from=came_from, __logins=login_counter))
-        userid = request.identity['repoze.who.userid']
+        #userid = request.identity['repoze.who.userid']
         
         self.data = self.utility.spritValue(id,".")
         
         if len(self.data) != 2:
             return dict(questions = []);
         
-        log.info('preview id : ' + str(id));
-        log.info('ready : ' + str(ready))
+        log.info('preview id : ' + str(id) + '  ready : ' + str(ready));
+         
+        
         
         self.header = '';
         self.footer = '';
@@ -282,13 +283,13 @@ class PreviewController(BaseController):
         self.template ='';
         self.questionOption = model.QuestionOption.getId(self.data[0]);
         if self.questionOption : 
-            log.info('expire date : ' + str(self.questionOption.expire_date));
-            log.info('current : ' + str(datetime.now()) );
+            #log.info('expire date : ' + str(self.questionOption.expire_date) + ', current date : ' +  str(datetime.now()));
             
-            if datetime.now() <= self.questionOption.expire_date:
-                log.info('not expire');
-            else :
-                log.info('expire');
+            
+            #if datetime.now() <= self.questionOption.expire_date:
+            #    log.info('not expire');
+            #else :
+            #    log.info('expire');
             
             
             if str(ready).lower() == 'no':    
@@ -313,7 +314,7 @@ class PreviewController(BaseController):
                     override_template(PreviewController.index, self.template) 
                     
                 
-        print 'idproject : ', id;     
+        
         return dict(page='view',header = self.header, 
                     footer = self.footer, 
                     action = self.nextQuestion,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Main Controller"""
 
-from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate   
+from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate ,auth_force_logout  
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates,controllers;
@@ -17,7 +17,7 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
 
-from pollandsurvey.controllers.service import SendMailService, RegisterService, SendMail, DoCheckin
+from pollandsurvey.controllers.service import SendMailService, RegisterService, SendMail, DoCheckin,ConvertHtml2Pdf
 from pollandsurvey.controllers.utility import Utility
 
 from pollandsurvey.controllers.register import RegisterController,AccountController, AccountSysController;
@@ -97,13 +97,16 @@ class RootController(BaseController):
         dh = LogDBHandler( config=config,request=request);        
         log.addHandler(dh)
         
+        self.urlServer =  model.SystemEnvironment.getServerUrl();
+        
+        
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
     
     @expose('pollandsurvey.templates.metronic')
     def index(self, came_from=lurl('/')):
         
-        print request.scheme   + '://';
+        #print request.scheme   + '://';
         
         return dict(page='metronic') 
     
@@ -111,13 +114,22 @@ class RootController(BaseController):
      
     
     @expose('pollandsurvey.templates.loginform')
+    #@expose('pollandsurvey.templates.login')
     def login(self, came_from=lurl('/')):
         login_counter = request.environ.get('repoze.who.logins', 0)
+        
+        log.info("login :" + came_from );
+        
+        if request.identity:
+            log.info( "user login already");
+            auth_force_logout(); 
+            redirect('/login');
          
         if login_counter > 0:
             flash(_('Wrong credentials'), 'warning')
         return dict(page='login', login_counter=str(login_counter),
-                    came_from=came_from)
+                    came_from=came_from,
+                    urlServer=self.urlServer)
         
    
     
@@ -155,13 +167,20 @@ class RootController(BaseController):
 
     
     @expose()
-    def post_login(self, came_from=lurl('/')):
+    def redirectHttp(self,*args,**kw):
+        print HTTPFound(location='www.pollsurfvey/survey');
+        raise HTTPFound(location='about');
+    
+    @expose()
+    def post_login(self, came_from=lurl('/'), *args, **kw):
 
-         
+        log.info("post_login"); 
         
         if not request.identity:
             log.warning("user cannot login, redirect to login");
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
+            print ( self.urlServer + '/login')
+            log.info( self.urlServer + '/login')
             redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
             
         #userid = request.identity['repoze.who.userid'];
@@ -182,7 +201,10 @@ class RootController(BaseController):
             flash(_('Please activate in your email'), 'warning') 
             #request.identity.current.logout();
             login_counter = request.environ.get('repoze.who.logins', 0) ;
-            redirect('/logout_handler')#, params=dict(came_from=came_from, __logins=login_counter))
+            
+        
+            
+            redirect( '/logout_handler')#, params=dict(came_from=came_from, __logins=login_counter))
             
         #flash(_('Welcome back, %s!') % userid)
         
@@ -190,9 +212,11 @@ class RootController(BaseController):
             if ('voter' in groups):
                 log.info("redirect to home page");
                 #model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to home page" ,current_page='Login',user_name=user);
-                redirect('/home');
+                log.info(self.urlServer + '/home' );
+                redirect( '/home');
             if ('creator' in groups):
                 log.info("redirect to create survey page");
+                log.info(self.urlServer + '/survey' );
                 #model.LogSurvey.insert(ip_server='127.0.0.1',status='INFO',message="redirect to create survey page" ,current_page='Login',user_name=user);
                 redirect('/survey');
         
@@ -234,7 +258,7 @@ class RootController(BaseController):
         return HTTPFound(location=came_from)
 
     @expose()
-    def post_logout(self, came_from=lurl('/')):
+    def post_logout(self, came_from=lurl('/'), *args, **kw):
         """
         Redirect the user to the initially requested page on logout and say
         goodbye as well.
@@ -388,25 +412,25 @@ class RootController(BaseController):
         self.page = kw.get('page');
         self.pagesize = kw.get('pagesize');
         
-        print "page : %s " %self.page;
-        print "page size : %s " %self.pagesize;
+        log.info( "page : %s " %self.page);
+        log.info( "page size : %s " %self.pagesize);
     
         
         if not request.identity:
             log.warning("user cannot login, redirect to login");
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login');
+            redirect( '/login');
         
         
         user =  request.identity['user'];
         
         
-        print "user_id : %s" %user.user_id;
+        log.info( "user_id : %s" %user.user_id);
         
         listSurvey = model.Voter.getListSurveyByMember(user.user_id,int(self.page) -1 ,int(self.pagesize));
         
         
-        print listSurvey; 
+         
             
         
                 
@@ -444,7 +468,17 @@ class RootController(BaseController):
         
         log.info("test 123456");
         
+        print request.environ;
         
+        
+        for key in request.environ:
+            print "%s  :  %s" %(key ,  request.environ[key]);
+        
+        print "--------------";
+        
+        print request.environ['HTTP_X_FORWARDED_FOR'];
+        print request.remote_user;
+        print request.client_addr;#['HTTP_X_FORWARDED_FOR']; 
         print request.remote_addr;
         import socket
         print socket.gethostbyname(socket.gethostname());
@@ -504,19 +538,18 @@ class RootController(BaseController):
         return dict(historys = '1');
          
     @expose('json') 
-    def showpassword(self):
+    def showpassword(self,came_from=lurl('/')):
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
+            redirect( '/login',
                 params=dict(came_from=came_from, __logins=login_counter))
         
         user =  request.identity['user']; 
         
         password = user.password.encode('utf-8');
         
-        print 'old password : %s ' %(user.password);
-        
-        print 'new password : %s ' %(password);
+        log.info( 'old password : %s , new password : %s ' %(user.password, password));
+         
         
         password = 'tong123456';
         from hashlib import sha256
@@ -568,7 +601,18 @@ class RootController(BaseController):
         
         return dict(password = password)
         
+    @expose()
+    def export2pdf(self):
+        self.con = ConvertHtml2Pdf();
         
+        values = {};
+        values['name'] = 'Mr. Tong Tong';
+        values['score'] = '90';
+        #self.con.convert(values);
+        
+      
+        
+          
              
     """
     @expose('pollandsurvey.templates.login')

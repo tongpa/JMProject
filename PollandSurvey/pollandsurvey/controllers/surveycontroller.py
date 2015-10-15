@@ -272,7 +272,7 @@ class SurveyController(BaseController):
         self.success = True;
         self.message = "success";
         self.result = True;
-        
+        log.info("add Question");
         self.dataValue = kw;
         log.info(kw);
         log.info('----------');
@@ -320,6 +320,7 @@ class SurveyController(BaseController):
                 question.text_label = '';
                 question.question = self.dataValue.get('question');
                 question.score = self.dataValue.get('score');  
+                
                 question.id_fix_difficulty_level = self.dataValue.get('id_fix_difficulty_level');
                  
                 question.user_id = user.user_id;
@@ -373,6 +374,7 @@ class SurveyController(BaseController):
                 basicQuestion.id_question = question.id_question;
                 basicQuestion.id_basic_data = basicData.id_basic_data;
                 basicQuestion.answer =   basic_datas.get('answer') ;# ({True: True, False: False}[ basic_datas.get('answer') in 'true']);
+                basicQuestion.score =   basic_datas.get('score') ;
                 basicQuestion.order = basic_datas.get('seq');                    
                 basicQuestion.save();              
             else:
@@ -381,6 +383,7 @@ class SurveyController(BaseController):
                 basicQuestion  = model.BasicQuestion.getByQuestionAndBasic(question.id_question, basicData.id_basic_data);
                 if(basicQuestion):
                     basicQuestion.answer =   basic_datas.get('answer') ; 
+                    basicQuestion.score =   basic_datas.get('score') ;
                     basicQuestion.order = basic_datas.get('seq');    
                 else:
                     log.info("error load basicQuestion");
@@ -637,12 +640,12 @@ class SurveyController(BaseController):
     def addInvitation(self, **kw):
         reload(sys).setdefaultencoding('utf8')
         
-        print kw;
-        print kw.get('id_question_invitation');
+        log.info( kw);
+        log.info( kw.get('id_question_invitation'));
         #print kw.get('content');
-        print str(kw.get('subject')).encode('utf-8');
-        print kw.get('id_question_project');
-        print str(kw.get('from_name')).encode('utf-8');
+        log.info( str(kw.get('subject')).encode('utf-8'));
+        log.info( kw.get('id_question_project'));
+        log.info( str(kw.get('from_name')).encode('utf-8'));
         
         
         self.success = True;
@@ -670,7 +673,7 @@ class SurveyController(BaseController):
             self.result = False;
             self.message = '' + str(e);
             
-        print self.message;        
+        log.info( self.message);        
         
         return dict(success=self.success, message = self.message, result= self.result);
     
@@ -679,7 +682,7 @@ class SurveyController(BaseController):
     def addVoterToInvitation(self,**kw):
         reload(sys).setdefaultencoding('utf8')
         
-        print kw;
+        log.info( kw);
         
         self.success = True;
         self.message = "Save Success";
@@ -696,8 +699,8 @@ class SurveyController(BaseController):
         try:
             df = json.loads(request.body, encoding=request.charset);
             
-            print(df);
-            print(df.get('id_question_invitation'));
+            log.info(df);
+            log.info(df.get('id_question_invitation'));
             
             
             
@@ -727,10 +730,10 @@ class SurveyController(BaseController):
         try:
             df = json.loads(request.body, encoding=request.charset);
             
-            print(df);
-            print(df.get('id_question_option'));
-            print(df.get('id_question_project'));
-            print(df.get('id_question_invitation'));
+            log.info(df);
+            log.info(df.get('id_question_option'));
+            log.info(df.get('id_question_project'));
+            log.info(df.get('id_question_invitation'));
             
             self.option = model.QuestionOption.getId(df.get('id_question_option'));
             
@@ -746,6 +749,8 @@ class SurveyController(BaseController):
                     user =  request.identity['user'];
                     
                     self.voters, self.leng =model.Voter.getVoter(user.user_id, page=0, page_size=100); 
+                    
+                    self.urlServer =  model.SystemEnvironment.getServerUrl();
         
                     for v in self.voters:
                         #print v;
@@ -765,7 +770,7 @@ class SurveyController(BaseController):
                         self.emailValues['email'] = v.email;
                         self.emailValues['subject'] = self.emailtemplate.subject;
                         self.emailValues['from'] =  self.emailtemplate.from_name;
-                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ;
+                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(self.urlServer, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ; #request.application_url
                         self.emailValues['initialDate'] = str(self.option.activate_date);
                         self.emailValues['finishDate'] = str(self.option.expire_date);
                         
@@ -801,7 +806,7 @@ class SurveyController(BaseController):
                 
                 #self.result,self.message =  model.QuestionOption.updateSendStatus(1,df.get('id_question_option'));
                 
-                print "\n send to thread";
+                log.info( "\n send to thread");
             else:
                 self.result = False;
                 self.message = "system found send already"; 
@@ -810,7 +815,7 @@ class SurveyController(BaseController):
              
             
         except Exception as e:
-            print e;
+            log.error(e);
             self.result = False;
             self.message = '' + str(e);
             

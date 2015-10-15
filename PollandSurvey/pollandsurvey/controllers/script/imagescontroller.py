@@ -42,9 +42,20 @@ class ImagesController(BaseController):
         pass;
     
     @expose(content_type='image/png')
+    def getImageScore(self,**kw):
+        reload(sys).setdefaultencoding("utf-8");
+        
+        image_file = os.path.join('C:/temp/upload/track_feedback/images/27/issue_27.png' );
+        imageId = kw.get('id');
+        
+        trackImage = model.Respondents.getId(imageId);
+        
+        return trackImage.image_file;
+        
+    
+    @expose(content_type='image/png')
     def getImage(self,**kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         image_file = os.path.join('C:/temp/upload/track_feedback/images/27/issue_27.png' );
         imageId = kw.get('id');
         
@@ -55,11 +66,11 @@ class ImagesController(BaseController):
        
         
         if trackImage:
-            print trackImage.media_path_file;
+            log.info( trackImage.media_path_file);
             image_file = os.path.join(trackImage.media_path_file );
-            print image_file;
+            log.info( image_file);
             if not os.path.exists(image_file):
-                print "Found no %s" % image_file
+                log.info( "Found no %s" % image_file)
             else:
                 
                 return  file(image_file, "rb").read()
@@ -70,20 +81,19 @@ class ImagesController(BaseController):
     
     @expose(content_type='image/png')
     def getSubImage(self,**kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding("utf-8");
         image_file = os.path.join('C:/temp/upload/track_feedback/images/27/issue_27.png' );
         imageId = kw.get('id');
         
         trackImage = model.BasicMultimediaData.getByBasicDataId(imageId);
-        print "orig file path";
-        print os.path.abspath(__file__);
+        log.info( "orig file path");
+        log.info( os.path.abspath(__file__));
         if trackImage:
-            print trackImage.media_path_file;
+            log.info( trackImage.media_path_file);
             image_file = os.path.join(trackImage.media_path_file );
-            print image_file;
+            log.info( image_file);
             if not os.path.exists(image_file):
-                print "Found no %s" % image_file
+                log.info( "Found no %s" % image_file)
             else:
                 
                 return  file(image_file, "rb").read()

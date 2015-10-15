@@ -17,6 +17,8 @@ from tgext.admin.controller import AdminController
 from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 from pollandsurvey.controllers.utility import Utility
+from pollandsurvey.controllers.service import ConvertHtml2Pdf, ConvertPdf2image
+
 
 import sys
 import json 
@@ -46,9 +48,16 @@ class AnswerController(BaseController):#RestController): #
         self.URL_REPLY = '/ans/reply/{0}.html';
         self.URL_GOODBYE = '/ans/thankyou/{0}.html';
         self.UPLOAD_DIR = config['path_upload_file'] ;
+        self.CONVERT_DIR = config['path_convert_file'] ;
+        
+        self.utility.createPathFile(self.CONVERT_DIR);
+        self.utility.createPathFile(self.UPLOAD_DIR);
+        self.sourceHtml = model.SystemEnvironment.getScoreViewHtml();
         
         dh = LogDBHandler( config=config,request=request);        
         log.addHandler(dh)
+        
+       
     
     @expose()
     def _default(self, *args, **kw):
@@ -179,13 +188,20 @@ class AnswerController(BaseController):#RestController): #
         self.nextQuestion  = '';
         self.urlRedirect = ''; 
         self.urlName = self.utility.spritValue(request.path_info,'/');
-         
+        
+        self.respondents  = model.Respondents.getByVoterIdAndPublicId(self.idVoter,self.idPublic); 
+        
+        self.project = model.QuestionProject.getId(self.idProject) 
+        
+        self.projectType = self.project.id_question_project_type;
+        
         if(len(self.urlName) >= 1 ) :
           
             self.urlRedirect = self.questionOption.redirect_url
             
     
-        return dict(page='goodbye', ready = 'yes',goodbye = Markdown(self.goodbye).convert(),nextQuestion = self.nextQuestion ,urlRedirect= self.nextQuestion);
+        return dict(page='goodbye', ready = 'yes',goodbye = Markdown(self.goodbye).convert(),nextQuestion = self.nextQuestion ,urlRedirect= self.nextQuestion,
+                    option=self.questionOption,projectType = self.projectType,imageId = self.respondents.id_respondents);
     
     @expose('json')
     def getDataPreview(self, came_from=lurl('/'),   *args, **kw): 
@@ -307,7 +323,9 @@ class AnswerController(BaseController):#RestController): #
                     
                     
             if(self.finished):  
+                
                 model.Respondents.updateScoreByIdRespondents(self.idResp);
+                self.__createScoreFile(self.idResp);
                 
                 self.redirect = self.URL_GOODBYE.format(   self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
                
@@ -484,5 +502,40 @@ class AnswerController(BaseController):#RestController): #
         row =None;
         
         return question;
+    
+    def __createScoreFile(self,idResp):
+        
+        self.respondent = model.Respondents.getId(idResp);
+        self.score = model.Respondents.getScoreByIdRespondents(self.idResp);
+        self.voter = self.respondent.voter;
+        
+        self.convertHtml = ConvertHtml2Pdf();
+        self.convertPNG = ConvertPdf2image();
+        
+        self.sourceHtml = model.SystemEnvironment.getScoreViewHtml();
+
+        values = {};
+        values['name'] = str(self.voter.prefix + ' ' + self.voter.firstname + ' ' + self.voter.lastname);
+        values['score'] = str(self.score);
+        
+        self.outputPDFFilename = ("{0}\{1}-{2}-{3}-{4}.pdf").format(str(self.CONVERT_DIR), str(self.respondent.id_respondents), str(self.respondent.id_voter), str(self.respondent.id_question_project), str(self.respondent.id_question_option))  ;
+        self.outputPNGFilename = ("{0}\{1}-{2}-{3}-{4}.png").format(str(self.CONVERT_DIR), str(self.respondent.id_respondents), str(self.respondent.id_voter), str(self.respondent.id_question_project), str(self.respondent.id_question_option))  ;
+        
+        self.result = self.convertHtml.convertHtmlToPdf(values, self.sourceHtml, self.outputPDFFilename);
+        log.info("convert file %s is %s" %(self.outputPDFFilename, self.result));
+        if(self.result == 0):
+            self.result = self.convertPNG.convert(self.outputPDFFilename, self.outputPNGFilename)
+            log.info("convert file %s is %s" %(self.outputPNGFilename, self.result));
+            if(self.result):
+                log.info("save image file %s is %s" %(self.outputPNGFilename, self.result));
+                with open(self.outputPNGFilename,"rb") as f:
+                    self.respondent.image_file = f.read(); 
+        else:
+            log.error("convert html to pdf error with id_resp=%s" %idResp)
+            
+        
+        
+         
+        
         
    

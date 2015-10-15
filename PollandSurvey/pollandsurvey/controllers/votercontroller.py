@@ -45,7 +45,7 @@ class VoterController(BaseController):
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def createVoter(self,*args,**kw):
         reload(sys).setdefaultencoding('utf8')
-        print kw;
+        log.info( kw);
        
         
         
@@ -75,7 +75,7 @@ class VoterController(BaseController):
             self.voter.id_marriage_status = 1;
             
             
-            print self.voter.id_marriage_status ;
+             
             self.voter.save();
             
             self.voterMaptype = model.VoterMapType();
@@ -101,9 +101,9 @@ class VoterController(BaseController):
         
         df = json.loads(request.body, encoding=request.charset);
         
-        print( df);
-        print( df.get('id_voter'));
-        print kw;
+        log.info( df);
+        log.info( df.get('id_voter'));
+        log.info (kw);
         self.success = True;
         self.result = True;
         self.message = '';

@@ -10,6 +10,8 @@ import string
 import random
 import uuid
 import hashlib
+import platform
+#from datetime import datetime
 log = logging.getLogger(__name__); 
 class Utility(object):
 
@@ -33,7 +35,7 @@ class Utility(object):
         
     def joinPathFileAndCreatePath(self,orig_path,subpath,filename):
         self.target_file_name = os.path.join(os.getcwd(), orig_path , subpath, filename);
-        print self.target_file_name;
+        #print self.target_file_name;
         self.createPathFile(self.target_file_name);        
         return self.target_file_name;
     
@@ -117,8 +119,10 @@ class Utility(object):
             return True;
         
         
-    def convertToDateTime(self,data,format):
-        pass;
+    def convertToDateTime(self,data,formatDate):
+        if data and formatDate:
+            return datetime.datetime.strptime(data, formatDate);
+        return None;
     
     def spritValue(self,data,value):
          
@@ -140,6 +144,13 @@ class Utility(object):
                 return False;
         
         return False;
+    
+    def isWindows(self):
+        return  "Windows" in platform.system()
+            
+    def isLinux(self):
+        return  "Linux" in platform.system()
+                
     
     def isActiveFromDate(self,data,start,stop):
         
@@ -174,10 +185,10 @@ class Utility(object):
     def decryptMD5(self,testHash):
         
         hash_object = hashlib.md5(b'Hello World')
-        print(hash_object.hexdigest())
+        #print(hash_object.hexdigest())
         
         hash_object = hashlib.md5(hash_object.hexdigest().encode())
-        print(hash_object.hexdigest())
+        #print(hash_object.hexdigest())
                         
          
             
@@ -218,6 +229,11 @@ class Utility(object):
 #dt_str = '01/02/2015'  + ' 00:00:00' ;
 #dt_obj = datetime.strptime(dt_str, '%d/%m/%Y %H:%M:%S')
 #print dt_obj;
+#import time;
+#dt_str = '01/02/2015'    ;
+#dt_obj = time.strptime(dt_str, '%d/%m/%Y')
+#print dt_obj;
+#print time.strftime("%d %b %Y",dt_obj)
  
 
 #from decimal import Decimal
@@ -232,3 +248,7 @@ class Utility(object):
  
  
 #datetime.strptime(  kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;
+
+ 
+
+

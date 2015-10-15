@@ -49,17 +49,17 @@ class InterfaceServiceController(RestController):
         
         #for h in request.headers:
         #    print h ,  request.headers[h];
-        print "body : " ,request.body;
+        log.info( "body : %s" ,request.body);
         try:
          
             if (kw):
                 self.client_id = kw['clientId'];
                 self.client_secret = kw['clientSecret'];
                 
-                self.userClientAhtuen = model.UserClientAuthen.getUserClientAuthen(self.client_id, self.client_secret);
+                self.UserClientAuthen = model.UserClientAuthen.getUserClientAuthen(self.client_id, self.client_secret);
                 samples = kw;
-                print self.userClientAhtuen;
-                if (self.userClientAhtuen):
+                log.info("user Client Auth " , self.UserClientAuthen) ;
+                if (self.UserClientAuthen):
                     self.keyAuthorize =   self.utility.my_random_string(15);
                     samples['keyAuthorize'] =  self.keyAuthorize #; "#987654321";
                     
@@ -70,9 +70,9 @@ class InterfaceServiceController(RestController):
             else:    
             
                 if( request.body):
-                    print "get value : request.body"
+                    
                     self.df = json.loads(request.body, encoding=request.charset);
-                    print self.df;
+                    log.info( "get value : request.body " +  self.df);
                     #print self.df;
                     #set keyAuthorize
                     self.client_id = self.df['clientId'];
@@ -204,7 +204,7 @@ class InterfaceServiceController(RestController):
         else:
             self.Keyauthorize = '0000000000';
             
-        print "11 key authorize : " , self.Keyauthorize;
+        log.info( "11 key authorize : " + self.Keyauthorize);
         
         
         
@@ -252,7 +252,7 @@ class InterfaceServiceController(RestController):
                 #create link
                 else:
                     self.voter =  self.mapExtenal.voter;
-                print "id voter : %s"  %self.voter.id_voter;
+                log.info( "id voter : %s"  %self.voter.id_voter);
                 
                 samples['urlTest'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(kw.get("idTest")) ,str(kw.get("idPublic")) , str(self.voter.id_voter))  ;
 

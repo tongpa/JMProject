@@ -52,8 +52,8 @@ class AngularController(BaseController):
     @expose('json')
     def saveQuestion(self, *args, **kw):
         
-        print args;
-        print kw;
+        #print args;
+        #print kw;
         
         return dict(success = True);
     
