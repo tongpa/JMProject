@@ -595,6 +595,7 @@ class SurveyController(BaseController):
         self.option.use_question_no = kw.get('use_question_no');
         self.option.duration_time   = kw.get('duration_time');
         self.option.random_answer = int ( kw.get('random_answer') ); 
+        self.option.show_score = self.utility.convertToBit(kw.get('show_score')) ;    
         
         self.option.show_navigator = self.utility.convertToBit(kw.get('show_navigator')) ;         
         self.option.redirect_url =kw.get('redirect_url');
