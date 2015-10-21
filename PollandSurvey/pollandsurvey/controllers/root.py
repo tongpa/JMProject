@@ -123,7 +123,7 @@ class RootController(BaseController):
         if request.identity:
             log.info( "user login already");
             auth_force_logout(); 
-            redirect('/login');
+            #redirect('/login');
          
         if login_counter > 0:
             flash(_('Wrong credentials'), 'warning')
