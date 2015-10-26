@@ -14,6 +14,7 @@ Ext.define('survey.view.pquestion.questiontype.imagepanel.UploadImagePanel',{
 	record :   new survey.model.listAnswerData({      		 
 				value: 'answer',
 				answer: 0,
+				score : 0,
 				seq:  0  
 				,id_question : Ext.id(),
 	    		answer_image: ''
@@ -98,7 +99,13 @@ initComponent: function() {
 			 hideLabel : true,
 			 anchor: '100%',
 			 hidden : !main.visiableColumns[2],
-			 value : main.record.get('score')
+			 value : main.record.get('score'),
+			 listeners : {
+				 'change' : function(txt,newValue,oldValue,eOpts){
+					 //console.log(newValue + ' ' + oldValue);
+					 main.changeDataRecord(newValue);
+				 }
+			 }
 		});
 		main.checkbox = Ext.create('Ext.form.field.Checkbox',{
 			name: 'answer',
@@ -112,16 +119,20 @@ initComponent: function() {
             		  
             		 
             		 	if (oldValue == false)
-            		 	{	
+            		 	{	var score = main.score.getValue();
+            		 		
+            		 		main.changeDataRecord(score);
+            		 		
+            		 		/*
             		 		var len = main.store.data.length;
             		 
-            		 		var len = main.store.data.length;
-            		 		
+            		 		var score = main.score.getValue();
             		 		
             		 		main.store.each(function(record){ 	   
             		 			if(main.record == record){
             		 				record.beginEdit();
                     		 		record.set('answer', 1);
+                    		 		record.set('score', score);
                     		 	    record.modified = false;
                     		 	    record.endEdit();
                      
@@ -129,13 +140,14 @@ initComponent: function() {
             		 			else{
             		 				record.beginEdit();
                     		 		record.set('answer', 0);
+                    		 		record.set('score', 0);
                     		 	    record.modified = false;
                     		 	    record.endEdit();
                     		 	     
             		 			}
                 		 		
                 		 	});
-            		 		
+            		 		*/
             		 		
             		 		main.fireEvent('onChangeCheckAnswer',ch, newValue, oldValue, eOpts);  
             		 	}
@@ -216,6 +228,31 @@ initComponent: function() {
 		
 		//main.items = [main.labelupload,main.imageFileUpload,main.fileUpload,main.checkbox,main.deletebt];
 		this.callParent();
+	},
+	changeDataRecord : function(score ){
+		
+		var main = this;
+		var len = main.store.data.length;
+ 		
+ 		main.store.each(function(record){ 	   
+ 			if(main.record == record){
+ 				record.beginEdit();
+		 		record.set('answer', 1);
+		 		record.set('score', score);
+		 	    record.modified = false;
+		 	    record.endEdit();
+ 
+ 			}
+ 			else{
+ 				record.beginEdit();
+		 		record.set('answer', 0);
+		 		record.set('score', 0);
+		 	    record.modified = false;
+		 	    record.endEdit();
+		 	     
+ 			}
+	 		
+	 	});
 	},
 	onDeleteClick : function(bt,ev){
 	 

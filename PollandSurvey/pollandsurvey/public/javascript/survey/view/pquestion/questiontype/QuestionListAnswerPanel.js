@@ -117,7 +117,7 @@ Ext.define('survey.view.pquestion.questiontype.QuestionListAnswerPanel',{
 		        	            		 	});
 		        	            		 	
 		        	            		 	survey.listBasicData.getAt(rowIndex).set('answer', 1);
-		        	            		 	survey.listBasicData.getAt(rowIndex).set('score', 1);
+		        	            		 	//survey.listBasicData.getAt(rowIndex).set('score', 1);
 		  
 		        	            		 }
 		        	            	  

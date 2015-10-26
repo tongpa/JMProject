@@ -2,7 +2,7 @@
 Ext.define('survey.view.pproject.ListProject',{
 	extend : 'Ext.grid.Panel',
 	alias: ['widget.ListProject'],
-     
+	  
 	anchor: '100%',
 	//width : '100%',
 	//height :  '100%',

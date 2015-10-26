@@ -159,7 +159,8 @@ Ext.define('survey.view.pproject.ProjectView',{
 			}
 		});
 		
-		main.btclose = Ext.create('Ext.Button',{		 
+		main.btclose = Ext.create('Ext.Button',{	
+			 
 			text : survey.label.close,
 			
 			//hidden : !main.showClose,

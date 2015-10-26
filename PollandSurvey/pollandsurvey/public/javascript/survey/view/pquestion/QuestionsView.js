@@ -107,6 +107,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 		 
 		main.items = [main.questionid,main.projectid,main.order,main.questiontypeid ,main.dataGrid, main.question ,main.fileUpload,main.difficultyLevel , main.fieldSetsHelp,main.answerCardPanel   ];  
 		
+		
 		main.btsave = Ext.create('Ext.Button',{		 
 			text : survey.label.save,
 			 
@@ -117,7 +118,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 				
 	            if (form.isValid()) {
 	            	
-	            	
+	            	 
 	            	var data = [];
 	            	
 	            	var items = survey.listBasicData.data.items;
@@ -169,8 +170,7 @@ Ext.define('survey.view.pquestion.QuestionsView',{
 	        		
 	        		main.dataGrid.setValue( Ext.encode(data));
 	            	
-	        		console.log(main.dataGrid);
-	            	console.log(data);
+	        		 
 	            	
 	            	
 	                form.submit({
