@@ -22,6 +22,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession ,QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
+
+from pollandsurvey.model.otheruselink import MapVoterExtenalLink
 import transaction
 __all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
 
@@ -383,6 +385,9 @@ class Voter(DeclarativeBase):
     def getVoterByOwnerAndEmail(cls,user_id_owner,email):
         return DBSession.query(cls).filter(cls.user_id_owner ==  str(user_id_owner).decode('utf-8'), cls.email ==  str(email).decode('utf-8') ).first();
     
+    @classmethod
+    def getVoterByEmail(cls,email):
+        return DBSession.query(cls).filter( cls.email ==  str(email).decode('utf-8') ).first();
         
     @classmethod
     def getListVoterByOwner(cls,user_id_owner,voter_type=5,search=None,page=0, page_size=None):
@@ -432,6 +437,8 @@ class Voter(DeclarativeBase):
                          'status':v.finished});
         values = None;
         return data;
+    
+     
          
 class VoterMapType(DeclarativeBase):
     
@@ -524,6 +531,8 @@ class Respondents(DeclarativeBase):
     
     image_file = Column(BLOB, nullable=True);
     finished  = Column(BIT, nullable=True, default=0);
+    key_gen = Column(String(255), nullable=False , index=True) ;
+    
     finished_date =  Column(DateTime, nullable=True );
     score_exam =   Column(Integer, nullable=True, default=0);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
@@ -573,6 +582,9 @@ class Respondents(DeclarativeBase):
     def getByVoterAndPublicId(cls,idvoter,idpublic):
         
         return DBSession.query(cls).outerjoin(Voter, Voter.id_voter == cls.id_voter).filter( cls.id_voter == str(idvoter), cls.id_question_option == str(idpublic) ).first();
+    @classmethod
+    def getByKey(cls,keyGen):
+        return DBSession.query(cls).filter(cls.key_gen == str(keyGen)).first();
     
     @classmethod
     def updateScoreByIdRespondents(cls, id_respondents):
@@ -630,7 +642,9 @@ class Respondents(DeclarativeBase):
             print e;  
             return False, [], 0;#e.__str__();
         
-        
+    @classmethod
+    def getByidUserandPublicId(cls,idUser,idPublic):   
+         return DBSession.query(cls).outerjoin(MapVoterExtenalLink, MapVoterExtenalLink.id_voter == cls.id_voter).filter( MapVoterExtenalLink.id_user_ref == str(idUser), cls.id_question_option == str(idPublic), cls.finished == str(1) ).first();
          
            
 class RespondentReply(DeclarativeBase):
