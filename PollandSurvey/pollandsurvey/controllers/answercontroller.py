@@ -367,7 +367,7 @@ class AnswerController(BaseController):#RestController): #
                 model.Respondents.updateScoreByIdRespondents(self.idResp);
                 self.__createScoreFile(self.idResp);
                 
-                self.redirect = self.urlUtility.URL_GOODBYE.format(   self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
+                self.redirect = self.urlUtility.URL_GOODBYE.format( key=  self.utility.splitNameWithOutExtention(basename(request.environ.get("HTTP_REFERER" )))  );
                
                     
                     
