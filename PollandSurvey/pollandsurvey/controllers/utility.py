@@ -210,7 +210,7 @@ class Utility(object):
 #print u.plusTime(datetime.datetime.today() , 10);
 
 #print u.plusDate(datetime.datetime.today(),30);
-#print u.my_random_string(15);
+#print u.my_random_string(25);
 
 #u.isPartOf('answer_1.png',"""C:\\fakepath\\answer_1.png""");
 #d2 = datetime.datetime.today() - datetime.timedelta(days=2);

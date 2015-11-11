@@ -110,6 +110,12 @@ class RootController(BaseController):
         
         return dict(page='metronic') 
     
+    @expose('pollandsurvey.templates.adsgoogle')
+    def adsgoogle(self, came_from=lurl('/')):
+        
+        #print request.scheme   + '://';
+        
+        return dict(page='adsgoogle') 
     
      
     
@@ -140,9 +146,26 @@ class RootController(BaseController):
                     came_from=came_from) 
         
     
-
+    @expose('pollandsurvey.templates.policy')
+    def policy(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from) 
     
+    @expose('pollandsurvey.templates.service')
+    def service(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
  
+    @expose('pollandsurvey.templates.support')
+    def support(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
+    
+    @expose('pollandsurvey.templates.marketing')
+    def marketing(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
+    
 
     @expose('pollandsurvey.templates.environ')
     @require(predicates.has_permission('manage', msg=l_('Only for managers')))
@@ -611,7 +634,9 @@ class RootController(BaseController):
         #self.con.convert(values);
         
       
-        
+    @expose('pollandsurvey.templates.mobile')
+    def samplejs(self,*arg, **kw):
+        return dict(page='activate_success') 
           
              
     """

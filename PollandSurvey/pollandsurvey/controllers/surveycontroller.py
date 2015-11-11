@@ -23,7 +23,7 @@ import types
 from datetime import datetime
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form
-
+from pollandsurvey.util import URLUtility
 import logging;
 log = logging.getLogger(__name__);
 from logsurvey import LogDBHandler
@@ -34,6 +34,7 @@ class SurveyController(BaseController):
     
     def __init__(self):
         self.utility = Utility();
+        self.urlUtility = URLUtility();
         self.UPLOAD_DIR = config['path_upload_file'] ;
         
         dh = LogDBHandler( config=config,request=request);
@@ -71,24 +72,7 @@ class SurveyController(BaseController):
         
         
         return dict(message = self.message, success = self.success, data =self.data)
-    @expose('json')
-    def createstudent(self,*args, **kw):
-        reload(sys).setdefaultencoding("utf-8");
-        log.info("survey controller index");
-        
-        return dict(page='index')
-    @expose('json')
-    def updatestudent(self,*args, **kw):
-        reload(sys).setdefaultencoding("utf-8");
-        log.info("survey controller index");
-        
-        return dict(page='index')
-    @expose('json')
-    def deletestudent(self,*args, **kw):
-        reload(sys).setdefaultencoding("utf-8");
-        log.info("survey controller index");
-        
-        return dict(page='index')
+    
     
      
      
@@ -761,9 +745,11 @@ class SurveyController(BaseController):
                             self.resp.id_voter = v.id_voter;
                             self.resp.id_question_project = self.option.id_question_project;
                             self.resp.id_question_option =self.option.id_question_option;
-                        
+                            self.resp.key_gen = self.utility.my_random_string(string_length=25)
                             self.resp.save();
                         
+                        if (self.resp.key_gen is None):
+                            self.resp.key_gen = self.utility.my_random_string(string_length=25)
                         
                         
                         self.emailValues={};
@@ -771,7 +757,8 @@ class SurveyController(BaseController):
                         self.emailValues['email'] = v.email;
                         self.emailValues['subject'] = self.emailtemplate.subject;
                         self.emailValues['from'] =  self.emailtemplate.from_name;
-                        self.emailValues['url'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(self.urlServer, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ; #request.application_url
+                        #self.emailValues['url'] = self.urlUtility.URL_REPLY.format(self.urlServer, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ; #request.application_url
+                        self.emailValues['url'] = self.urlUtility.URL_QUESTIONNAIRE.format(nameserver=self.urlServer,key=self.resp.key_gen);  #self.urlUtility.URL_REPLY.format(self.urlServer, str(self.option.id_question_project), str(self.option.id_question_option), str(v.id_voter))  ; #request.application_url
                         self.emailValues['initialDate'] = str(self.option.activate_date);
                         self.emailValues['finishDate'] = str(self.option.expire_date);
                         

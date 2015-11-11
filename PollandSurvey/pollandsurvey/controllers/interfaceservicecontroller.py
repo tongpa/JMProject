@@ -17,6 +17,7 @@ from datetime import datetime,timedelta
 #from dateutil.relativedelta import relativedelta
 
 from pollandsurvey.controllers.utility import Utility
+from pollandsurvey.util import URLUtility
 
 import time
 import sys
@@ -36,6 +37,8 @@ class InterfaceServiceController(RestController):
         dh = LogDBHandler( config=config,request=request);        
         log.addHandler(dh)
         self.utility = Utility();
+        self.urlUtility = URLUtility();
+        self.urlServer =  model.SystemEnvironment.getServerUrl();
         
     @with_trailing_slash
     @expose('json')
@@ -49,7 +52,8 @@ class InterfaceServiceController(RestController):
         
         #for h in request.headers:
         #    print h ,  request.headers[h];
-        log.info( "body : %s" ,request.body);
+        #log.info( "body : %s" ,request.body);
+        print ("body : %s" ,request.body);
         try:
          
             if (kw):
@@ -58,14 +62,16 @@ class InterfaceServiceController(RestController):
                 
                 self.UserClientAuthen = model.UserClientAuthen.getUserClientAuthen(self.client_id, self.client_secret);
                 samples = kw;
-                log.info("user Client Auth " , self.UserClientAuthen) ;
+                
                 if (self.UserClientAuthen):
+                    log.info("user Client Auth %s" , str(self.UserClientAuthen.user_id)) ;
                     self.keyAuthorize =   self.utility.my_random_string(15);
                     samples['keyAuthorize'] =  self.keyAuthorize #; "#987654321";
                     
                     self.startDate = self.utility.getCurrentDate();
                     self.expireDate = self.utility.plusTime(self.startDate, 5)
                     model.UserSessionAuthen.createSessionAuthen( self.keyAuthorize,self.startDate, self.expireDate  ) ;
+            
                      
             else:    
             
@@ -118,8 +124,8 @@ class InterfaceServiceController(RestController):
         
         print "createTest key authorize : " , self.Keyauthorize;
         
-        #if model.UserSessionAuthen.currentSessionAuthen(self.Keyauthorize):
-        if  self.Keyauthorize == "459987456":   
+        if model.UserSessionAuthen.currentSessionAuthen(self.Keyauthorize):
+        #if  self.Keyauthorize == "459987456":   
             self.userExtenal = model.UseExtenalLink();
             self.userExtenal.id_user =  kw.get("idUser");
             self.userExtenal.user_type =kw.get("userType");
@@ -144,7 +150,7 @@ class InterfaceServiceController(RestController):
             self.option.id_question_project = self.defaultOption.id_question_project;        
             self.option.id_question_theme = self.defaultOption.id_question_theme; 
             
-            self.option.name_publication = str(self.defaultOption.name_publication) + "-" + str(self.userExtenal.user_name);
+            self.option.name_publication = str(self.defaultOption.name_publication.encode('utf8')) + "-" + str(self.userExtenal.user_name.encode('utf8'));
             
             
             self.option.id_fix_random_type = self.defaultOption.id_fix_random_type;
@@ -218,19 +224,23 @@ class InterfaceServiceController(RestController):
                 #create sur_voter
                 self.mapExtenal = model.MapVoterExtenalLink.getUserLinkVoterBy(self.userExtenal.id_use_external_link, kw.get("idUser"));
                  
-                self.voter = model.Voter;
+                self.voter = model.Voter();
                 if( self.mapExtenal is None or self.mapExtenal.voter is None):
                     log.info("user external is not voter %s",kw.get("email"));
-                    self.voter = model.Voter();
-                    self.voter.email = kw.get("email");
-                    self.voter.prefix = kw.get("idPrefix");
-                    self.voter.firstname = kw.get("firstname");
-                    self.voter.lastname = kw.get("lastname");
-                    self.voter.user_id_owner  = 3 ;
-                    self.voter.id_marriage_status =  kw.get("idMarriageStatus");
-                    self.voter.birthdate =   kw.get("birthdate");
-                    self.voter.id_gender = kw.get("idGender");
-                    self.voter.save();
+                    self.voter = model.Voter.getVoterByEmail(kw.get("email"));
+                    if self.voter is None:
+                        log.info("voter %s is not existed",kw.get("email"));
+                        self.voter = model.Voter();
+                        self.voter.email = kw.get("email");
+                        self.voter.prefix = kw.get("idPrefix");
+                        self.voter.firstname = kw.get("firstname");
+                        self.voter.lastname = kw.get("lastname");
+                        self.voter.user_id_owner  = 3 ;
+                        self.voter.id_marriage_status =  kw.get("idMarriageStatus");
+                        self.voter.birthdate =   kw.get("birthdate");
+                        self.voter.id_gender = kw.get("idGender");
+                        self.voter.save();
+                    
                     
                     self.mapExternalLink = model.MapVoterExtenalLink();
                     self.mapExternalLink.id_use_external_link =  self.userExtenal.id_use_external_link;
@@ -244,7 +254,8 @@ class InterfaceServiceController(RestController):
                     self.respondents.id_voter = self.voter.id_voter;
                     self.respondents.id_question_project = kw.get("idTest");
                     self.respondents.id_question_option  = kw.get("idPublic");
-        
+                    self.respondents.key_gen = self.utility.my_random_string(string_length=25)
+                    
                     self.respondents.finished =0;
                     self.respondents.score_exam =0;
                     
@@ -252,9 +263,14 @@ class InterfaceServiceController(RestController):
                 #create link
                 else:
                     self.voter =  self.mapExtenal.voter;
+                    self.respondents = model.Respondents.getByVoterIdAndPublicId(str(self.voter.id_voter), str(kw.get("idPublic")));
+                                                                                 
+                     
+                    
                 log.info( "id voter : %s"  %self.voter.id_voter);
                 
-                samples['urlTest'] = ("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(kw.get("idTest")) ,str(kw.get("idPublic")) , str(self.voter.id_voter))  ;
+                samples['urlTest'] =  self.urlUtility.URL_QUESTIONNAIRE.format(nameserver=self.urlServer,key=self.respondents.key_gen)  ;
+                #("{0}/ans/reply/{1}.{2}.{3}.0.html").format(request.application_url,str(kw.get("idTest")) ,str(kw.get("idPublic")) , str(self.voter.id_voter))  ;
 
                 samples['status'] = True;
                 samples['errorCode'] = 'S0001';            
@@ -269,7 +285,7 @@ class InterfaceServiceController(RestController):
             log.error( "Keyauthorize : is not same "  );
         
         response.headers['KeyAuthorize'] = self.Keyauthorize;
-        
+         
         return samples;
     
     
@@ -278,6 +294,48 @@ class InterfaceServiceController(RestController):
     def getScore(self,*args,**kw):
         log.info("getScore")
         samples = kw;
+        print "-------------------------";
+         
+        print kw['idUser'];
+        print kw['idPublic'];
+        print "-------------------------";
         
+        
+        for h in request.headers:
+            print "header : %s , %s "  %(h,request.headers[h]);
+            
+        self.Keyauthorize = request.headers['Keyauthorize'];
+        
+        
+        if('Keyauthorize' in request.headers):
+            self.Keyauthorize = request.headers['Keyauthorize'];
+        else:
+            self.Keyauthorize = '0000000000';
+            
+        log.info( "11 key authorize : " + self.Keyauthorize);
+        
+        samples['score'] = None;
+        samples['urlscore'] = '';
+                
+        if model.UserSessionAuthen.currentSessionAuthen(self.Keyauthorize): #self.Keyauthorize == "#987654321" :
+            print "success %s " %self.Keyauthorize ;
+            
+            self.respondents = model.Respondents.getByidUserandPublicId(kw['idUser'],kw['idPublic']);
+            
+            if (self.respondents):
+                print self.respondents.score_exam;
+                samples['score'] = self.respondents.score_exam;
+                samples['urlscore'] = '';
+                
+            samples['status'] = True;
+            samples['errorCode'] = 'S0001';            
+            samples['message'] = "";
+                
+        else:
+            samples['status'] = False;
+            samples['errorCode'] = 'E0002';            
+            samples['message'] = "Session is not match ";
+        
+        response.headers['KeyAuthorize'] = self.Keyauthorize;
         return samples;
             
