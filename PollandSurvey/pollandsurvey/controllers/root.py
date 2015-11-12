@@ -638,7 +638,34 @@ class RootController(BaseController):
     def samplejs(self,*arg, **kw):
         return dict(page='activate_success') 
           
-             
+    
+    @expose('pollandsurvey.templates.uploadfile')     
+    @require(predicates.in_any_group('managers', msg=l_('Only for Admin'))) 
+    def uploadfile(self,*arg,**kw):
+        return dict(page='uploadfile')
+    
+    
+    @expose('pollandsurvey.templates.uploadfile')      
+    @require(predicates.in_any_group('managers', msg=l_('Only for Admin')))
+    def savefile(self,*arg,**kw):
+        print arg;
+        print kw;
+        
+        reload(sys).setdefaultencoding('utf8')
+        print kw.get('file');
+        fileUpload = kw.get('file');
+        data = fileUpload.file.read();
+        file_name=  fileUpload.filename
+        
+        target_file_name = "c:\\temp\\"+ file_name;  
+        
+        f = open(target_file_name, 'wb')
+        f.write(data)
+        f.close()
+        
+        return dict(page='uploadfile')
+    
+    
     """
     @expose('pollandsurvey.templates.login')
     def login_old(self, came_from=lurl('/')):
