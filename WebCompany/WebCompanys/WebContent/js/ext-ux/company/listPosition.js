@@ -42,6 +42,30 @@ Ext.define('company.listPositionPostDate',{
 		});
     	 
     }, 
+     getPagingToolsBar : function(){
+    	var main = this;
+    	return [{
+            xtype: 'pagingtoolbar',
+            store: main.store, // same store GridPanel is using
+            dock: 'bottom',
+            displayInfo: true,
+            listeners : {
+            	scope: main,
+            	'beforechange' : main.onBeforeChange,
+            }
+        }]
+    },
+    onBeforeChange : function(paging,page,opt){
+    	var main = this;
+    	main.store.loadPage(page,{
+			params : {
+				'keysearch' : main.positionData.id  
+    		},
+    		scope : this
+		});
+    	
+		return false;
+	},
     initComponent: function() {
 		
     	var main = this;
@@ -55,7 +79,7 @@ Ext.define('company.listPositionPostDate',{
     	    	     
     	            
     	        ];
-    	        
+    	main.dockedItems = main.getPagingToolsBar();        
     	this.callParent();
     	        
    	},
@@ -131,8 +155,8 @@ Ext.define('company.winListPositionPostDate',{
 	layout: 'fit',
 	 
 	modal : true,
-	width : 400,
-	height : 350,
+	width : 500,
+	height : 400,
 	closable: true,
     closeAction: 'hide',
     showClose : true,

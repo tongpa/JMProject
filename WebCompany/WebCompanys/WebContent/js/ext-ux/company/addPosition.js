@@ -381,7 +381,15 @@ Ext.define('company.PositionPostDate',{
 	                	success: function(response){
 	                	    	//store.load();
 	                			//company.listPosition();
-	                		 main.fireEvent('refreshOther', this);
+	                		
+	                		var value = Ext.JSON.decode(response.responseText);
+	                		if(value && value.success){
+	                			main.fireEvent('refreshOther', this);
+	                		}
+	                		else{
+	                			Ext.Msg.alert('Status', value.msg);
+	                		}
+	                		 
 	                		 
 	                		 
 	                		},

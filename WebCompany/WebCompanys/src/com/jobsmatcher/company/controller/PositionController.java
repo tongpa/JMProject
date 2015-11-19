@@ -179,7 +179,7 @@ public class PositionController {
 	public @ResponseBody Map<String, Comparable> addJobs(@RequestBody Position position, HttpSession sec) {
 		Map<String, Comparable> response = new HashMap<String, Comparable>();
 		try {
-			
+			System.out.println("test : 1234 : ");
 			 
 			if(position.getId_position() ==0){
 				
@@ -188,7 +188,7 @@ public class PositionController {
 				//position.setPost_date(util.convertDate(position.getPost_date()));
 				 
 				logger.info(position.getPost_date());
-				
+				System.out.println("test : 1234 : ");
 				
 				positionDao.saveOrUpdate(position);
 				
@@ -208,8 +208,9 @@ public class PositionController {
 				 
 			}
 			else{
-				
-				positionDao.updatePosition(position);
+				System.out.println("update : ");
+				positionDao.saveOrUpdate(position);
+				//positionDao.updatePosition(position);
 			}
 	        response.put("success", true);
 	        response.put("msg", "Welcome tong"  );
@@ -291,11 +292,21 @@ public class PositionController {
 			positionPostDate.setId_position(util.convertInteger((String)jsonObject.get("id_position")));
 			positionPostDate.setPost_date(util.convertDate((String)jsonObject.get("post_date")   ));
 			
-			positionPostDateDao.saveOrUpdate(positionPostDate);
+			 List<PositionPostDate> listPositionPostDate = positionPostDateDao.getPositionPostDeteByPositionAndDate(positionPostDate.getId_position(),positionPostDate.getPost_date());
+			
+			if(listPositionPostDate.size() == 0){
+				positionPostDateDao.saveOrUpdate(positionPostDate);
+				response.put("success", true);
+		        response.put("msg", "Welcome tong"  );
+			}else
+			{
+				response.put("success", false);
+		        response.put("msg", (String)jsonObject.get("post_date")  + " already is exist"  );
+			}
 			
 			
-	        response.put("success", true);
-	        response.put("msg", "Welcome tong"  );
+			
+	        
 	    } catch(Exception ex) {
 	        response.put("success", false);
 	        response.put("msg", ex.getMessage());

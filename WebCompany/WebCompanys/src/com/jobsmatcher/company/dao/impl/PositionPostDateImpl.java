@@ -3,6 +3,7 @@ package com.jobsmatcher.company.dao.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -122,6 +123,24 @@ public class PositionPostDateImpl extends AbstractDaoImpl<PositionPostDate, Stri
 		int v = getCurrentSession().createSQLQuery(sb.toString()).executeUpdate(); 
 		logger.info("delete job_position_post_date : " + v);
 		
+	}
+
+	@Override
+	public List<PositionPostDate> getPositionPostDeteByPositionAndDate(Integer positionId,Date postDate) {
+		String sql = "from PositionPostDate c where c.id_position = :positionId and c.post_date = :postdate";
+		 
+		 
+		
+		List<PositionPostDate> users = new ArrayList<PositionPostDate>();
+		users = getCurrentSession()
+				.createQuery(sql)
+				.setParameter("positionId",  positionId )
+				.setParameter("postdate", postDate)
+				.list();
+		 
+		System.out.println("list : " + users.size());
+		
+		return users;
 	}
  
 }
