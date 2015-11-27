@@ -1,0 +1,86 @@
+ <html><head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/></head>
+<body>
+<div class="zero-clipboard">
+	<span class="btn-clipboard"><button type="button" class="btn btn-default btn-xs"  aria-label="Center Align" id="right_{{content.id}}" data-placement="right" title="Tooltip on right">
+<span class="glyphicon glyphicon-info-sign"  aria-hidden="true"> </span> 
+</button></span>
+</div> 
+
+<div class="highlight"> 
+<br/> 	
+ 	<span class="head_question">{{content.seq}}.&nbsp;&nbsp;{{content.question}} </span> 
+	 
+ 	<div class="row" ng-if="content.image == 1">
+	 	<div class="col-md-1">
+	 		 
+	 	</div>
+	 	
+	 	<div class="col-md-11" >
+	 		<img  ng-src="/images/getImage?id={{content.id}}" alt=""  height="70%" width="70%"/>
+	 	</div>
+ 	</div>
+	    
+	<!-- 
+	<button type="button" class="btn btn-default btn-xs"  aria-label="Center Align" id="right_{{content.id}}" data-placement="right" title="Tooltip on right">
+<span class="glyphicon glyphicon-info-sign"  aria-hidden="true"> </span> 
+</button>
+ style="padding-left:25px"
+ -->
+ 	<br/>
+ 	<div class="row">
+	 	<div class="col-md-1">
+	 		 <input type="hidden" name="question_{{content.id}}" value="{{content.id}}"/>
+	 	</div>
+	 	<div class="col-md-11">
+	 		<div ng-repeat="answer in content.answer">
+	 			
+	 			<div class="row media-middle">
+		    		 <div ng-if="true == answer.choose" >
+		    		 	 
+				          
+				         <div class="col-md-10  true-highlighted">
+				        	
+				        	<span > <img  ng-src="/images/getSubImage?id={{answer.id}}" alt="{{answer.label}}" height="15%" width="15%"/> </span>
+				        </div>
+				         <div class="col-md-2  true-highlighted">  
+				         	
+				        	<img ng-if="1 == answer.result" src="../img/survey/true.png" class="img-circle"/> <img ng-if="0 == answer.result"  src="../img/survey/false.png" class="img-circle"/>
+				        </div>
+				         
+				     </div>
+				     <div ng-if="true != answer.choose">
+				      
+				       <div class="col-md-12">      
+				        <span > <img  ng-src="/images/getSubImage?id={{answer.id}}" alt="{{answer.label}}" height="15%" width="15%"/> </span>
+				        </div>
+				     </div>
+				     </div> 
+	 				
+	 				<br/>
+		    </div>
+	 	</div>
+ 	</div>
+	
+	
+	
+	
+	
+	
+	 
+ 
+</div>
+
+
+
+<script>
+$(document).ready(function(){
+ 	 
+   
+    $("#right").tooltip({
+        placement : 'right'
+    });
+});
+</script>
+</body>
+</html>
+ 

@@ -9,7 +9,17 @@
 
 <div class="highlight"> 
 <br/>
-<span class="head_question">{{content.seq}}. &nbsp;&nbsp;{{content.question}}</span>
+<span class="head_question">{{content.seq}}. &nbsp;&nbsp;{{content.question}} - {{content.image}}</span>
+
+	<div class="row" ng-if="content.image == 1">
+	 	<div class="col-md-1">
+	 		 
+	 	</div>
+	 	
+	 	<div class="col-md-11" >
+	 		<img  ng-src="/images/getImage?id={{content.id}}" alt=""  height="70%" width="70%"/>
+	 	</div>
+ 	</div>
 	<!-- <div class="row">
 	 	<div class="col-md-1">
 	 		<h2><span>{{content.seq}}.</span></h2>
