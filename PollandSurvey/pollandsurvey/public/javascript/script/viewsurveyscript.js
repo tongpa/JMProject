@@ -353,7 +353,9 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     var checkboxTemplateFile = '/template/checkboxtpl.html';
 	     var imageTemplateFile = '/template/imagetpl.html';
 	     
+	     /**for view Result*/
 	     var viewimageTemplageFile = '/template/viewradiotpl.html';
+	     var viewimageTemplateFile = '/template/viewimagetpl.html';
 	      
 	     
 	     var getTemplate = function(contentType) {
@@ -361,19 +363,27 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	          
 	         switch(contentType) {
 	             case 'radio':
+	            	 console.log('radio');
 	                 template = radioTemplateFile;
 	                 
 	                 
 	                 break;
 	             case 'check':
+	            	 console.log('check');
 	                 template = checkboxTemplateFile;
 	                 break;
 	             case 'image':
+	            	 console.log('image');
 	                 template = imageTemplateFile;
 	                 break;
 	             case 'viewradio' :
+	            	 console.log('viewradio');
 	            	 template = viewimageTemplageFile;
 	            	 break;
+	            	 
+	             case 'viewimage' :
+	            	 console.log('viewimage');
+	            	 template = viewimageTemplateFile;
 	         }
 
 	         return template;
