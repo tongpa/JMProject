@@ -782,8 +782,8 @@ class SurveyController(BaseController):
                         sendmail  = SendMailService();
                         sendmail.sentEmail(self.emailValues, template);
                         
-                        #self.sendmail.sended_date = datetime.now();
-                        #self.sendmail.status = 'F';
+                        self.sendmail.sended_date = datetime.now();
+                        self.sendmail.status = 'F';
                        
                         
                     

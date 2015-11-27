@@ -9,14 +9,42 @@
 </head>
 
 <body>
-  <h1>Error ${code}</h1>
 
-<?python
+<div class="main">
+      <div class="container">
+        <!-- BEGIN SIDEBAR & CONTENT -->
+        <div class="row margin-bottom-20">
+          <!-- BEGIN CONTENT -->
+          <div class="col-md-12 col-sm-12">
+            <div class="content-page page-404">
+               <div class="number"> ${code} </div>
+               <div class="details">
+                  <h3>Oops!  You're lost.</h3>
+                  <p>
+                  <?python
 import re
 mf = re.compile(r'(</?)script', re.IGNORECASE)
 def fixmessage(message):
     return mf.sub(r'\1noscript', message)
-?>
-  <div>${XML(fixmessage(message))}</div>
+	?>
+	<div>${XML(fixmessage(message))}</div>
+ 
+                     <a href="${tg.url('/')}" class="link">Return home</a> or try the search bar below.
+                  </p>
+               </div>
+            </div>
+          </div>
+          <!-- END CONTENT -->
+        </div>
+        <!-- END SIDEBAR & CONTENT -->
+      </div>
+    </div>
+    
+ 
+ 
+ 
+  
+
+
 </body>
 </html>

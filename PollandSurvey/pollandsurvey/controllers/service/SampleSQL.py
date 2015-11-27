@@ -38,22 +38,26 @@ logging.basicConfig(level=logging.INFO,
 
 class DoCheckin(threading.Thread):
     
-    def __init__(self,limit=1,offset=0,group=None, target=None, name=None, verbose=None):
+    def __init__(self,limit=1,offset=0, group=None, target=None, name=None, verbose=None):
         threading.Thread.__init__(self, group=group, target=target, name=name,verbose=verbose);
+        
+         
+        self.urlDatabase = config['sqlalchemy.url'] ;
         self.__getConnection();
         
-        self.SMTP_SERVER = "smtp.gmail.com" ;
-        self.SMTP_PORT= "587" ;
-        self.SMTP_USER = "padungsandy@gmail.com" ;
-        self.SMTP_PASSWORD = "tong1234";
+        self.SMTP_SERVER = config['smtp_server'] # "smtp.gmail.com" ;
+        self.SMTP_PORT= config['smtp_port'] ;
+        self.SMTP_USER = config['smtp_user'] ;
+        self.SMTP_PASSWORD = config['smtp_password'] ;
         
         self.LIMIT = limit;
         self.OFFSET = offset;
-        
+        self.setLoop = True;
          
         
     def __getConnection(self):
-        self.some_engine = create_engine("mysql://sa:sa@localhost:3306/pollandsurvey?charset=utf8&use_unicode=0" , echo=False );
+        self.some_engine =create_engine(self.urlDatabase , echo=False ); 
+        #create_engine("mysql://sa:sa@localhost:3306/pollandsurvey?charset=utf8&use_unicode=0" , echo=False );
         # create a configured "Session" class
         ##self.Session = sessionmaker(bind=self.some_engine)
         Session = sessionmaker( )
@@ -128,10 +132,23 @@ class DoCheckin(threading.Thread):
         
             
     def run(self):
-        logging.info('running with %s and %s', self.LIMIT, self.OFFSET)
-        logging.info(self.isAlive());
-        self.query(self.LIMIT,self.OFFSET);
-        pass;
+        count =0
+        self.limit = 100;
+        row =0
+        while (self.setLoop):
+            logging.info('running with %s and %s', self.LIMIT, self.OFFSET)
+            logging.info(self.isAlive());
+            self.query(self.LIMIT,self.OFFSET);
+            print row
+            row = row +1;
+            
+            time.sleep(30) 
+        
+         
+         
+    
+    
+            
 """        
 for i in [1,2]:
     print i;    

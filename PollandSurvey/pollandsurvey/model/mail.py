@@ -32,7 +32,7 @@ class SendMail(DeclarativeBase):
     
     subject = Column(String(255) )
     content = Column(Text )
-    status= Column(String(1) )
+    status= Column(String(1) )  #W = wait, S = Send
     
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     send_date =  Column(DateTime, default=datetime.now); 
@@ -50,7 +50,7 @@ class SendMail(DeclarativeBase):
         self.receive = receive;
         self.subject = subject;
         self.content = content; 
-        self.status = 'S';
+        self.status = 'W';
         
     def __str__(self):
         return '"%s"' % (self.position )

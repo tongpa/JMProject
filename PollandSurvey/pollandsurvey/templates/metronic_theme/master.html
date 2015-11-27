@@ -118,7 +118,8 @@
             <div class="row">
                 <!-- BEGIN TOP BAR LEFT PART -->
                 <div class="col-md-6 col-sm-6 additional-shop-info">
-                     
+                   <a  class="site-logo-custom" href="${tg.url('/')}">
+        <img src="${tg.url('/img/jm_logo.png')}" height="20" alt="Pollsurfvey"/> PollSurfvey  </a>
                 </div>
                 <!-- END TOP BAR LEFT PART -->
                 <!-- BEGIN TOP BAR MENU -->
@@ -163,11 +164,11 @@
         </div>        
     </div>
     <!-- END TOP BAR -->
+    
     <!-- BEGIN HEADER -->
     <div class="header">
       <div class="container">
-      <a class="site-logo" href="${tg.url('/')}">
-        <img src="${tg.url('/img/jm_logo.png')}" height="20" alt="Pollsurfvey"/> PollSurfvey </a>
+      
         
          
 
@@ -176,15 +177,29 @@
         <!-- BEGIN NAVIGATION -->
         <div class="header-navigation pull-right font-transform-inherit">
           <ul>
+          	
+          
            <li py:if="request.identity"><a href="${tg.url('/home')}"><span lang="th"> Home</span></a></li>
            <li py:if="request.identity"><a href="${tg.url('survey')}"><span lang="th"> Survey</span></a></li>
-            <li><a href="/about" >About</a></li>
-            <li><a href="onepage-index.html" >How It Work</a></li>
-            <li><a href="onepage-index.html" >Example</a></li>
-            <li><a href="onepage-index.html" >Pricing</a></li>
+            <li><a href="${tg.url('/about')}" >About</a></li>
+            <li><a href="${tg.url('/howitwork')}">How It Work</a></li>
+            
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">
+                Example 
+                <i class="fa fa-angle-down"></i>
+              </a>
+                
+              <ul class="dropdown-menu">
+                <li><a href="${tg.url('/examplepoll')}">Poll</a></li>
+                <li><a href="${tg.url('/examplesurvey')}">Survey</a></li>
+                <li><a href="${tg.url('/exampleexam')}">Exam</a></li>
+              </ul>
+            </li>
+              <!--<li><a href="onepage-index.html" >Pricing</a></li>
             
 
-            <!-- BEGIN TOP SEARCH -->
+ 
             <li class="menu-search">
               <span class="sep"></span>
               <i class="fa fa-search search-btn"></i>
@@ -199,7 +214,7 @@
                 </form>
               </div> 
             </li>
-            <!-- END TOP SEARCH -->
+           END TOP SEARCH -->
           </ul>
         </div>
         <!-- END NAVIGATION -->
@@ -232,8 +247,22 @@
         <div class="row">
           <!-- BEGIN COPYRIGHT -->
           <div class="col-md-6 col-sm-6 padding-top-10">
-            Copyright © PollSurfvey 2015 <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+            Copyright © PollSurfvey 2015 <a href="${tg.url('/policy')}">Privacy Policy</a> | <a href="${tg.url('/service')}">Terms of Service</a>
           </div>
+          <div  class="fb-like"  data-share="true"  data-width="450"   data-show-faces="true"></div>
+          
+          
+          <script>
+			  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
+			  ga('create', 'UA-70386806-1', 'auto');
+			  ga('send', 'pageview');
+			
+			</script>
+          
           <!-- END COPYRIGHT -->
           <!-- BEGIN PAYMENTS  
           <div class="col-md-6 col-sm-6">
@@ -258,6 +287,51 @@
   
  
     <!-- BEGIN RevolutionSlider -->
+    
+    
+    
+    <script type="text/javascript">
+    /**facebook*/
+    window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '798971426913505',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+      /**facebook*/
+    
+    
+    
+        jQuery(document).ready(function() {
+             
+            $.backstretch([
+             		      //  "/theme/metronic/assets/admin/pages/media/bg/1.jpg" ,
+                 		    "/theme/metronic/assets/admin/pages/media/bg/2.jpg"
+                 		  //  "/theme/metronic/assets/admin/pages/media/bg/3.jpg",
+                 		  //  "/theme/metronic/assets/admin/pages/media/bg/4.jpg"
+             		        ]
+             	       	
+             	       		/*
+             	       		 , {
+             		          fade: 1000,
+             		          duration: 8000
+             		    	}
+             	       		 */
+             	       	
+             	       	);
+            
+        });
+    </script>
+ 
  
 </body>
 </html>

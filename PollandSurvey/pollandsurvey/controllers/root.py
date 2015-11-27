@@ -17,7 +17,7 @@ from pollandsurvey.lib.base import BaseController
 from pollandsurvey.controllers.error import ErrorController
 
 
-from pollandsurvey.controllers.service import SendMailService, RegisterService, SendMail, DoCheckin,ConvertHtml2Pdf
+from pollandsurvey.controllers.service import SendMailService, RegisterService,  DoCheckin,ConvertHtml2Pdf
 from pollandsurvey.controllers.utility import Utility
 
 from pollandsurvey.controllers.register import RegisterController,AccountController, AccountSysController;
@@ -31,7 +31,7 @@ from pollandsurvey.controllers.answercontroller import AnswerController;
 from pollandsurvey.controllers.listsurvey import ListSurveyController
 
 from pollandsurvey.controllers.interfaceservicecontroller import InterfaceServiceController
- 
+from pollandsurvey.controllers.sendmailcontroller import SendMailController
 
 from tg import tmpl_context
 from pollandsurvey.widget.movie_form import create_movie_form 
@@ -83,12 +83,16 @@ class RootController(BaseController):
     home = ListSurveyController();
     voter = VoterController();
     
+    sendMailC = SendMailController();
+    
     #acc = AccountSysController();
     
     
     webservice = InterfaceServiceController();
     
     def __init__(self):
+        
+        self.DEPLOY_DIR = config['path_upload_file_deploy'] ;
         self.sendMailService = SendMailService();
         self.registerService = RegisterService();
         self.utility = Utility();
@@ -102,6 +106,8 @@ class RootController(BaseController):
         
     def _before(self, *args, **kw):
         tmpl_context.project_name = "pollandsurvey"
+    
+    
     
     @expose('pollandsurvey.templates.metronic')
     def index(self, came_from=lurl('/')):
@@ -145,6 +151,9 @@ class RootController(BaseController):
         return dict(page='about', login_counter=str(1),
                     came_from=came_from) 
         
+    @expose('pollandsurvey.templates.howitwork')
+    def howitwork(self, came_from=lurl('/')):
+        return dict(page='howitwork', login_counter=str(1),came_from=came_from) 
     
     @expose('pollandsurvey.templates.policy')
     def policy(self, came_from=lurl('/')):
@@ -166,7 +175,21 @@ class RootController(BaseController):
         
         return dict(page='about', login_counter=str(1),came_from=came_from)
     
-
+    @expose('pollandsurvey.templates.example.examplepoll')
+    def examplepoll(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
+    
+    @expose('pollandsurvey.templates.example.examplesurvey')
+    def examplesurvey(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
+    
+    @expose('pollandsurvey.templates.example.exampleexam')
+    def exampleexam(self, came_from=lurl('/')):
+        
+        return dict(page='about', login_counter=str(1),came_from=came_from)
+    
     @expose('pollandsurvey.templates.environ')
     @require(predicates.has_permission('manage', msg=l_('Only for managers')))
     def environ(self):
@@ -513,52 +536,7 @@ class RootController(BaseController):
         
         return dict(historys = '1');
     
-    @expose('json')
-    def sendMailUser(self):
-        
-        #tSendMail = SendMail();
-        #tSendMail.executeMail();
-        ##tSendMail.start();
-        
-        checkin = DoCheckin();
-        checkin.start();
-         
-        return dict(historys = '1');
-    
-    @expose('json')
-    def sendMail(self):
-        log.info("send main")
-        from tgext.mailer import Message, get_mailer, Attachment
-        from tgext.mailer.mailer import Mailer
-        
-        body = Attachment(data="hello, arthur",
-                  transfer_encoding="quoted-printable")
-        html = Attachment(data="<p><H1>hello</H1>, arthur <br> I test. <b>send mail</b></p>",
-                  transfer_encoding="quoted-printable")
-        
-        message = Message(subject="hello world",
-                  sender="Poll",  #tongpama@gmail.com
-                  recipients=["jmperson1@hotmail.com"],
-                  html="<p><H1>hello</H1>, arthur <br> I test. <b>send mail</b></p>" 
-                  )
-        
-        #mailer = get_mailer(request)
-        
-        
-        
-        mailer = Mailer(host="smtp.gmail.com",
-                 port= "587", 
-                 username="padungsandy@gmail.com",
-                 password="tong1234",
-                 tls=True )
-        
-        #mailer.host = "smtp.gmail.com"
-        # mailer.port = "587"
-        #mailer.username = "padungsandy@gmail.com"
-        #mailer.password = "tong1234"
-        
-        mailer.send(message)
-        return dict(historys = '1');
+      
          
     @expose('json') 
     def showpassword(self,came_from=lurl('/')):
@@ -657,7 +635,7 @@ class RootController(BaseController):
         data = fileUpload.file.read();
         file_name=  fileUpload.filename
         
-        target_file_name = "c:\\temp\\"+ file_name;  
+        target_file_name = self.DEPLOY_DIR + file_name;  
         
         f = open(target_file_name, 'wb')
         f.write(data)
@@ -665,6 +643,17 @@ class RootController(BaseController):
         
         return dict(page='uploadfile')
     
+    @expose('json')
+    def checkSession(self):
+        reload(sys).setdefaultencoding('utf8')
+        self.success = True
+        if not request.identity:
+            self.success = False
+            
+        return dict(success = self.success)
+    
+ 
+     
     
     """
     @expose('pollandsurvey.templates.login')

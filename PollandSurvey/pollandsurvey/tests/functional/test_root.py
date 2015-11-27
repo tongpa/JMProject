@@ -32,7 +32,7 @@ class TestRootController(TestController):
         # and then uncomment the next two lines)
 
         # links = response.html.findAll('a')
-        # print links
+        # print(links)
         # ok_(links, "Mummy, there are no links here!")
 
     def test_environ(self):
@@ -43,13 +43,16 @@ class TestRootController(TestController):
     def test_data(self):
         """The data display demo works with HTML"""
         response = self.app.get('/data.html?a=1&b=2')
-        response.mustcontain("<td>a</td>", "<td>1</td>",
-                             "<td>b</td>", "<td>2</td>")
+        response.mustcontain("<td>a", "<td>1",
+                             "<td>b", "<td>2")
 
     def test_data_json(self):
         """The data display demo works with JSON"""
         resp = self.app.get('/data.json?a=1&b=2')
-        ok_(dict(page='data', params={'a':'1', 'b':'2'}) == resp.json, resp.json)
+        ok_(
+            dict(page='data', params={'a': '1', 'b': '2'}) == resp.json,
+            resp.json
+        )
 
     def test_secc_with_manager(self):
         """The manager can access the secure controller"""

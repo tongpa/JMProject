@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Survey Controller"""
 
-from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate
+from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context,validate,session
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tg.exceptions import HTTPFound
 from tg import predicates
@@ -92,8 +92,9 @@ class ScriptModelController(BaseController):
             
     @expose('json')
     def getOptionsProject(self, *args, **kw):
-        pid = kw.get('projectid');
         
+        pid = kw.get('projectid');
+         
         self.page = kw.get('page');
         self.start = kw.get('start');
         self.limit = kw.get('limit');    
@@ -160,7 +161,7 @@ class ScriptModelController(BaseController):
     def getInvitationData(self, *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
        
-        
+         
         self.page = kw.get('page');
         self.start = kw.get('start');
         self.limit = kw.get('limit');   
@@ -189,6 +190,8 @@ class ScriptModelController(BaseController):
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def getInvitationNumberData(self, *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
+        
+         
         user =  request.identity['user'];
         self.idOption = kw.get('idOption');
         self.page = kw.get('page');

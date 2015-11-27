@@ -378,18 +378,18 @@
 		</div>
 		<div class="form-group">
 			<label>
-			<input type="checkbox" name="tnc"/> I agree to the <a href="#">
-			Terms of Service </a>
-			and <a href="#">
+			<input type="checkbox" name="tnc"/> I agree to the <a href="${tg.url('/policy')}">
 			Privacy Policy </a>
+			and <a href="${tg.url('/service')}">
+			Terms of Service </a> 
 			</label>
 			<div id="register_tnc_error">
 			</div>
 		</div>
 		<div class="form-actions">
-			<button id="register-back-btn" type="button" class="btn">
+			<button id="register-back-btn" type="reset" class="btn">
 			<i class="m-icon-swapleft"></i> Clear </button>
-			<button type="submit" id="register-submit-btn" class="btn blue pull-right"> <!--   -->
+			<button type="submit" id="register-submit-btn" class="btn blue pull-right"> <!--  type="button"  -->
 			Sign Up <i class="m-icon-swapright m-icon-white"></i>
 			</button>
 		</div>
