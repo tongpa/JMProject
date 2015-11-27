@@ -16,7 +16,7 @@ var Account = function () {
 		function format(state) {
 			console.log(state);
             if (!state.id) return state.text; // optgroup
-            return "<img class='flag' src='/theme/metronic/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+            return "<img class='flag' src='/theme/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
         }
 		$("#select2_sample4").select2({
 		  	placeholder: '<i class="fa fa-map-marker"></i>&nbsp;Select a Country',
@@ -53,7 +53,7 @@ var Account = function () {
 		//////////////
 		function formatLanguage(state) {
             if (!state.id) return state.text; // optgroup
-            return "<img class='flag' src='/theme/metronic/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+            return "<img class='flag' src='/theme/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
 			
 			
         }

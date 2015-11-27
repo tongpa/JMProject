@@ -6,7 +6,7 @@ var Register = function () {
 
 		function format(state) {
             if (!state.id) return state.text; // optgroup
-            return "<img class='flag' src='/theme/metronic/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
+            return "<img class='flag' src='/theme/assets/global/img/flags/" + state.id.toLowerCase() + ".png'/>&nbsp;&nbsp;" + state.text;
         }
 
 		$("#select2_sample4").select2({
@@ -228,7 +228,7 @@ var Register = function () {
             
 	       	$.backstretch([
 	       	               "/img/survey/assets/bg/violett_flowers.jpg"
-    		    //"/theme/metronic/assets/admin/pages/media/bg/2.jpg" 
+    		    //"/theme/assets/global/pages/media/bg/2.jpg" 
 		        ] );
         }
 

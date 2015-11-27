@@ -61,7 +61,7 @@ var Activate = function () {
             
 	       	$.backstretch([
 		        
-    		    "/theme/metronic/assets/admin/pages/media/bg/2.jpg" 
+    		    "/theme/assets/global/pages/media/bg/2.jpg" 
 		        ] );
         }
 
