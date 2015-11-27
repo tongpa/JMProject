@@ -13,7 +13,7 @@ Ext.Loader.setConfig({
 });
 
 //Ext.Loader.setPath('Ext.ux', '/ux');
-
+//Ext.Loader.setPath('survey', '/javascript/survey');
 Ext.require([
              'Ext.*',
              'Ext.form.*',
@@ -27,13 +27,15 @@ Ext.require([
              'Ext.state.*', 
              'Ext.Msg.*', 
              'Ext.ux.form.ItemSelector', 
-             'Ext.ux.grid.column.UploadFile',
+             'Ext.ux.grid.column.UploadFile' 
              
              //'survey.model.ListOptionTheme',
              
              //'survey.store.MasterStore',
              //'survey.store.ListOptionThemeStore',
              
+             
+             /*
              'survey.view.pvoters.ListVoters',
              'survey.view.pvoters.SelectVoters',
              'survey.view.pvoters.VotersView',
@@ -75,7 +77,7 @@ Ext.require([
              'survey.panel.ManageVariable',
              'survey.panel.ManageQuestion',
              'survey.panel.ManageProject',
-             'survey.panel.ManageTrackRespondents'
+             'survey.panel.ManageTrackRespondents'*/
              
              
             
@@ -87,7 +89,7 @@ Ext.tip.QuickTipManager.init();
 
 Ext.application({
     name: 'survey',
-   
+    appFolder: '/javascript/survey',
     launch: function() {
     	Ext.tip.QuickTipManager.init();
     	
@@ -249,6 +251,8 @@ Ext.application({
 				    	
 				    	manage_question.setLoad(record);
 				    	manage_option.setLoad(record);
+				    	manage_sendInvitation.setLoad(record);
+				    	manage_trackRespondets.setLoad(record);
 				    	
 						tab_project.add(panel_manage).show();
 					

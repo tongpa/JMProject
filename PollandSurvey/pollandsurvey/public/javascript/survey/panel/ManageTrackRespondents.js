@@ -1,7 +1,3 @@
-
- 
-
-
 Ext.define('survey.panel.ManageTrackRespondents',{
 	//extend : 'Ext.panel.Panel', 	 
 	extend : 'Ext.form.Panel',
@@ -19,6 +15,25 @@ Ext.define('survey.panel.ManageTrackRespondents',{
     
     isCreate : true,
     parentForm : null,
+    setLoad : function (projectRecord,page){
+    	
+    	page = typeof page !== 'undefined' ? page : 1;
+    	
+    	this.projectid = '';
+    	this.record = projectRecord;
+    	if (projectRecord != null && projectRecord.id != null) {
+    		
+    		this.projectid = projectRecord.id;
+    		 
+    		this.store1.loadPage(page,{
+				params : {
+	    			projectid : projectRecord.id
+	    		},
+	    		scope : this
+			});
+    	}
+    	
+    },
     initComponent: function() {
 		
 		var main = this;
@@ -33,17 +48,12 @@ Ext.define('survey.panel.ManageTrackRespondents',{
 	            	}
 				} } );
 		
-		main.tbar =  [{
-            xtype:'combobox',
-            name : 'id_question_theme',
+		main.listPublication  = Ext.create('survey.view.customs.CustomCombobox',{
+			name : 'id_question_theme',
 			fieldLabel : survey.label.create_publication,
-			store: main.store1,
-			queryMode: 'local',
+			store: main.store1, 
 			displayField: 'name_publication',
 			valueField: 'id_question_option',
-			editable : false,
-			 
-			allowBlank : false,
 			listeners:{
 		         scope: main,
 		         'select': function ( combo, records, eOpts ){
@@ -59,10 +69,18 @@ Ext.define('survey.panel.ManageTrackRespondents',{
 		        		 main.panel.reloadData( recordSelected.get('id_question_option') );
 		        		 recordSelected = null;
 		        	 }
+		         },
+		         changeDataValue :function(paging,page){
+		        	  
+		        	 
+		        	  
+		        	 main.setLoad(main.record,page);
 		         }
 		       
 		    }
-        }];
+				}  );
+		
+		main.tbar =  [main.listPublication];
 		  
 		main.items = [main.panel ];
 		

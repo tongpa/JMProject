@@ -51,6 +51,8 @@ Ext.define('survey.view.poption.ListPublicationOption',{
     onBeforeChange : function(paging,page,opt){
     	var main = this;
     	main.fireEvent('changeDataValue', paging,page); 
+    	console.log(paging);
+    	console.log(page);
 		return false;
 	},
     initComponent : function(){
@@ -162,6 +164,33 @@ Ext.define('survey.view.poption.ListPublicationOption',{
             });
         }, 50);
         return Ext.String.format('<div id="{0}"></div>', id);
+    },
+    sendbuttonManage1 : function(value,m,r){
+    	var main = this;
+    	var id = Ext.id();
+    	
+    	var send_status = r.data.send_status;
+    	if(send_status == 0){
+	        Ext.defer(function () {
+	            Ext.widget('splitbutton', {
+	                renderTo: id,
+	                text: survey.label.send ,// + r.get('name'),
+	               // width: 75,
+	                handler: function () {
+	                	
+	                },
+	                menu: new Ext.menu.Menu({
+	                    items: [
+	                        // these will render as dropdown menu items when the arrow is clicked:
+	                        {text: 'Item 1', handler: function(){ alert("Item 1 clicked"); }},
+	                        {text: 'Item 2', handler: function(){ alert("Item 2 clicked"); }}
+	                    ]
+	                })
+	            });
+	        }, 50);
+    	}
+    	
+    	return Ext.String.format('<div id="{0}"></div>', id);
     },
     sendbuttonManage : function(value,m,r){
     	var main = this;

@@ -114,12 +114,21 @@ Ext.define('survey.MasterStore',{
     	}  ,
 		listeners: {
             exception: function(proxy, response, operation){
-                Ext.MessageBox.show({
+            	//debugger;
+               /* Ext.MessageBox.show({
                     title: 'REMOTE EXCEPTION',
                     msg: operation.getError(),
                     icon: Ext.MessageBox.ERROR,
                     buttons: Ext.Msg.OK
                 });
+                */
+                
+            	Ext.MessageBox.alert('Time out','Session Time out', function(){
+            		window.location = "/login";
+            		
+            	});
+            	 
+                
             } 
         }
 	}
