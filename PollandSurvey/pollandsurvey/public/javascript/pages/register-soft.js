@@ -203,8 +203,9 @@ var Register = function () {
 
 	        jQuery('#register-back-btn').click(function () {
 	        	console.log('register back');
-	        	//$('.register-form')[0].reset();
-	        	$('.register-form').clearForm();
+	        	 
+	        	
+	        	//$('.register-form').clearForm();
 	        	/* 
 	        	$('.register-form input').each(function(){
 					$(this).val('');
