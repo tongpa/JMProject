@@ -8,39 +8,89 @@
     <title>How It Work</title>
  
   </head>
- <body>
+ <body  class="corporate">
  <div class="main">
  <div class="container">
- 	<div class="row service-box margin-bottom-20">
- 		<div class="content-page">
- 			 
-			<div class="row">
-                <div class="content-page page-404">
-               <div class="number"> <img src='/img/show-hand.png'/> </div>
-               <div class="details">
-                  <h2>Create an account</h2>
-                 
-                  	 <p><i class="fa fa-check-square-o fa-lg" style="color:green"> Create poll, survey, exam easy to build </i> </p>
-                  	<p><i class="fa fa-check-square-o fa-lg" style="color:green"> Easy Create From</i> </p>
-                  	<p><i class="fa fa-check-square-o fa-lg" style="color:green"> Basic Question Type</i> </p>
-                  	<p><i class="fa fa-check-square-o fa-lg" style="color:green"> Create Invitation Template</i> </p>
-                  	<p><i class="fa fa-check-square-o fa-lg" style="color:green"> Manage Publication</i> </p>
-                  	<p><i class="fa fa-check-square-o fa-lg" style="color:green"> View Result</i></p>
-                  	  
- 
-                      
-                   
-               </div>
-            </div>
-            </div>
-		
 		 
+ 	
+ 	<div class="row service-box margin-bottom-20">
+ 		<div class="col-md-12 col-sm-12">
+	 		<div class="content-page">
+	 			
+	 			<div class="col-md-7 ">
+	 				<div class="details">
+	                  <h2>Create an account</h2>
+	                  <div class="row front-lists-v1">
+	                    <div class="col-md-12">
+	                      <ul class="list-unstyled margin-bottom-20">
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> Create poll, survey, exam easy to build</li>
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> Easy Create From </li>
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> Basic Question Type</li>
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> Create Invitation Template</li>
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> Manage Publication</li>                        
+	                        <li><i class="fa fa-check-square-o" style="color:green"></i> View Result</li>
+	                      </ul>
+	                    </div>
+                  	  </div>
+                    </div>
+	 			</div>
+	 			
+	 			<div class="col-md-5 front-carousel">
+	 				<div id="myCarousel" class="carousel slide">
+	 					<div class="carousel-inner">
+	 						<div class="item active">
+		                        <img src="/img/show-hand.png" alt=""></img>
+		                        
+		                      </div>
+	 					</div>
+	 				</div>
+	 			</div>
+	 			 
+			 
+			</div>
 		</div>
  	</div>
  	
- 	
  
  </div>
  </div>
+<!-- Load javascripts at bottom, this will reduce page load time -->
+    <!-- BEGIN CORE PLUGINS (REQUIRED FOR ALL PAGES) -->
+    <!--[if lt IE 9]>
+    <script src="${tg.url('/theme/assets/global/plugins/respond.min.js')}"></script>
+    <![endif]--> 
+    <script src="${tg.url('/theme/assets/global/plugins/jquery-1.11.0.min.js')}" type="text/javascript"></script>
+    <script src="${tg.url('/theme/assets/global/plugins/jquery-migrate-1.2.1.min.js')}" type="text/javascript"></script>
+    <script src="${tg.url('/theme/assets/global/plugins/bootstrap/js/bootstrap.min.js')}" type="text/javascript"></script>      
+    <script src="${tg.url('/theme/assets/frontend/layout/scripts/back-to-top.js')}" type="text/javascript"></script>
+    <!-- END CORE PLUGINS -->
+	
+ 
+
+    
+	
+	<script src="${tg.url('/theme/assets/global/scripts/metronic.js')}" type="text/javascript"></script>
+    <script src="${tg.url('/theme/assets/frontend/layout/scripts/layout.js')}" type="text/javascript"></script>
+   <!--   <script src="${tg.url('/theme/assets/admin/layout/scripts/layout.js')}" type="text/javascript"></script> -->
+
+    <script type="text/javascript">
+     
+    
+        jQuery(document).ready(function() {
+        	Metronic.init();
+            Layout.init();    
+             
+      
+           // Layout.initTwitter();
+        
+            
+       		  Languages.init();
+            
+          
+            
+        });
+    </script>
+    <!-- END PAGE LEVEL JAVASCRIPTS -->
+    
   </body>
 </html>
