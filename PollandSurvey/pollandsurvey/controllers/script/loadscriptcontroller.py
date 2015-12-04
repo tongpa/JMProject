@@ -49,8 +49,7 @@ class ScriptController(BaseController):
     #@expose(content_type = 'text/plain; charset=UTF-8')#charset=windows-874')
     @expose(content_type="text/javascript; charset=UTF-8")
     def loadLang(self, lang=None ,**kw):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding('utf8')
         language = "en";
         if( lang is not None):
             language = lang;

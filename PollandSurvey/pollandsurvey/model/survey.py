@@ -984,7 +984,7 @@ class BasicQuestion(DeclarativeBase):
             
             #data = DBSession.query(BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type).join(BasicData).join(BasicDataType).join(BasicTextData).filter(cls.id_question == str(id)).all(); 
             
-            data =  DBSession.query(cls.id_question,cls.score,cls.answer,BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).join(BasicTextData).join(BasicDataType).filter(cls.id_question == str(id)).all();
+            data =  DBSession.query(cls.id_question,cls.score,cls.answer,BasicTextData.id_basic_data,BasicTextData.value,BasicTextData.multi_line,BasicDataType.description,BasicDataType.id_basic_data_type ).join(BasicData).outerjoin(BasicTextData).join(BasicDataType).filter(cls.id_question == str(id)).all();
             
             
             #datad = BasicQuestion()._convertBasicTextToJson( data);

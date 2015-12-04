@@ -306,13 +306,15 @@ class AnswerController(BaseController):#RestController): #
                     self.idQuestion = value.get('id');
                     self.values = value.get('value');
                     
-                    self.questionOption,self.redirect = self.__checkOptionExpired(self.idPublic,False);
+                    print value.get('type');
+                    
+                    self.questionOption,self.redirect = self.__checkOptionExpired(self.idPublic,False);#check Expired
             
-                    self.respondent,self.redirect = self.__checkRespondentFinished( None,  None,self.idResp,False);
+                    self.respondent,self.redirect = self.__checkRespondentFinished( None,  None,self.idResp,False);#check finished
                     
                     if(self.respondent):
-                        self.question = model.Question.getById(self.idQuestion);
-                        
+                        self.question = model.Question.getById(self.idQuestion);#getQuestion
+                         
                         self.respondent.finished = self.finished;
                         self.respondent.finished_date = datetime.now();
                         if(self.question):
@@ -330,8 +332,9 @@ class AnswerController(BaseController):#RestController): #
                                 #save
                                 for v in self.values:
                                     self.replyquestion = model.ReplyBasicQuestion(); 
-                                    self.replyquestion.id_resp_reply = self.respondentreply.id_resp_reply;
-                                    self.replyquestion.id_basic_data = v;
+                                    self.replyquestion.id_resp_reply = self.respondentreply.id_resp_reply; #error
+                                    self.replyquestion.id_basic_data = v.get('id')
+                                    self.replyquestion.answer_text = v.get('value')
                                     self.replyquestion.save();
                                  
                                     log.info("save answer replyquestion : " +str( self.respondentreply.id_resp_reply ) + " and " + str( self.replyquestion.id_basic_data ) + " success");
@@ -458,7 +461,7 @@ class AnswerController(BaseController):#RestController): #
     def __getQuestionFromReply(self,reply,questionOption):
         question = [];
         for re in reply:
-            re.question
+            #re.question
             question.append(re.question.to_json(randomAnswer= questionOption.random_answer));
         
         return question;

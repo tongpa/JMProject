@@ -43,8 +43,7 @@ class PreviewController(BaseController):
     @expose('pollandsurvey.templates.view.multiquestion')
     def index(self ,id=0,ready='no' , came_from=lurl('/')):
         
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding('utf8')
         
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
@@ -115,8 +114,7 @@ class PreviewController(BaseController):
    
     @expose('pollandsurvey.templates.view.welcome')
     def welcome(self,id=0,came_from=lurl('/')):
-        reload(sys);
-        sys.setdefaultencoding("utf-8");
+        reload(sys).setdefaultencoding('utf8')
         
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
@@ -151,6 +149,8 @@ class PreviewController(BaseController):
     
     @expose('pollandsurvey.templates.view.singlequestion')
     def show(self ,id=0 , came_from=lurl('/')):
+        reload(sys).setdefaultencoding('utf8')
+        
         if not request.identity:
             login_counter = request.environ.get('repoze.who.logins', 0) + 1
             redirect('/login',   params=dict(came_from=came_from, __logins=login_counter))

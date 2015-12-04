@@ -55,6 +55,7 @@ class ListSurveyController(BaseController):
         tmpl_context.project_name = "pollandsurvey"
 
     @expose('pollandsurvey.templates.listsurvey.index')
+    #@expose('pollandsurvey.templates.surveyjs.index')
     def index(self, came_from=lurl('/')):
         
         if not request.identity:
@@ -70,7 +71,7 @@ class ListSurveyController(BaseController):
             groups = None;
             redirect('/survey');
         """        
-        return dict(page='metronic') 
+        return dict(page='home') 
     
     #def index(self, came_from=lurl('/'), *args, **kw):
         """Handle the front-page."""

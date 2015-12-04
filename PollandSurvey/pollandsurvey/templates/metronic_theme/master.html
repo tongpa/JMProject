@@ -180,10 +180,10 @@
           <ul>
           	
           
-           <li py:if="request.identity"><a href="${tg.url('/home')}"><span lang="th"> Home</span></a></li>
-           <li py:if="request.identity"><a href="${tg.url('survey')}"><span lang="th"> Survey</span></a></li>
-            <li><a href="${tg.url('/about')}" >About</a></li>
-            <li><a href="${tg.url('/howitwork')}">How It Work</a></li>
+           <li class="${('', 'active')[value_of('page') == 'home']}" py:if="request.identity"><a href="${tg.url('/home')}"><span lang="th"> Home</span></a></li>
+           <li class="${('', 'active')[value_of('page') == 'survey']}" py:if="request.identity"><a href="${tg.url('/survey')}"><span lang="th"> Survey</span></a></li>
+           <li class="${('', 'active')[value_of('page') == 'about']}" ><a href="${tg.url('/about')}" >About</a></li>
+           <li class="${('', 'active')[value_of('page') == 'howitwork']}"><a href="${tg.url('/howitwork')}">How It Work</a></li>
             
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="#">

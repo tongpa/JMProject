@@ -45,6 +45,52 @@ class SurveyController(BaseController):
         tmpl_context.project_name = "pollandsurvey"
     
     
+    @expose('pollandsurvey.templates.surveyjs.index')
+    #@expose('pollandsurvey.templates.listsurvey.index')
+     
+    def listsetup(self, came_from=lurl('/'), *args, **kw):
+        """Handle the front-page."""
+        reload(sys).setdefaultencoding("utf-8");
+        
+        
+       
+        
+        if not request.identity:
+            log.warning("user cannot login, redirect to login");
+            login_counter = request.environ.get('repoze.who.logins', 0) + 1 
+            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
+            
+        
+        groups = request.identity['groups'] ;
+        
+        return dict(page='survey')
+    
+    
+    @expose('json')
+    def getProject(self, *args, **kw):
+        
+        self.page = kw.get('page');
+        self.pagesize = kw.get('pagesize');
+        
+        print ( "page : %s " %self.page);
+        print ( "page size : %s " %self.pagesize);
+        
+        user =  request.identity['user']; 
+        
+        quest_project = [];
+         
+        quest_project.append({'survey_name': "test1", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        quest_project.append({'survey_name': "test2", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        #quest_project.append({'survey_name': "test3", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        #quest_project.append({'survey_name': "test4", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        #quest_project.append({'survey_name': "test5", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        #quest_project.append({'survey_name': "test5", 'duration_date' :   '2015/10/01', 'survey_type' : 'exam', 'status' : 'Finish','url'  : 'localhost' })
+        
+        
+        
+        return dict(historys = quest_project,length = 6);
+    
+    
     @expose('pollandsurvey.templates.survey.samplegrid')
     @require(predicates.in_any_group('voter','managers', msg=l_('Only for voter')))
     def samplegrid(self, *args, **kw):
@@ -374,7 +420,7 @@ class SurveyController(BaseController):
            
             log.info("------------------------basic Data type----------------------------------" );
             log.info('self.id_question_type : ' + str(self.id_question_type)  + ' type : ' + type(self.id_question_type).__name__ ) ;
-            if (self.id_question_type == '1' or self.id_question_type == '2' or self.id_question_type == '3'):
+            if ( self.id_question_type in ['1','2','3','4','5','6','7'] ):
                 log.info("case text");
                 basicText = model.BasicTextData();
                 if (not self.isCreate ):

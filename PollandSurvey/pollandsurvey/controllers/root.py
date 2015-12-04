@@ -653,7 +653,6 @@ class RootController(BaseController):
         return dict(success = self.success)
     
  
-     
     
     """
     @expose('pollandsurvey.templates.login')

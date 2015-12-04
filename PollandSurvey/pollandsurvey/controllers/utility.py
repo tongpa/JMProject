@@ -249,6 +249,11 @@ class Utility(object):
  
 #datetime.strptime(  kw.get('activate_date')  + ' 00:00:00' , '%d/%m/%Y %H:%M:%S') ;
 
- 
+a = ['1','2','3','4','5','6']
+if '2' in a:
+    print '1';
+else:
+    print '-';
+     
 
 
