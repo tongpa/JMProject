@@ -352,30 +352,43 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     var radioTemplateFile = '/template/radiotpl.html';
 	     var checkboxTemplateFile = '/template/checkboxtpl.html';
 	     var imageTemplateFile = '/template/imagetpl.html';
+	     var textTemplateFile = '/template/texttpl.html';
+	     var textAreaTemplateFile = '/template/textareatpl.html';
+	     var textNumberTemplateFile = '/template/textnumbertpl.html';
 	     
 	     /**for view Result*/
-	     var viewimageTemplageFile = '/template/viewradiotpl.html';
-	     var viewimageTemplateFile = '/template/viewimagetpl.html';
-	      
+	     var viewimageTemplageFile = '/template/view/viewradiotpl.html';
+	     var viewimageTemplateFile = '/template/view/viewimagetpl.html';
+	     var viewtextTemplateFile = '/template/view/viewtexttpl.html';
+	     var viewtextAreaTemplateFile = '';
+	     var viewtextNumberTemplateFile = '';
+	     
 	     
 	     var getTemplate = function(contentType) {
 	         var template = '';
-	          
+	         
+	         console.log(contentType);
+	         
 	         switch(contentType) {
 	             case 'radio':
-	            	 console.log('radio');
 	                 template = radioTemplateFile;
-	                 
-	                 
 	                 break;
 	             case 'check':
-	            	 console.log('check');
-	                 template = checkboxTemplateFile;
+	            	 template = checkboxTemplateFile;
 	                 break;
 	             case 'image':
-	            	 console.log('image');
-	                 template = imageTemplateFile;
+	            	 template = imageTemplateFile;
 	                 break;
+	             case 'text':
+	            	 template = textTemplateFile;
+	                 break;
+	             case 'textarea':
+		        	 template = textAreaTemplateFile;
+	                 break;
+	             case 'textnumber':
+		        	 template = textNumberTemplateFile;
+	                 break;    
+	                 
 	             case 'viewradio' :
 	            	 console.log('viewradio');
 	            	 template = viewimageTemplageFile;
@@ -384,6 +397,13 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	             case 'viewimage' :
 	            	 console.log('viewimage');
 	            	 template = viewimageTemplateFile;
+	            	 break;
+	            	 
+	             case 'viewtext' :
+	            	 console.log('viewtext');
+	            	 template = viewtextTemplateFile;
+	            
+	              
 	         }
 
 	         return template;
@@ -401,31 +421,42 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     directive.link =    function($scope, $element, $attrs) {
 	    	 var same = false;
 	    	 var qnaObj = new Object();
+	    	 var ansObj = new Object();
 	    	 $scope.selectedScore = function(id, value, type, object){
 	    		    //Click answer
 	    		 	$scope.$parent.chooseAnswer(true); 
 	    		 	
+	    		 	console.log("value : " + value);
 	    		 	
 	    		 	qnaObj = new Object();
 	    		 	qnaObj.id = id;
 	    		 	qnaObj.idproject = $scope.$parent.idProject;
 	    		 	qnaObj.idresp = $scope.$parent.idResp;
 	    		 	qnaObj.value = [];
-	    		 	qnaObj.value.push(value);
+	    		 	//qnaObj.value.push(value== null ? object.selected_text:value );
 	    		 	qnaObj.type = type;
 	    		 	
-	    		 	console.log(qnaObj);
+	    		 	ansObj = new Object();
+	    		 	ansObj.id = value;
+	    		 	ansObj.value = object.selected_text;
+	    		 	
+	    		 	qnaObj.value.push(ansObj);
+	    		 	
 	    		 	
 	    		 	 
 	    		 	same = false;
-	    		 	angular.forEach( $scope.$parent.countQuestion, function(qna) {
+	    		 	var row = 0;
+	    		 	angular.forEach( $scope.$parent.lastQuestion, function(qna) {
+	    		 			console.log(row);
+	    		 			row = row +1;
 	    		          if( qna.id === id ) {
 	    		        	  same =true;
-	    		        	  
+	    		        	  console.log(qna);
 	    		        	  switch(type) {
 	    			             case 'radio':
 		    			            	 qna.value = [];
-		    			            	 qna.value.push(value);
+		    			            	 //qna.value.push(value);
+		    			            	 qna.value.push(ansObj);
 	    			            	 	break;
 	    			             case 'check':
 	    			            	 	var s = false;
@@ -445,22 +476,38 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	    			            	 	break;
 	    			             case 'image':
 	    			            	 qna.value = [];
-	    			            	 qna.value.push(value);
+	    			            	//qna.value.push(value);
+	    			            	 qna.value.push(ansObj);
+	    			                 break;
+	    			             case 'text':
+	    			            	 qna.value = [];
+	    			            	 value = object.selected_text;
+	    			            	 console.log(value);
+	    			            	//qna.value.push(value);
+	    			            	 qna.value.push(ansObj);
+	    			            	 //debugger;
 	    			                 break;
 	    			         } 
 	    		        	  
 	    		        	  
 	    		          }   
-	    		 	});	    		 	
+	    		 	});	    	
+	    		 	
 	    		 	if (!same) {
-	    		 		$scope.$parent.countQuestion.push(qnaObj);
+	    		 		console.log("not same");
+	    		 		console.log(qnaObj);
+	    		 		//$scope.$parent.countQuestion.push(qnaObj);
+	    		 		$scope.$parent.lastQuestion.push(qnaObj);
 	    		 		
 	    		 		$scope.$parent.updateQuestionsAttemptedCount();
 	    		 	}
-	    	//	 	console.log($scope.$parent.countQuestion);
+	    		 	//console.log($scope.$parent.countQuestion);
 	    		 	
-	    		 	$scope.$parent.lastQuestion.push(qnaObj);
-	    	//	 	console.log($scope.$parent.lastQuestion);
+	    		 	//$scope.$parent.lastQuestion.push(qnaObj);
+	    		 	
+	    		 	
+	    		 	
+	    		 	//console.log($scope.$parent.lastQuestion);
 	    		 	
 	    		 	
 	    		 	//debugger;
@@ -471,7 +518,7 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	     
 	     directive.controller = function($scope) {
 	         $scope.getTemplateUrl = function() {  
-	        	 console.log('gettemplate');
+	        	// console.log('gettemplate');
 	        	  
 	        	 if($scope.content == null)
 	        	 {
@@ -491,4 +538,23 @@ app.controller('TimerDemoController',  function ($scope,$log,setTimerService) {
 	   
 	});
 	
+	app.directive('restrictInput', [function(){
+
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var ele = element[0];
+                var regex = RegExp(attrs.restrictInput);
+                var value = ele.value;
+
+                ele.addEventListener('keyup',function(e){
+                    if (regex.test(ele.value)){
+                        value = ele.value;
+                    }else{
+                        ele.value = value;
+                    }
+                });
+            }
+        };
+    }]);    
  

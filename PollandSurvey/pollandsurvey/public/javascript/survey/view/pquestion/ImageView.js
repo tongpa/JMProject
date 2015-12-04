@@ -12,6 +12,9 @@ Ext.define('survey.view.pquestion.ImageView',{
         labelWidth: 100
     }, 
     setLoadData : function( questionrecord, questiontyperecord ){
+    	
+    	console.log("ImageView setLoadData");
+    	
     	var form = this;
     	form.record = questionrecord;
     	form.wrappedImage.setHidden(true);

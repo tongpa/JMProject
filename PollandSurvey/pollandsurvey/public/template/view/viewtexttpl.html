@@ -11,33 +11,37 @@
 <br/>	
 	<span class="head_question">{{content.seq}}.&nbsp;&nbsp;{{content.question}} </span> 
 	
-	<div class="row" ng-if="content.image == 1">
-	 	<div class="col-md-1">
-	 		 
-	 	</div>
-	 	
-	 	<div class="col-md-11" >
-	 		<img  ng-src="/images/getImage?id={{content.id}}" alt=""  height="70%" width="70%"/>
-	 	</div>
- 	</div>
- 	
 
 	<div class="row">
 	 	<div class="col-md-1">
 	 		<input type="hidden" name="question_{{content.id}}" value="{{content.id}}"/>
 	 	</div>
 	 	<div class="col-md-11"> <!-- style="padding-left:25px" -->
+	 	
+	 	
 	 		<div  ng-repeat="answer in content.answer">
-		    	<div class="radio">
-		    		 <label>
-		    		  
+	 			  
+		    		 <div class="row">
+		    		 <div ng-if="true == answer.choose" >
+		    		 	 
+				          
+				         <div class="col-md-10  true-highlighted">
+				        	<span> {{answer.label}} </span>
+				        </div>
+				         <div class="col-md-2  true-highlighted">  
+				        	<img ng-if="1 == answer.result" src="../img/survey/true.png" class="img-circle"/> <img ng-if="0 == answer.result"  src="../img/survey/false.png" class="img-circle"/>
+				        </div>
 				         
-				        <input name="radio_{{content.id}}" value="{{answer.id}}" ng-model="$parent.selected_text" ng-change="selectedScore(content.id,answer.id,'radio',this)"  type="radio"  required="required"/>    
-				        <span> {{answer.label}} </span>  
-				        
+				     </div>
+				     <div ng-if="true != answer.choose">
 				      
-				      </label>
-		    	</div>
+				       <div class="col-md-12">      
+				        <span> {{answer.label}} </span>
+				        </div>
+				     </div>
+				     </div> 
+				 
+		    	
 		    </div>
 	 	</div>
  	</div>

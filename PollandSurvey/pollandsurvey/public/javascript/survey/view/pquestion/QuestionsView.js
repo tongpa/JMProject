@@ -19,8 +19,12 @@ Ext.define('survey.view.pquestion.QuestionsView',{
     isCreate : true,
     parentForm : null,
     setLoadData : function (projectrecord,questionrecord, questiontyperecord,numberorder){
+    	console.log("QuestionsView setLoadData");
     	
-    	 
+    	console.log(projectrecord);
+    	console.log(questionrecord); 
+    	console.log(questiontyperecord); 
+    	console.log(numberorder); 
     	 
     	var form = this;
     	form.projectrecord = projectrecord;

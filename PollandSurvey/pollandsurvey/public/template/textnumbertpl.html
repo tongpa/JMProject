@@ -1,0 +1,60 @@
+ <html><head><meta http-equiv="content-type" content="text/html; charset=windows-1252"/></head>
+<body>
+<div class="zero-clipboard">
+	<span class="btn-clipboard"><button type="button" class="btn btn-default btn-xs"  aria-label="Center Align" id="right_{{content.id}}" data-placement="right" title="Tooltip on right">
+<span class="glyphicon glyphicon-info-sign"  aria-hidden="true"> </span> 
+</button></span>
+</div> 
+
+<div class="highlight"> 
+<br/> 	
+ 	<span class="head_question">{{content.seq}}.&nbsp;&nbsp;{{content.question}} </span> 
+	 
+ 	<div class="row" ng-if="content.image == 1">
+	 	<div class="col-md-1">
+	 		 
+	 	</div>
+	 	
+	 	<div class="col-md-11" >
+	 		<img  ng-src="/images/getImage?id={{content.id}}" alt=""  height="70%" width="70%"/>
+	 	</div>
+ 	</div>
+	    
+	
+ 	<div class="row">
+	 	<div class="col-md-1">
+	 		 <input type="hidden" name="question_{{content.id}}" value="{{content.id}}"/>
+	 	</div>
+	 	<div class="col-md-11">
+	  
+	 		<input restrict-input="^[-0-9]*[.]{0,1}[0-9]*$" maxlength="20" type="text" class="form-control" />
+	 		 
+	 		 
+	 		 
+	 		 
+	 	</div>
+ 	</div>
+	
+	
+	
+	
+	
+	
+	 
+ 
+</div>
+
+
+
+<script>
+$(document).ready(function(){
+ 	 
+   
+    $("#right").tooltip({
+        placement : 'right'
+    });
+});
+</script>
+</body>
+</html>
+ 

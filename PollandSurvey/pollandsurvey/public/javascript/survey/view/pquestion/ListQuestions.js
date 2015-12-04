@@ -124,7 +124,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                     
 		                } 
 		            },  '->',
-		            { // Save Button
+		            { // edit Button
 		            	iconCls : 'icon-edit'					                
 		                , style: 'margin-left: 5px;'
 		                ,text : survey.label.edit
@@ -138,7 +138,7 @@ Ext.define ('survey.view.pquestion.ListQuestions',{
 		                    //Ext.Msg.alert('Save', 'Save user: ' + record.data.question);
 		                }  
 		            }, '->',
-		            {
+		            {//move up
 		                iconCls: 'move-up',
 		                tooltip: survey.label.move_up,
 		                handler: function(grid,index,c,d,f,row){

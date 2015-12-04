@@ -24,8 +24,8 @@ Ext.define('survey.view.pquestion.WinQuestionsView',{
     },
     
     setLoadData : function(projectrecord,questionrecord, questiontyperecord,numberorder){
-     
     	
+    	console.log("WinQuestionsView setLoadData");
     	this.panelView.setLoadData(projectrecord,questionrecord, questiontyperecord,numberorder);
     },
     
