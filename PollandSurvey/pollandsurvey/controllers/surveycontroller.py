@@ -47,21 +47,13 @@ class SurveyController(BaseController):
     
     @expose('pollandsurvey.templates.surveyjs.index')
     #@expose('pollandsurvey.templates.listsurvey.index')
-     
+    @require(predicates.not_anonymous(  msg=l_('Only for Authen')))
     def listsetup(self, came_from=lurl('/'), *args, **kw):
         """Handle the front-page."""
         reload(sys).setdefaultencoding("utf-8");
         
         
-       
-        
-        if not request.identity:
-            log.warning("user cannot login, redirect to login");
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1 
-            redirect('/login', params=dict(came_from=came_from, __logins=login_counter))
-            
-        
-        groups = request.identity['groups'] ;
+        #groups = request.identity['groups'] ;
         
         return dict(page='survey')
     
@@ -134,13 +126,9 @@ class SurveyController(BaseController):
         return dict(page='index')
     
     @expose('json')
+    @require(predicates.not_anonymous(  msg=l_('Only for Authen')))
     def getProjectByUser(self, came_from=lurl('/'),*args, **kw):
         reload(sys).setdefaultencoding("utf-8");
-        
-        if not request.identity:
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
-                params=dict(came_from=came_from, __logins=login_counter))
         
         user =  request.identity['user']; 
         
@@ -222,19 +210,14 @@ class SurveyController(BaseController):
         self.message = "success";
         
         return dict(success=self.success, message = self.message);
+    
     @expose('json')
+    @require(predicates.not_anonymous(  msg=l_('Only for Authen')))
     def saveProject(self, came_from=lurl('/'), *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
         self.success = True;
         self.message = "success";
-        
-        if not request.identity:
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
-                params=dict(came_from=came_from, __logins=login_counter))
-        
-        
-        
+         
         
         project = model.QuestionProject();
         
@@ -297,6 +280,7 @@ class SurveyController(BaseController):
     
         
     @expose('json',content_type="text/plain" )
+    @require(predicates.not_anonymous(  msg=l_('Only for Authen')))
     def addQuestion(self, came_from=lurl('/'), *args, **kw):
         reload(sys).setdefaultencoding("utf-8");
         self.success = True;
@@ -311,10 +295,7 @@ class SurveyController(BaseController):
         
     
         
-        if not request.identity:
-            login_counter = request.environ.get('repoze.who.logins', 0) + 1
-            redirect('/login',
-                params=dict(came_from=came_from, __logins=login_counter))
+        
         
         user =  request.identity['user']; 
         
