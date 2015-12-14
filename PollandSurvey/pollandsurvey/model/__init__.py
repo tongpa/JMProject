@@ -71,13 +71,16 @@ from pollandsurvey.model.auth import User, Group, Permission
 from logsurvey import LogSurvey;
 
 from systemconfig import SystemEnvironment, FixLanguage,FixCountry;
-from movie import Movie
-from authuser import UserService,UserGenCode, UserSocialNetwork,ClientProject,UserClientAuthen,UserSessionAuthen;
-from mail import SendMail 
-from survey import EmailTemplateType,EmailTemplate,SysConfig
-from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData,BasicTextData,Question,QuestionValidation
-from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation,DifficultyLevel,RandomType,CloseType
-from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType
-from otheruselink import UseExtenalLink,MapVoterExtenalLink;
+
+from surveymodel import *
+
+
+#from authuser import UserService,UserGenCode, UserSocialNetwork,ClientProject,UserClientAuthen,UserSessionAuthen;
+#from mail import SendMail 
+#from survey import EmailTemplateType,EmailTemplate,SysConfig
+#from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion, BasicTextData,Question,QuestionValidation
+#from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation,DifficultyLevel,RandomType,CloseType
+#from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType
+#from otheruselink import UseExtenalLink,MapVoterExtenalLink;
 
 __all__ = ('User', 'Group', 'Permission')
