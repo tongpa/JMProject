@@ -23,7 +23,7 @@ from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
  
 
  
-__all__ = ['UserService','UserGenCode' ,'UserSocialNetwork' , 'ClientProject', 'UserClientAuthen','UserSessionAuthen'] 
+__all__ = ['UserService','UserGenCode' ,'UserSocialNetwork' , 'ClientProject', 'UserClientAuthen','UserSessionAuthen', 'SocialType'] 
 
  
 
@@ -114,16 +114,33 @@ class UserGenCode(DeclarativeBase):
 class UserSocialNetwork(DeclarativeBase): 
     __tablename__ = 'sur_user_social_network';
     
-    id_user_social_network = Column(Integer, autoincrement=True, primary_key=True)
+    id_user_social_network = Column(BigInteger, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey(u'tg_user.user_id'))
-    provider_id = Column(String(255))
-    provider_user_id = Column(String(255))
-    access_token = Column(String(255))
+    id_social_type =  Column(Integer, ForeignKey(u'sur_m_social_type.id_social_type') ) 
+    provider_user_id = Column(String(100))
+    access_token = Column(String(500))
     secret = Column(String(255))
     display_name = Column(String(255))
     profile_url = Column(String(512))
     image_url = Column(String(512))
     rank = Column(Integer)
+    expiresin = Column(String(10))
+    singed_request = Column(String(700))
+     
+    create_date  = Column( TIMESTAMP(timezone=True), nullable=True ,default=sql.func.utc_timestamp());
+    create_user = Column(String(255) , nullable=True, default='SYSTEM');
+    
+    update_date = Column(TIMESTAMP(timezone=True), nullable=True,onupdate=sql.func.utc_timestamp() );
+    update_user = Column(String(255) , nullable=True );
+    
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+        
+    
+    @classmethod
+    def getByUserId(cls,user_id):
+        return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
     
 class ClientProject(DeclarativeBase):
     __tablename__ = 'sur_m_client_project';
@@ -198,5 +215,32 @@ class UserSessionAuthen(DeclarativeBase):
             return True;
         pass;
     
+class SocialType(DeclarativeBase):
+
+    __tablename__ = 'sur_m_social_type'
+
+    id_social_type =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
     
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_social_type": self.id_social_type, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_social_type": self.id_social_type, "description": self.description, "active": self.active };    
+    
+ 
     

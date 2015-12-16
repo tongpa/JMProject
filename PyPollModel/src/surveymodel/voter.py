@@ -13,7 +13,7 @@ from datetime import datetime
 from hashlib import sha256
 
 
-from sqlalchemy import Table, ForeignKey, Column,and_
+from sqlalchemy import Table, ForeignKey, Column,and_, func
 from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger,BLOB
 
 from sqlalchemy.util import KeyedTuple;
@@ -83,6 +83,21 @@ class Gender(DeclarativeBase):
         return {"id_gender": self.id_gender, "description": self.description, "active": self.active };
     def to_dict(self):
         return {"id_gender": self.id_gender, "description": self.description, "active": self.active };
+    
+    @classmethod
+    def getIdGender(cls,description):
+        gender = DBSession.query(cls).filter( func.lower( cls.description )  == func.lower( str(description).decode('utf-8')) ).first();
+        if(gender):
+            return gender.id_gender;
+        else:
+            gender = Gender();
+            gender.description = description;
+            
+            DBSession.add(gender); 
+            DBSession.flush() ;
+            
+            return gender.id_gender
+            
      
 class MarriageStatus(DeclarativeBase):
 
