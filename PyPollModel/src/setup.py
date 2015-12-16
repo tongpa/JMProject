@@ -24,7 +24,9 @@ setup(name='surveymodel',
       #package_dir={'survey': ''},
      #packages=['logsurvey'],
      packages=find_packages(exclude=['ez_setup']),
-     package_dir={'surveymodel': 'surveymodel'},
+     package_dir={'surveymodel': 'surveymodel',
+                  'surveyobject':'surveyobject'
+                  },
       #py_modules=['logsurvey'],
       #packages=find_packages(exclude=['ez_setup']),
        
