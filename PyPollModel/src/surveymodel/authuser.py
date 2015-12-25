@@ -78,10 +78,7 @@ class UserService( DeclarativeBase): #User,
         return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
     
     def updateGroupUserVoter(self):
-        sql = "insert into  tg_user_group values ()";
-        s = text("insert into tg_user_group values(:user_id,2)");
-        
-        
+       
         result = DBSession.execute('insert into tg_user_group values(:user_id,:group_id)', {'user_id': self.user_id,'group_id':2})
         #DBSession.execute(s, user_id= self.user_id ).fetchall() 
         DBSession.flush() ;
@@ -141,6 +138,10 @@ class UserSocialNetwork(DeclarativeBase):
     @classmethod
     def getByUserId(cls,user_id):
         return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
+    
+    @classmethod
+    def getByUserIdAndSocialId(cls,user_id,socialId):
+        return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8'), cls.id_social_type == str(socialId).decode('utf-8') ).first();
     
 class ClientProject(DeclarativeBase):
     __tablename__ = 'sur_m_client_project';
