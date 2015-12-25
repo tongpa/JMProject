@@ -124,6 +124,7 @@ class UserSocialNetwork(DeclarativeBase):
     expiresin = Column(String(10))
     singed_request = Column(String(700))
      
+    access_token_expiry  = Column(DateTime, nullable=False)
     create_date  = Column( TIMESTAMP(timezone=True), nullable=True ,default=sql.func.utc_timestamp());
     create_user = Column(String(255) , nullable=True, default='SYSTEM');
     
