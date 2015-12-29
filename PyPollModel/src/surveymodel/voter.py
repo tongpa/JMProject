@@ -29,6 +29,9 @@ from surveymodel.otheruselink import MapVoterExtenalLink
 import transaction
 __all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
 
+
+
+
 class VoterType(DeclarativeBase):
 
     __tablename__ = 'sur_m_voter_type'

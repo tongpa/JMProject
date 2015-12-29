@@ -61,8 +61,8 @@ class UserService( DeclarativeBase): #User,
     update_user = Column(String(255) , nullable=True );
 
     def __repr__(self):
-        return '<User: name=%s, email=%s, display=%s>' % (
-                repr(self.first_name), repr(self.email_address), repr(self.display_name))
+        return '<UserService: name=%s, user_id=%s >' % (
+                repr(self.first_name), repr(self.user_id) )
 
     def __unicode__(self):
         return self.display_name or self.user_name
@@ -76,6 +76,8 @@ class UserService( DeclarativeBase): #User,
     @classmethod
     def getByUserId(cls,user_id):
         return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
+    
+    
     
     def updateGroupUserVoter(self):
        
@@ -138,11 +140,16 @@ class UserSocialNetwork(DeclarativeBase):
     
     @classmethod
     def getByUserId(cls,user_id):
-        return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
+        return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).all();
+    
     
     @classmethod
     def getByUserIdAndSocialId(cls,user_id,socialId):
         return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8'), cls.id_social_type == str(socialId).decode('utf-8') ).first();
+    
+    @classmethod
+    def getBySocial(cls,social_id, socialtype_id):
+        return DBSession.query(cls).filter(cls.provider_user_id == str(social_id).decode('utf-8'), cls.id_social_type == str(socialtype_id).decode('utf-8') ).first();
     
 class ClientProject(DeclarativeBase):
     __tablename__ = 'sur_m_client_project';
@@ -230,6 +237,10 @@ class SocialType(DeclarativeBase):
         
     def __str__(self):
         return '"%s"' % (self.description )
+    
+    @classmethod
+    def getByid(cls,id,act):
+        return DBSession.query(cls).filter( cls.id_social_type == str(id).decode('utf-8')   , cls.active == str(act).decode('utf-8') ).first();
     
     @classmethod
     def getAll(cls,act):
