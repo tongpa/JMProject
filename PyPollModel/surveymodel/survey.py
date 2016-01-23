@@ -55,6 +55,15 @@ class SysConfig(DeclarativeBase):
     def defaultExpireByCountry(cls,codeCountry):
         #expired_activate_code
         pass;
+    
+    @classmethod
+    def all(cls,codeCountry='th'):
+        return DBSession.query(cls).filter(cls.active == str('1').decode('utf-8'),cls.code_country == str(codeCountry).decode('utf-8')).all();
+    
+    @classmethod
+    def getByCode(cls, code, codeCountry='th'):
+        return DBSession.query(cls).filter(cls.default_code == str(code),   cls.active == str('1').decode('utf-8'),cls.code_country == str(codeCountry).decode('utf-8')).all();
+    
         
 class DifficultyLevel(DeclarativeBase):
     __tablename__ = 'sur_fix_difficulty_level';

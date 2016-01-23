@@ -72,6 +72,10 @@ class UserService( DeclarativeBase): #User,
         DBSession.add(self); 
         DBSession.flush() ;
         
+    @classmethod
+    def getById(cls,user_id):
+      
+        return DBSession.query(cls).filter(cls.user_id == str(user_id).decode('utf-8') ).first();
     
     @classmethod
     def getByUserId(cls,user_id):
