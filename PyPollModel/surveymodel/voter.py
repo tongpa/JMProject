@@ -554,7 +554,8 @@ class Respondents(DeclarativeBase):
     key_gen = Column(String(255), nullable=False , index=True) ;
     
     finished_date =  Column(DateTime, nullable=True );
-    score_exam =   Column(Integer, nullable=True, default=0);
+    score_exam =   Column(String(10), nullable=True, default=0);
+    full_score = Column(String(10), nullable=True);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
     
@@ -608,20 +609,28 @@ class Respondents(DeclarativeBase):
     
     @classmethod
     def updateScoreByIdRespondents(cls, id_respondents):
-        sql = """ update sur_respondents a_respondents
-                    set a_respondents.score_exam =  ( 
+        
+        sql = """ update sur_respondents INNER JOIN (
+                    select 
+                        SUM(sur_basic_question.score)  as sum_answer ,
+                        COUNT(sur_basic_question.score) as count_answer,
+                        sur_resp_reply.id_respondents
+                        from   sur_resp_reply  
+                            INNER JOIN sur_reply_basic_question on sur_resp_reply.id_resp_reply = sur_reply_basic_question.id_resp_reply
+                            INNER JOIN sur_basic_question on (sur_basic_question.id_question = sur_resp_reply.id_question and sur_basic_question.id_basic_data = sur_reply_basic_question.id_basic_data )
+                        where sur_resp_reply.id_respondents = %(id_respondents)s
                     
-                     select 
-                    SUM(sur_basic_question.score)  as sum_answer 
-                    from   sur_resp_reply  
-                      INNER JOIN sur_reply_basic_question on sur_resp_reply.id_resp_reply = sur_reply_basic_question.id_resp_reply
-                      INNER JOIN sur_basic_question on (sur_basic_question.id_question = sur_resp_reply.id_question and sur_basic_question.id_basic_data = sur_reply_basic_question.id_basic_data )
-                    where sur_resp_reply.id_respondents = a_respondents.id_respondents
+                    ) ans on sur_respondents.id_respondents = ans.id_respondents
                     
                     
-                    )
-                    where a_respondents.id_respondents = '""" + str(id_respondents) + """'  """;
-                    
+                    set 
+                    sur_respondents.full_score = ans.count_answer,
+                    sur_respondents.score_exam = ans.sum_answer
+                    """
+
+        sql = sql % dict(id_respondents=id_respondents)             
+        
+        
         result = DBSession.execute(sql);
          
     @classmethod
