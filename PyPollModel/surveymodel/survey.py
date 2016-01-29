@@ -25,7 +25,7 @@ from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
 import random; 
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
-           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType','CloseType']
+           ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType','CloseType', 'MapQuestionGroup', 'QuestionGroup']
 
 
 
@@ -1374,7 +1374,7 @@ class Invitation(DeclarativeBase):
         pass;
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.name_content )
     def save(self):
         try:
             DBSession.add(self); 
@@ -1436,5 +1436,42 @@ class Invitation(DeclarativeBase):
     def to_dict(self):
         return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
        
-          
+       
+class QuestionGroup(DeclarativeBase):
+
+    __tablename__ = 'sur_question_group'
+
+    id_question_group =  Column(BigInteger, autoincrement=True, primary_key=True)
+    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    question_group_name = Column(String(255) )
+    question_group_desciption = Column(Text )
+    id_parent = Column(   BigInteger,ForeignKey('sur_question_group.id_question_group'), nullable=True, index=True) ;
+    active= Column(BIT, nullable=True, default=0);
+    
+    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    update_date =  Column(DateTime, nullable=False ,onupdate=sql.func.utc_timestamp());
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.name_content )
+
+class MapQuestionGroup(DeclarativeBase):
+    __tablename__ = 'sur_map_question_group'
+
+    id_sur_map_question_group =  Column(BigInteger, autoincrement=True, primary_key=True)
+    id_question_group = Column(   BigInteger,ForeignKey('sur_question_group.id_question_group'), nullable=False, index=True) ;
+    id_question = Column(   BigInteger,ForeignKey('sur_question.id_question'), nullable=False, index=True) ;
+    
+    order= Column(Integer, default=0);
+    
+    create_date =  Column(DateTime, nullable=False, default=datetime.now); 
+    update_date =  Column(DateTime, nullable=False,onupdate=sql.func.utc_timestamp() );
+    
+    def __init__(self):
+        pass;
+        
+    def __str__(self):
+        return '"%s"' % (self.name_content )
     

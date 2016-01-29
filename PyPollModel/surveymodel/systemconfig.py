@@ -58,6 +58,10 @@ class SystemEnvironment(DeclarativeBase):
         return DBSession.query(cls).filter(cls.active == str(active).decode('utf-8')).all(); 
     
     @classmethod
+    def getbyKey(cls,key):
+        return DBSession.query(cls).filter(cls.environment_key  == str(key).decode('utf-8') ,cls.active == str('1').decode('utf-8')).first();
+    
+    @classmethod
     def getServerUrl(cls):
         env =  DBSession.query(cls).filter(cls.environment_key  == str('SERVER_URL').decode('utf-8') ,  cls.active == str('1').decode('utf-8')).first();
         return env.description;
