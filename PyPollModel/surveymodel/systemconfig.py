@@ -23,7 +23,7 @@ from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
  
 
  
-__all__ = ['SystemEnvironment', 'FixLanguage','FixCountry' ] 
+__all__ = ['SystemEnvironment', 'FixLanguage','FixCountry', 'ZoneBanner' ] 
 
  
 
@@ -137,3 +137,46 @@ class FixCountry( DeclarativeBase): #User,
     
     def to_json(self):
         return {"code": self.code, "description": self.description  };
+    
+    
+ 
+
+class ZoneBanner(DeclarativeBase):
+    
+    __tablename__ = 'sur_sys_zone_banner'
+
+    id_sys_zone_banner =  Column(BigInteger, autoincrement=True, primary_key=True); 
+    page_name = Column(String(255), nullable=False);
+    zone_number = Column(Integer, nullable=False);
+    script_text = Column(Text, nullable=True);
+    description = Column(String(255), nullable=True);
+    active  = Column(BIT, nullable=True, default=1);
+    create_date = Column(TIMESTAMP(timezone=True), nullable=True ,default=sql.func.utc_timestamp());
+    
+    
+    
+    
+
+    def __repr__(self):
+        return '<ZoneBanner: page_name=%s, zone_number=%s >' % (
+                repr(self.page_name), repr(self.zone_number) )
+
+    def __unicode__(self):
+        return self.page_name 
+    
+    
+    def save (self):
+        DBSession.add(self); 
+        DBSession.flush() ;
+        
+    
+    @classmethod
+    def getAll(cls,active):
+        return DBSession.query(cls).filter(cls.active == str(active).decode('utf-8')).all(); 
+    
+    @classmethod
+    def getByPageandZone(cls,pageName,ZoneNumber,active=1):
+        return DBSession.query(cls).filter( cls.page_name.ilike("%"+pageName+"%") , cls.zone_number == str(ZoneNumber), cls.active == str(active).decode('utf-8')).first(); 
+    
+     
+    

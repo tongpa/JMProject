@@ -1,4 +1,4 @@
-from systemconfig import SystemEnvironment, FixLanguage,FixCountry
+from systemconfig import SystemEnvironment, FixLanguage,FixCountry, ZoneBanner
 from authuser import UserService,UserGenCode, UserSocialNetwork,ClientProject,UserClientAuthen,UserSessionAuthen, SocialType 
 from mail import SendMail 
 from survey import EmailTemplateType,EmailTemplate,SysConfig

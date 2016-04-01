@@ -24,6 +24,8 @@ from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
 import transaction
 import random; 
+from PIL.ImageCms import DESCRIPTION
+from surveyobject.mastermodel import MasterBase
 __all__ = ['SysConfig','EmailTemplate','EmailTemplateType','GroupVariables', 'QuestionType', 'QuestionProjectType' ,'BasicDataType', 'QuestionProject','LanguageLabel','Variables','BasicData','BasicQuestion','BasicTextData' 
            ,'Question', 'QuestionOption', 'BasicMultimediaData','QuestionMedia','QuestionTheme' , 'Invitation','DifficultyLevel' , 'RandomType','CloseType', 'MapQuestionGroup', 'QuestionGroup']
 
@@ -359,7 +361,7 @@ class BasicDataType(DeclarativeBase):
      
 
         
-class QuestionProject(DeclarativeBase):
+class QuestionProject(MasterBase, DeclarativeBase):
 
     __tablename__ = 'sur_question_project'
 
@@ -383,13 +385,31 @@ class QuestionProject(DeclarativeBase):
     
     active  = Column(BIT, nullable=True, default=1)
     
-    def __init__(self):
-        self.active = 1;
+    
+    
+    def __init__(self,id_question_project=None,name=None,description=None,user_id=None, id_question_project_type=None, header_message=None, footer_message=None, welcome_text=None, end_text=None, start_date=None, end_date=None, active=1):
+        
+        super(QuestionProject, self).__init__(DBSession)
+        
+        self.id_question_project = id_question_project;
+        self.name = name;
+        self.description = description;
+        self.user_id = user_id;
+        self.id_question_project_type = id_question_project_type;
+        self.header_message = header_message;
+        self.footer_message = footer_message;
+        self.welcome_text = welcome_text;
+        self.end_text = end_text;
+        self.start_date = start_date;
+        if(active is None):
+            self.active = 1;
         
     def __str__(self):
         return '"%s"' % (self.description )
     
-    def save(self):
+    
+        
+    """def save(self):
         try:
             DBSession.add(self); 
             DBSession.flush() ;
@@ -399,9 +419,16 @@ class QuestionProject(DeclarativeBase):
             print "Duplicate entry" 
             return "Duplicate entry"
     
+    def updateall(self):
+        DBSession.merge(self,load=True)"""
+        
+    
+    
     @classmethod
     def getId(cls,act):
         return DBSession.query(cls).get(act); 
+    
+ 
            
     @classmethod
     def getAllByUser(cls,act=1,userid=0,page=0, page_size=None):
@@ -451,7 +478,7 @@ class QuestionProject(DeclarativeBase):
 
 
     
-class Question(DeclarativeBase):
+class Question(MasterBase,DeclarativeBase):
 
     __tablename__ = 'sur_question'
 
@@ -482,8 +509,21 @@ class Question(DeclarativeBase):
     
     active  = Column(BIT, nullable=True, default=1);
     
-    def __init__(self):
-        self.active = 1;
+    def __init__(self, id_question=None,id_question_type=None, id_question_project=None, user_id=None, id_fix_difficulty_level=None, question=None, help_message=None, text_label=None, 
+                 order=0, active=1 ):
+        
+        super(Question, self).__init__(DBSession)
+        self.id_question = id_question
+        self.id_question_type =id_question_type
+        self.id_question_project = id_question_project
+        self.user_id = user_id
+        self.id_fix_difficulty_level = id_fix_difficulty_level
+        self.question = question
+        self.help_message = help_message
+        self.text_label = text_label
+        self.order =order
+        self.active = active
+        
         
     def __str__(self):
         return '"%s"' % (self.question )
@@ -531,9 +571,7 @@ class Question(DeclarativeBase):
          
         return dict;
     
-    def save (self):
-        DBSession.add(self); 
-        DBSession.flush() ;
+     
     
     @classmethod
     def updateOrderById(cls,order,id):
@@ -886,8 +924,12 @@ class QuestionMedia(DeclarativeBase):
      
      
     
-    def __init__(self):
-        pass;
+    def __init__(self, id_question = None,  value = None, media_type = None, media_path_file = None ):
+        self.id_question = id_question
+     
+        self.value = value
+        self.media_type = media_type
+        self.media_path_file = media_path_file
         
     def __str__(self):
         return '"%s"' % (self.message )
@@ -1136,7 +1178,7 @@ class BasicTextData(DeclarativeBase):
         return DBSession.query(cls).get(act); 
     
     
-class QuestionOption(DeclarativeBase):   
+class QuestionOption(MasterBase, DeclarativeBase):   
     __tablename__ = 'sur_question_option';
 
     id_question_option =  Column(BigInteger, autoincrement=True, primary_key=True);    
@@ -1181,16 +1223,53 @@ class QuestionOption(DeclarativeBase):
     
     use_default = Column(BIT, nullable=True, default=0);
     
-    def __init__(self):
+    def __init__(self,id_question_option=None, id_question_project=None, id_question_theme=None, id_question_invitation=None,                  
+                 id_fix_random_type=None, id_close_type=None, name_publication=None, activate_date=None, expire_date=None,                  
+                 header_message=None, footer_message=None, welcome_message=None, end_message=None, send_status=0,                  
+                 show_score=0, random_answer=0, redirect_url=None, gen_code=None,show_navigator=None,                   
+                 duration_time=None, use_question_no=None, create_date=None, no_use=1, use_default=0 ):
+        
+        super(QuestionOption, self).__init__(DBSession)
+        
+        self.id_question_option=id_question_option
+        self.id_question_project=id_question_project
+        self.id_question_theme=id_question_theme
+        self.id_question_invitation=id_question_invitation
+        self.id_fix_random_type=id_fix_random_type
+        self.id_close_type=id_close_type
+        self.name_publication=name_publication
+        self.activate_date=activate_date
+        self.expire_date=expire_date
+        self.header_message=header_message
+        self.footer_message=footer_message
+        self.welcome_message=welcome_message
+        self.end_message=end_message
+        self.send_status=send_status
+        self.show_score=show_score
+        self.random_answer= random_answer
+        self.redirect_url=redirect_url
+        self.gen_code=gen_code
+        self.show_navigator=show_navigator
+        self.duration_time=duration_time
+        self.use_question_no=use_question_no
+        self.no_use=no_use
+        self.use_default=use_default
+        
+        self.create_date=create_date
+        
+        
+        
+        
+        
         #self.create_date  =datetime.now;
         pass;
         
     def __str__(self):
         return "question option"; #'"%s"' % str(self.id_question_option )
     
-    def save (self):
-        DBSession.add(self); 
-        DBSession.flush() ;
+    #def save (self):
+    #    DBSession.add(self); 
+    #    DBSession.flush() ;
         
     def remove(self):
         DBSession.delete(self); 
@@ -1354,7 +1433,7 @@ class BasicMultimediaData(DeclarativeBase):
         DBSession.query(cls).filter(  cls.id_basic_data == str(idBasicData) ).delete();        
         DBSession.flush() ;   
         
-class Invitation(DeclarativeBase):
+class Invitation(MasterBase, DeclarativeBase):
 
     __tablename__ = 'sur_question_invitation'
 
@@ -1368,22 +1447,26 @@ class Invitation(DeclarativeBase):
     content = Column(Text )
  
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
-    update_date =  Column(DateTime, nullable=False );
+    update_date =  Column(DateTime, nullable=False, onupdate=sql.func.utc_timestamp() );
     
-    def __init__(self):
-        pass;
+    def __init__(self, id_question_invitation=None, name_content=None, from_name=None, subject=None, id_question_project= None, content=None,
+                 create_date=None, update_date=None  ):
+        
+        super(Invitation, self).__init__(DBSession)
+        
+        self.id_question_invitation = id_question_invitation
+        self.name_content = name_content
+        self.from_name = from_name
+        self.subject = subject
+        self.id_question_project = id_question_project
+        self.content =content
+        #self.create_date = create_date
+        #self.update_date = update_date
+        
         
     def __str__(self):
         return '"%s"' % (self.name_content )
-    def save(self):
-        try:
-            DBSession.add(self); 
-            DBSession.flush() ;
-            print "save project"
-            return None;
-        except  IntegrityError:
-            print "Duplicate entry" 
-            return "Duplicate entry"
+     
     
     @classmethod
     def getId(cls,act):
