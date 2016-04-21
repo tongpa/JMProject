@@ -475,7 +475,7 @@ class QuestionProject(MasterBase, DeclarativeBase):
         #DBSession.delete(quest); 
         DBSession.flush() ;
     
-
+    
 
     
 class Question(MasterBase,DeclarativeBase):
@@ -496,6 +496,8 @@ class Question(MasterBase,DeclarativeBase):
     id_fix_difficulty_level = Column(   BigInteger,ForeignKey('sur_fix_difficulty_level.id_fix_difficulty_level'), nullable=False, index=True) ;
     difficultylevel = relation('DifficultyLevel', backref='sur_question_id_fix_difficulty_level');
     
+    id_question_group = Column(   Integer,ForeignKey('sur_question_group.id_question_group'), nullable=False, index=True) ;
+    questiongroup = relation('QuestionGroup', backref='sur_question_id_question_group');
     
     question = Column(Text,  nullable=False);
     help_message = Column(String(255),  nullable=False);
@@ -509,7 +511,7 @@ class Question(MasterBase,DeclarativeBase):
     
     active  = Column(BIT, nullable=True, default=1);
     
-    def __init__(self, id_question=None,id_question_type=None, id_question_project=None, user_id=None, id_fix_difficulty_level=None, question=None, help_message=None, text_label=None, 
+    def __init__(self, id_question=None,id_question_type=None, id_question_project=None, user_id=None,id_question_group=None, id_fix_difficulty_level=None, question=None, help_message=None, text_label=None, 
                  order=0, active=1 ):
         
         super(Question, self).__init__(DBSession)
@@ -518,6 +520,7 @@ class Question(MasterBase,DeclarativeBase):
         self.id_question_project = id_question_project
         self.user_id = user_id
         self.id_fix_difficulty_level = id_fix_difficulty_level
+        self.id_question_group = id_question_group
         self.question = question
         self.help_message = help_message
         self.text_label = text_label
@@ -737,6 +740,7 @@ class Question(MasterBase,DeclarativeBase):
         question.help_message = parsed_dict.get('help_message');
         question.text_label = parsed_dict.get('text_label');
         question.order = parsed_dict.get('order');
+        question.id_question_group = parsed_dict.get('id_question_group');
         question.active = parsed_dict.get('active');
         return question;
         
@@ -745,6 +749,17 @@ class Question(MasterBase,DeclarativeBase):
         datas = [];
         if pid is not None:
             data =  DBSession.query(cls,QuestionType).join(QuestionType).filter(cls.id_question_project == str(pid).decode('utf-8')).order_by(cls.order).all();
+            for d,e in data:
+                d.question_type_name = e.description;
+                datas.append(d); 
+        
+        return datas;
+    
+    @classmethod
+    def getQuestionByGroupId(cls,gid):
+        datas = [];
+        if gid is not None:
+            data =  DBSession.query(cls,QuestionType).join(QuestionType).filter(cls.id_question_group == str(gid).decode('utf-8')).order_by(cls.order).all();
             for d,e in data:
                 d.question_type_name = e.description;
                 datas.append(d); 
@@ -1520,25 +1535,88 @@ class Invitation(MasterBase, DeclarativeBase):
         return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
        
        
-class QuestionGroup(DeclarativeBase):
+class QuestionGroup(MasterBase,DeclarativeBase):
 
     __tablename__ = 'sur_question_group'
 
     id_question_group =  Column(BigInteger, autoincrement=True, primary_key=True)
     id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    question_project = relation('QuestionProject', backref='sur_question_group_id_question_project');
+    
     question_group_name = Column(String(255) )
-    question_group_desciption = Column(Text )
+    question_group_description = Column(Text )
     id_parent = Column(   BigInteger,ForeignKey('sur_question_group.id_question_group'), nullable=True, index=True) ;
+    order =  Column(Integer  );
     active= Column(BIT, nullable=True, default=0);
     
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
-    update_date =  Column(DateTime, nullable=False ,onupdate=sql.func.utc_timestamp());
+    update_date =  Column(DateTime, nullable=True ,onupdate=sql.func.utc_timestamp());
     
-    def __init__(self):
-        pass;
+    def __init__(self,id_question_group=None, id_question_project=None, question_group_name=None, question_group_description=None, id_parent=None, order=None, active =1):
+        
+        super(QuestionGroup, self).__init__(DBSession)
+        
+        self.id_question_group = id_question_group
+        self.id_question_project = id_question_project
+        self.question_group_name = question_group_name
+        self.question_group_description = question_group_description
+        self.id_parent = id_parent
+        self.order = order
+        self.active = active
+         
         
     def __str__(self):
-        return '"%s"' % (self.name_content )
+        return '"%s"' % (self.question_group_name )
+    
+    @classmethod
+    def setId(cls,dct):
+        return DBSession.query(cls).get( str(dct['id_question_group']))
+        #.get(dct['id_question_group'])
+        #DBSession.flush() ;
+    
+    @classmethod
+    def delete(cls,groupquestion):
+        DBSession.delete(groupquestion); 
+        DBSession.flush() ;
+        
+    @classmethod
+    def deleteById(cls,dct):
+         
+        
+        return DBSession.query(cls).filter(cls.id_question_group == str(dct['id_question_group'])).delete()
+        #.get(dct['id_question_group'])
+        #DBSession.flush() ;
+        
+    
+    @classmethod
+    def getByProjectId(cls,projectid=0, userid=0, page=0, page_size=None):
+        
+        query = DBSession.query(cls).join(QuestionProject).filter(cls.id_question_project == str(projectid) , 
+                                                                      
+                                                                     QuestionProject.user_id == str(userid), 
+                                                                     cls.id_parent.is_(None) )
+        query_total = query;
+        
+        if page_size:
+            query = query.limit(page_size)
+        if page: 
+            page = 0 if page < 0 else page;
+            query = query.offset(page*page_size)
+        
+        values = query.all();  
+        total = query_total.count();
+          
+        data = [];
+        for v in values:
+            data.append(v.to_json(cls));
+                         
+        return data,total;
+        
+    
+        
+             
+    
+    
 
 class MapQuestionGroup(DeclarativeBase):
     __tablename__ = 'sur_map_question_group'
