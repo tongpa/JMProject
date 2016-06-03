@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//surveymodel/__init__.py=utf-8
 encoding//surveymodel/authuser.py=utf-8
 encoding//surveymodel/mail.py=utf-8
 encoding//surveymodel/respondentq.py=utf-8

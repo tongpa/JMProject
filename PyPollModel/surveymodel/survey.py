@@ -18,7 +18,7 @@ from sqlalchemy import Table, ForeignKey, Column,and_ ,sql
 from sqlalchemy.types import Unicode,   DateTime, Date, Integer, String, Text,Boolean,BigInteger,SmallInteger,CHAR,TIMESTAMP
 
 from sqlalchemy.util import KeyedTuple;
-from sqlalchemy.orm import relation, synonym, Bundle
+from sqlalchemy.orm import relation, synonym, Bundle,relationship
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 from pollandsurvey.model import DeclarativeBase, metadata, DBSession
@@ -172,7 +172,7 @@ class EmailTemplateType(DeclarativeBase):
 
 
 
-class Languages(DeclarativeBase):
+class Languages(MasterBase,DeclarativeBase):
     __tablename__ = 'sur_m_language'
 
     id_language =  Column(BigInteger, autoincrement=True, primary_key=True);
@@ -212,7 +212,14 @@ class LanguageLabel(DeclarativeBase):
     message_th =  Column(String(255) , nullable=True); 
     active  = Column(BIT, nullable=True, default=1);
     
-    def __init__(self):
+    def __init__(self,id_language_label=None, module=None, default_label=None, message_en=None, message_th=None, activate =1  ):
+        super(LanguageLabel, self).__init__(DBSession)
+        
+        self.id_language_label=id_language_label
+        self.module=module
+        self.default_label=default_label
+        self.message_en=message_en
+        self.message_th=message_th
         self.active = 1;
     def __str__(self):
         return '"%s"' % (self.default_label )
@@ -230,6 +237,9 @@ class LanguageLabel(DeclarativeBase):
             #return DBSession.query(cls).get(act); 
         else:
             return DBSession.query(cls) .all();
+        
+    
+    
      
 
 class GroupVariables(DeclarativeBase):       
@@ -532,20 +542,22 @@ class Question(MasterBase,DeclarativeBase):
         return '"%s"' % (self.question )
     
     
-    def to_json(self,randomAnswer=True,showResult = None):
+    def to_json(self,randomAnswer=True,showResult = None,initOrder=1):
         
          
         checkMedia = 0;
         if( self.media):
             checkMedia = 1;
+         
         
         dict  = {"id": self.id_question, 
                  "question": self.question,
                  "help_message": self.help_message,
                  "text_label": self.text_label,
-                "seq": self.order ,
+                "seq": initOrder, #self.order ,
                 'type': self.question_type.type,
                 "answer": [],
+                
                 "image" : checkMedia,
                 "active": self.active,
                 "id_fix_difficulty_level" : self.id_fix_difficulty_level };
@@ -574,6 +586,12 @@ class Question(MasterBase,DeclarativeBase):
          
         return dict;
     
+    def updateOrdering(self):
+        oldQuestion = DBSession.query(Question).filter(Question.id_question == self.id_question).first()
+        if oldQuestion.id_question_group != self.id_question_group :
+            res = DBSession.query(sql.func.max(Question.order).label("max_order")  ).filter(Question.id_question_group == self.id_question_group).one_or_none()
+            
+            self.order =  res.max_order+1 if (res.max_order is not None) else 1
      
     
     @classmethod
@@ -1542,17 +1560,20 @@ class QuestionGroup(MasterBase,DeclarativeBase):
     id_question_group =  Column(BigInteger, autoincrement=True, primary_key=True)
     id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
     question_project = relation('QuestionProject', backref='sur_question_group_id_question_project');
-    
     question_group_name = Column(String(255) )
     question_group_description = Column(Text )
     id_parent = Column(   BigInteger,ForeignKey('sur_question_group.id_question_group'), nullable=True, index=True) ;
     order =  Column(Integer  );
     active= Column(BIT, nullable=True, default=0);
-    
+    question_group_show_text = Column(Text);
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     update_date =  Column(DateTime, nullable=True ,onupdate=sql.func.utc_timestamp());
     
-    def __init__(self,id_question_group=None, id_question_project=None, question_group_name=None, question_group_description=None, id_parent=None, order=None, active =1):
+    questions = relation("Question", backref="sur_question_group_id_question_group")
+    
+    #relation('QuestionProject', backref='sur_invitation_id_question_project');
+    
+    def __init__(self,id_question_group=None, id_question_project=None, question_group_name=None, question_group_description=None, id_parent=None, order=None,question_group_show_text=None, active =1):
         
         super(QuestionGroup, self).__init__(DBSession)
         
@@ -1561,6 +1582,7 @@ class QuestionGroup(MasterBase,DeclarativeBase):
         self.question_group_name = question_group_name
         self.question_group_description = question_group_description
         self.id_parent = id_parent
+        self.question_group_show_text = question_group_show_text
         self.order = order
         self.active = active
          
@@ -1587,6 +1609,9 @@ class QuestionGroup(MasterBase,DeclarativeBase):
         #.get(dct['id_question_group'])
         #DBSession.flush() ;
         
+    @classmethod
+    def getByProject(cls,projectid=0):
+        return DBSession.query(cls).filter(cls.id_question_project == str(projectid),  cls.id_parent.is_(None) ).all()
     
     @classmethod
     def getByProjectId(cls,projectid=0, userid=0, page=0, page_size=None):
@@ -1613,8 +1638,18 @@ class QuestionGroup(MasterBase,DeclarativeBase):
         return data,total;
         
     
-        
-             
+    def tojsonview(self,randomAnswer=True,showResult = None,initOrder=1):
+        dic_group = {
+                     'id_question_group': self.id_question_group,
+                     'question_group_show_text' : self.question_group_show_text,
+                     'questions' : []
+                    }
+        for self.question in self.questions:
+            
+            dic_group['questions'].append( self.question.to_json(randomAnswer = randomAnswer,initOrder=initOrder) )
+            initOrder = initOrder +1
+            
+        return dic_group ,initOrder    
     
     
 

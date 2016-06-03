@@ -563,7 +563,7 @@ class Respondents(DeclarativeBase):
         pass;
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.id_respondents )
     def save(self):
         try:
             DBSession.add(self); 
@@ -695,7 +695,7 @@ class RespondentReply(DeclarativeBase):
         pass;
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.id_resp_reply )
     
     @classmethod
     def getAll(cls,act):

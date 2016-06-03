@@ -1,4 +1,8 @@
-from systemconfig import SystemEnvironment, FixLanguage,FixCountry, ZoneBanner
+# -*- coding: utf-8 -*-
+
+
+
+from systemconfig import SystemEnvironment, FixLanguage,FixCountry, ZoneBanner, FixContent, Content
 from authuser import UserService,UserGenCode, UserSocialNetwork,ClientProject,UserClientAuthen,UserSessionAuthen, SocialType 
 from mail import SendMail 
 from survey import EmailTemplateType,EmailTemplate,SysConfig

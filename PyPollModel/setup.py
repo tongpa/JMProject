@@ -16,7 +16,7 @@ except ImportError:
     from distutils.core import setup
     
 setup(name='surveymodel',
-      version='1.0',
+      version='1.04.22',
       description="model of poll and survey",
       
       author="Tong",
