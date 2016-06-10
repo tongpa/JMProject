@@ -20,8 +20,9 @@ from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.orm import relation, synonym
 from surveyobject.mastermodel import MasterBase
 
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
- 
+
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+from surveymodel import DeclarativeBase, metadata, DBSession, User 
 
  
 __all__ = ['SystemEnvironment', 'FixLanguage','FixCountry', 'FixContent' 'ZoneBanner' ] 

@@ -1,5 +1,4 @@
 setup.py
-surveymodel/CommonRoutines.py
 surveymodel/__init__.py
 surveymodel/authuser.py
 surveymodel/logsurvey.py

@@ -14,7 +14,8 @@ from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.sql import text
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession 
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+from surveymodel import DeclarativeBase, metadata, DBSession
 import transaction
 __all__ = ['SendMail']
 

@@ -1,8 +1,9 @@
 from sqlalchemy import Column
 from sqlalchemy.types import Date, Integer, String, Text
 
-from pollandsurvey.model import DeclarativeBase
-
+ 
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+from surveymodel import DeclarativeBase, metadata, DBSession
 __all__ = ['Movie']
 class Movie(DeclarativeBase):
 

@@ -19,8 +19,8 @@ from sqlalchemy.types import Unicode, Integer, DateTime, String,TIMESTAMP,BigInt
 from sqlalchemy.dialects.mysql import BIT
 from sqlalchemy.orm import relation, synonym
 
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
- 
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
+from surveymodel import DeclarativeBase, metadata, DBSession, User 
 
  
 __all__ = ['UserService','UserGenCode' ,'UserSocialNetwork' , 'ClientProject', 'UserClientAuthen','UserSessionAuthen', 'SocialType'] 

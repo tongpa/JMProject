@@ -21,7 +21,9 @@ from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
 
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession #,QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession #,QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
+from surveymodel import DeclarativeBase, metadata, DBSession
+
 from surveymodel.survey import QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
 
 #from pollandsurvey.model.otheruselink import MapVoterExtenalLink

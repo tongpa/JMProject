@@ -20,7 +20,8 @@ from sqlalchemy.util import KeyedTuple;
 from sqlalchemy.orm import relation, synonym, Bundle
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.dialects.mysql import BIT
-from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+#from pollandsurvey.model import DeclarativeBase, metadata, DBSession
+from surveymodel import DeclarativeBase, metadata, DBSession
 import transaction
 
 from pollandsurvey.model import Voter;
