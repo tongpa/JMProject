@@ -72,6 +72,11 @@ class SystemEnvironment(MasterBase,DeclarativeBase):
     
     @classmethod
     def getScoreViewHtml(cls):
+        
+       # print "contextual_connect : %s" %( 'contextual_connect' in DBSession)
+        
+        
+        
         env =  DBSession.query(cls).filter(cls.environment_key  == str('SCORE_VIEW_HTML').decode('utf-8') ,  cls.active == str('1').decode('utf-8')).first();
         return env.description;
     

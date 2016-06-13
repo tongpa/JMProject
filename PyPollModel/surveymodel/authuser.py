@@ -13,7 +13,7 @@ from datetime import datetime
 from hashlib import sha256
 
 
-from sqlalchemy.sql import text
+from sqlalchemy.sql import text, and_
 from sqlalchemy import Table, ForeignKey, Column,sql,desc
 from sqlalchemy.types import Unicode, Integer, DateTime, String,TIMESTAMP,BigInteger, Date
 from sqlalchemy.dialects.mysql import BIT
@@ -22,12 +22,13 @@ from sqlalchemy.orm import relation, synonym
 #from pollandsurvey.model import DeclarativeBase, metadata, DBSession, User
 from surveymodel import DeclarativeBase, metadata, DBSession, User 
 
+from surveyobject.mastermodel import MasterBase
  
 __all__ = ['UserService','UserGenCode' ,'UserSocialNetwork' , 'ClientProject', 'UserClientAuthen','UserSessionAuthen', 'SocialType'] 
 
  
 
-class UserService( DeclarativeBase): #User,
+class UserService(MasterBase, DeclarativeBase): #User,
     """
     User definition.
 
@@ -49,7 +50,7 @@ class UserService( DeclarativeBase): #User,
     birthdate     = Column(Date, nullable=True);
     language = Column(String(255), nullable=True);
     #code_activate = Column(String(255), nullable=True);
-    
+    post_code = Column(String(10), nullable=True);
     count_send_activate = Column(Integer,default=0 );
     count_send_forgot    = Column(Integer,default=0 );
     
@@ -60,6 +61,37 @@ class UserService( DeclarativeBase): #User,
     update_date = Column(TIMESTAMP(timezone=True), nullable=True,onupdate=sql.func.utc_timestamp() );
     update_user = Column(String(255) , nullable=True );
 
+    
+    def __init__(self,user_id=None, first_name=None, last_name=None, address=None, city=None, country=None, accept_tnc=None, id_gender=None, birthdate=None, language=None, 
+                 post_code=None, count_send_activate=None, count_send_forgot=None, create_date=None, create_user=None, update_date=None, update_user=None):
+        print "init in UserService"
+        super(UserService, self).__init__(DBSession)
+        
+                
+        self.user_id =  user_id
+        self.first_name = first_name
+        self.last_name = last_name
+        self.address  = address
+        self.city  = city
+        self.country  = country
+        self.accept_tnc  = accept_tnc
+        self.id_gender =id_gender
+        
+        self.birthdate     = birthdate
+        self.language = language
+     
+        self.post_code = post_code
+        self.count_send_activate = count_send_activate
+        self.count_send_forgot    = count_send_forgot
+        
+        
+        self.create_date  = create_date
+        self.create_user = create_user
+        
+        self.update_date = update_date
+        self.update_user = update_user
+        
+
     def __repr__(self):
         return '<UserService: name=%s, user_id=%s >' % (
                 repr(self.first_name), repr(self.user_id) )
@@ -67,11 +99,7 @@ class UserService( DeclarativeBase): #User,
     def __unicode__(self):
         return self.display_name or self.user_name
     
-    
-    def save (self):
-        DBSession.add(self); 
-        DBSession.flush() ;
-        
+            
     @classmethod
     def getById(cls,user_id):
       
@@ -82,14 +110,28 @@ class UserService( DeclarativeBase): #User,
       
         return DBSession.query(User).filter(User.user_id == str(user_id).decode('utf-8') ).first();
     
-    
-    
     def updateGroupUserVoter(self):
        
         result = DBSession.execute('insert into tg_user_group values(:user_id,:group_id)', {'user_id': self.user_id,'group_id':2})
         #DBSession.execute(s, user_id= self.user_id ).fetchall() 
         DBSession.flush() ;
+    
+ 
+    def updateByValue1(self,**kw):
+        print "update by value"
+        for c in self.__table__.columns :
+             
+            if c.name in kw  and kw[c.name] :
+                print "name : %s value : %s" %(c.name, kw[c.name])   
+                setattr(self,c.name,kw[c.name] )
+                if isinstance(c.type, TIMESTAMP):
+                    setattr(self,c.name,   datetime.strptime(kw[c.name] ,  '%d/%m/%Y')  )
         
+    
+    def updateall(self):
+        print "update"
+        DBSession.merge(self,load=True)
+           
 class UserGenCode(DeclarativeBase):
     __tablename__ = 'sur_user_gen_code';
     
@@ -121,6 +163,7 @@ class UserSocialNetwork(DeclarativeBase):
     id_user_social_network = Column(BigInteger, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey(u'tg_user.user_id'))
     id_social_type =  Column(Integer, ForeignKey(u'sur_m_social_type.id_social_type') ) 
+    social_type = relation('SocialType', backref='sur_user_social_network_id_social_type');
     provider_user_id = Column(String(100))
     access_token = Column(String(500))
     secret = Column(String(255))
@@ -141,7 +184,10 @@ class UserSocialNetwork(DeclarativeBase):
     def save (self):
         DBSession.add(self); 
         DBSession.flush() ;
-        
+    
+    @classmethod
+    def getSocialByUserId(cls,user_id):
+        return DBSession.query(SocialType,cls).outerjoin(cls, and_(SocialType.id_social_type == cls.id_social_type,  cls.user_id == str(user_id).decode('utf-8') ) ).all();
     
     @classmethod
     def getByUserId(cls,user_id):
@@ -155,6 +201,7 @@ class UserSocialNetwork(DeclarativeBase):
     @classmethod
     def getBySocial(cls,social_id, socialtype_id):
         return DBSession.query(cls).filter(cls.provider_user_id == str(social_id).decode('utf-8'), cls.id_social_type == str(socialtype_id).decode('utf-8') ).first();
+    
     
 class ClientProject(DeclarativeBase):
     __tablename__ = 'sur_m_client_project';

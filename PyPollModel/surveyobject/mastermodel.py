@@ -1,8 +1,10 @@
 import json
 from datetime import datetime
+from sqlalchemy.types import TIMESTAMP 
 class MasterBase(object):
     
     def __init__(self,dbSession):
+        print "init in master base : %s " %self
         self.DBSession = dbSession
         
     
@@ -20,6 +22,21 @@ class MasterBase(object):
     def remove(self):
         self.DBSession.delete(self); 
         self.DBSession.flush() ;
+        
+    def mergeValue(self,value):
+         
+        for name, column in value.__mapper__.columns.items():
+            if(getattr(value, name)):
+                setattr(self,name, getattr(value, name)  )
+        
+        #self.updateall()
+    
+    def updateByValue(self,**kw):
+        for c in self.__table__.columns : 
+            if c.name in kw  and kw[c.name]:   
+                setattr(self,c.name,kw[c.name] )
+                if isinstance(c.type, TIMESTAMP):
+                    setattr(self,c.name,   datetime.strptime(kw[c.name] ,  '%d/%m/%Y')  )
         
     @property
     def json(self):
