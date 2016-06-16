@@ -77,7 +77,17 @@ class User(DeclarativeBase):
     display_name = Column(Unicode(255))
     _password = Column('password', Unicode(128))
     created = Column(DateTime, default=datetime.now)
-
+    
+    active = Column(Unicode(1), nullable=False, default=1)
+    
+    def __init__(self, user_id=None, user_name=None,email_address=None,password=None, display_name=None,active=1):
+        self.user_id = user_id
+        self.user_name = user_name
+        self.email_address = email_address
+        self.display_name = display_name
+        self.active = active
+        self._set_password(password);
+        
     def __repr__(self):
         return '<User: name=%s, email=%s, display=%s>' % (
                 repr(self.user_name), repr(self.email_address), repr(self.display_name))
@@ -153,6 +163,11 @@ class User(DeclarativeBase):
         DBSession.add(self); 
         DBSession.flush() ;
         
+    @classmethod
+    def getId(cls,act):
+        return DBSession.query(cls).get(act); 
+        
+            
 class Permission(DeclarativeBase):
     """
     Permission definition.

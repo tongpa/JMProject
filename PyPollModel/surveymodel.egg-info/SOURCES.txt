@@ -1,5 +1,6 @@
 setup.py
 surveymodel/__init__.py
+surveymodel/auth.py
 surveymodel/authuser.py
 surveymodel/logsurvey.py
 surveymodel/mail.py
@@ -20,4 +21,5 @@ surveyobject/__init__.py
 surveyobject/authresponse.py
 surveyobject/mastermodel.py
 surveyobject/questionobject.py
+surveyobject/registerobject.py
 surveyobject/searchobject.py

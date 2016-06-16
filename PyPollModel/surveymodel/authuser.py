@@ -116,6 +116,9 @@ class UserService(MasterBase, DeclarativeBase): #User,
         #DBSession.execute(s, user_id= self.user_id ).fetchall() 
         DBSession.flush() ;
     
+    def updateGroupUserCreator(self):
+        result = DBSession.execute('insert into tg_user_group values(:user_id,:group_id)', {'user_id': self.user_id,'group_id':4})
+        DBSession.flush() ;
  
     def updateByValue1(self,**kw):
         print "update by value"
@@ -155,6 +158,10 @@ class UserGenCode(DeclarativeBase):
     @classmethod
     def getByActivateCode(cls,code):
         return DBSession.query(cls).filter(cls.id_gen_code_type == str('2').decode('utf-8'),cls.code == str(code).decode('utf-8')).order_by(desc( cls.create_date )).first();
+    
+    @classmethod
+    def getByDeactivateCode(cls,code):
+        return DBSession.query(cls).filter(cls.id_gen_code_type == str('6').decode('utf-8'),cls.success == str("1").decode('utf-8') ,cls.code == str(code).decode('utf-8')).order_by(desc( cls.create_date )).first();
 
 
 class UserSocialNetwork(DeclarativeBase): 
