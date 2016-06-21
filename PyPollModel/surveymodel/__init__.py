@@ -80,5 +80,5 @@ from survey import EmailTemplateType,EmailTemplate,SysConfig
 from survey import QuestionType,LanguageLabel,QuestionProject,QuestionProjectType,GroupVariables,Variables,BasicDataType,BasicData,BasicQuestion,BasicTextData, Question,QuestionValidation
 from survey import QuestionOption,BasicMultimediaData, QuestionMedia,QuestionTheme,Languages,Invitation,DifficultyLevel,RandomType,CloseType
 from survey import MapQuestionGroup, QuestionGroup
-from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType
+from voter import VoterType,Gender,MarriageStatus,Organization,TelephoneType,AddressType,Position,Telephone,Address,Voter,MemberUser,Respondents,RespondentReply,ReplyBasicQuestion,VoterMapType,LivingConditionType,RaceType,ReligionType,NationalityType,EmploymentType,EmploymentDetail,EducationType
 from otheruselink import UseExtenalLink,MapVoterExtenalLink;
