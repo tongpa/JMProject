@@ -542,7 +542,6 @@ class Question(MasterBase,DeclarativeBase):
     def __str__(self):
         return '"%s"' % (self.question )
     
-    
     def to_json(self,randomAnswer=True,showResult = None,initOrder=1):
         
          
@@ -567,17 +566,14 @@ class Question(MasterBase,DeclarativeBase):
         
         if showResult:
             dict['type'] = 'view' + dict['type'];
+            
         
         if len( self.child ) >0 : 
             for answer in self.child:
-                for basicText in  answer.basicData.childenText:
-                        
+                for basicText in  answer.basicData.childenText:    
                     child.append(basicText.to_json(showResult=showResult));
-                for basicMedia in  answer.basicData.childenMedia:                    
+                for basicMedia in  answer.basicData.childenMedia:
                     child.append(basicMedia.to_json(showResult=showResult));
-                
-            
-                    
         
         #radom answer 
         if(randomAnswer):
@@ -1178,12 +1174,12 @@ class BasicTextData(DeclarativeBase):
             
             dict['choose'] = False;
             dict['result'] = None;
-                 
+            dict['result_text'] = None
+            
             if self.id_basic_data == showResult[1]:
                 dict['choose'] = True;
                 dict['result'] = showResult[2];
-             
-                
+                dict['result_text'] = showResult[3]
                  
         return dict;
     
@@ -1443,9 +1439,11 @@ class BasicMultimediaData(DeclarativeBase):
             if self.id_basic_data == showResult[1]:
                 dict['choose'] = True;
                 dict['result'] = showResult[2];
+                dict['result_text'] = showResult[3]
             else :
                 dict['choose'] = False;
                 dict['result'] = None;
+                dict['result_text'] = None
                  
         return dict;
     
@@ -1475,7 +1473,7 @@ class Invitation(MasterBase, DeclarativeBase):
     name_content = Column(String(255) )
     from_name = Column(String(255) )
     subject = Column(String(255) )
-    id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
+    #id_question_project = Column(   BigInteger,ForeignKey('sur_question_project.id_question_project'), nullable=False, index=True) ;
     question_project = relation('QuestionProject', backref='sur_invitation_id_question_project');
     
     content = Column(Text )
@@ -1483,7 +1481,7 @@ class Invitation(MasterBase, DeclarativeBase):
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     update_date =  Column(DateTime, nullable=False, onupdate=sql.func.utc_timestamp() );
     
-    def __init__(self, id_question_invitation=None, name_content=None, from_name=None, subject=None, id_question_project= None, content=None,
+    def __init__(self, id_question_invitation=None, name_content=None, from_name=None, subject=None,  content=None,
                  create_date=None, update_date=None  ):
         
         super(Invitation, self).__init__(DBSession)
@@ -1492,7 +1490,7 @@ class Invitation(MasterBase, DeclarativeBase):
         self.name_content = name_content
         self.from_name = from_name
         self.subject = subject
-        self.id_question_project = id_question_project
+        #self.id_question_project = id_question_project
         self.content =content
         #self.create_date = create_date
         #self.update_date = update_date
@@ -1549,9 +1547,9 @@ class Invitation(MasterBase, DeclarativeBase):
         return data,total;
     
     def to_json(self):
-        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
+        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject,  "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
     def to_dict(self):
-        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject, "id_question_project": self.id_question_project, "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
+        return {"id_question_invitation": self.id_question_invitation, "from_name": self.from_name, "subject": self.subject,  "content": self.content, "create_date": self.create_date,"name_content": self.name_content   };
        
        
 class QuestionGroup(MasterBase,DeclarativeBase):
@@ -1613,6 +1611,10 @@ class QuestionGroup(MasterBase,DeclarativeBase):
     @classmethod
     def getByProject(cls,projectid=0):
         return DBSession.query(cls).filter(cls.id_question_project == str(projectid),  cls.id_parent.is_(None) ).all()
+    
+    @classmethod
+    def getByOption(cls,optionid=0):
+        return DBSession.query(cls).join(QuestionOption, and_(cls.id_question_project == QuestionOption.id_question_project,QuestionOption.id_question_option == str(optionid) ) ).all()
     
     @classmethod
     def getByProjectId(cls,projectid=0, userid=0, page=0, page_size=None):

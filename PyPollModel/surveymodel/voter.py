@@ -693,8 +693,12 @@ class RespondentReply(DeclarativeBase):
     
     childenAnswer = relation('ReplyBasicQuestion')  ; 
     
-    def __init__(self):
-        pass;
+    def __init__(self,id_resp_reply = None, id_respondents = None, id_question= None, response_date= datetime.now):
+        self.id_resp_reply = id_resp_reply
+        self.id_respondents = id_respondents
+        self.id_question = id_question
+        self.response_date  = response_date
+        
         
     def __str__(self):
         return '"%s"' % (self.id_resp_reply )
@@ -738,7 +742,7 @@ class RespondentReply(DeclarativeBase):
     
     @classmethod
     def getResultByRespondemtAndQuestion(cls,idResp,idQuestion):
-        return  DBSession.query(cls.id_question,ReplyBasicQuestion.id_basic_data,BasicQuestion.answer).\
+        return  DBSession.query(cls.id_question,ReplyBasicQuestion.id_basic_data,BasicQuestion.answer,ReplyBasicQuestion.answer_text).\
             join(ReplyBasicQuestion).join(BasicQuestion,ReplyBasicQuestion.id_basic_data == BasicQuestion.id_basic_data ).\
             filter(cls.id_respondents ==  str(idResp).decode('utf-8'), cls.id_question ==  str(idQuestion).decode('utf-8') ).first();
                 
@@ -755,11 +759,13 @@ class ReplyBasicQuestion(DeclarativeBase):
     answer_text =  Column(String(255) )  
     
     
-    def __init__(self):
-        pass;
+    def __init__(self,id_resp_reply =None, id_basic_data=None, answer_text="" ):
+        self.id_resp_reply = id_resp_reply
+        self.id_basic_data = id_basic_data
+        self.answer_text = answer_text
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.id_resp_reply )
     
     def save (self):
         DBSession.add(self); 
