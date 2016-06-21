@@ -23,15 +23,249 @@ from sqlalchemy.dialects.mysql import BIT
 
 #from pollandsurvey.model import DeclarativeBase, metadata, DBSession #,QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
 from surveymodel import DeclarativeBase, metadata, DBSession
+ 
+from surveyobject.mastermodel import MasterBase
 
 from surveymodel.survey import QuestionOption,QuestionProject,QuestionProjectType,BasicQuestion
 
 #from pollandsurvey.model.otheruselink import MapVoterExtenalLink
 from surveymodel.otheruselink import MapVoterExtenalLink
 import transaction
-__all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType','AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents','RespondentReply','ReplyBasicQuestion']
+__all__ = ['VoterType','Gender','MarriageStatus','Organization','TelephoneType',
+           'AddressType','Position','Telephone','Address','Voter','MemberUser', 'Respondents',
+           'RespondentReply','ReplyBasicQuestion','LivingConditionType','RaceType','ReligionType',
+           'NationalityType','EmploymentType','EmploymentDetail','EducationType']
+
+class LivingConditionType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_living_condition'
+
+    id_living_condition =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_living_condition": self.id_living_condition, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_living_condition": self.id_living_condition, "description": self.description, "active": self.active };
+
+class RaceType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_race'
+
+    id_race =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_race": self.id_race, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_race": self.id_race, "description": self.description, "active": self.active };
+    
+class EducationType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_education'
+
+    id_education =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_education": self.id_education, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_education": self.id_education, "description": self.description, "active": self.active };    
+
+class ReligionType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_religion'
+
+    id_religion =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_religion": self.id_religion, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_religion": self.id_religion, "description": self.description, "active": self.active };
+
+class NationalityType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_nationality'
+
+    id_nationality =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_nationality": self.id_nationality, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_nationality": self.id_nationality, "description": self.description, "active": self.active };
+
+class EmploymentType(DeclarativeBase):
+
+    __tablename__ = 'sur_fix_employment_status_type'
+
+    id_employment_status_type =  Column(BigInteger, autoincrement=True, primary_key=True)
+    description = Column(String(255),unique=True, nullable=False)
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self):
+        self.active = 1;
+        
+    def __str__(self):
+        return '"%s"' % (self.description )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    def to_json(self):
+        return {"id_employment_status_type": self.id_employment_status_type, "description": self.description, "active": self.active };
+    def to_dict(self):
+        return {"id_employment_status_type": self.id_employment_status_type, "description": self.description, "active": self.active };
 
 
+class EmploymentDetail(MasterBase,DeclarativeBase):
+
+    __tablename__ = 'sur_voter_employment'
+
+    id_employment =  Column(BigInteger, autoincrement=True, primary_key=True)
+    id_voter= Column( BigInteger,ForeignKey('sur_voter.id_voter'), nullable=False, index=True) 
+    id_employment_status_type= Column( BigInteger,ForeignKey('sur_fix_employment_status_type.id_employment_status_type'), nullable=False, index=True) 
+    intructry_type= Column(String(255), nullable=False)
+    job_catagory= Column(String(255), nullable=False)
+    
+    
+    active  = Column(BIT, nullable=True, default=1)
+    
+    
+    def __init__(self,id_employment=None,
+                 id_voter=None,
+                 id_employment_status_type=None,
+                 intructry_type=None,
+                 job_catagory=None,
+                 active = 1):
+        
+        super(EmploymentDetail, self).__init__(DBSession)
+        
+        self.id_employment = id_employment
+        self.id_voter = id_voter
+        self.id_employment_status_type = id_employment_status_type
+        self.intructry_type = intructry_type
+        self.job_catagory = job_catagory
+        self.active = active
+        
+    def __str__(self):
+        return '"%s"' % (self.id_employment_status_type )
+    
+    @classmethod
+    def getAll(cls,act):
+        if act is not None:
+            return DBSession.query(cls).filter(cls.active == str(act).decode('utf-8')).all();
+            #return DBSession.query(cls).get(act); 
+        else:
+            return DBSession.query(cls) .all();
+        
+    @classmethod
+    def getId(cls,id):
+        return DBSession.query(cls).get(id); 
+    
+   
+        
+    def to_json(self):
+        return {"id_employment": self.id_employment, 
+                "id_voter":self.id_voter,
+                "id_employment_status_type": self.description, 
+                "intructry_type":self.intructry_type,
+                "job_catagory":self.job_catagory,
+                "active": self.active };
+    def to_dict(self):
+        return {"id_employment": self.id_employment, 
+                "id_voter":self.id_voter,
+                "id_employment_status_type": self.description, 
+                "intructry_type":self.intructry_type,
+                "job_catagory":self.job_catagory,
+                "active": self.active };
 
 
 class VoterType(DeclarativeBase):
@@ -221,7 +455,7 @@ class Position(DeclarativeBase):
 
     id_position =  Column(BigInteger, autoincrement=True, primary_key=True)
     
-    id_organization = Column(   BigInteger,ForeignKey('sur_organization.id_organization'), nullable=False, index=True) ;
+    id_organization = Column(BigInteger,ForeignKey('sur_organization.id_organization'), nullable=False, index=True) ;
     organization = relation('Organization', backref='sur_position_id_organization');
     
     position = Column(String(255),unique=True, nullable=False)
@@ -249,9 +483,9 @@ class Position(DeclarativeBase):
     def to_dict(self):
         return {"id_position": self.id_position, "id_organization": self.id_organization, "position": self.position, "department": self.department, "id_voter": self.id_voter };
 
-class Telephone(DeclarativeBase):
+class Telephone(MasterBase, DeclarativeBase):
 
-    __tablename__ = 'sur_telephone'
+    __tablename__ = 'sur_voter_telephone'
 
     id_telephone =  Column(BigInteger, autoincrement=True, primary_key=True)
     
@@ -263,11 +497,17 @@ class Telephone(DeclarativeBase):
     id_voter = Column(   BigInteger,ForeignKey('sur_voter.id_voter'), nullable=False, index=True) ;
     
     
-    def __init__(self):
-        pass;
+    def __init__(self,id_telephone=None,id_telephone_type=None,description=None,id_voter=None):   
+           
+        super(Telephone, self).__init__(DBSession)
+        
+        self.id_telephone = id_telephone
+        self.id_telephone_type = id_telephone_type       
+        self.description = description
+        self.id_voter = id_voter
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.description)
     
     @classmethod
     def getAll(cls,act):
@@ -281,26 +521,43 @@ class Telephone(DeclarativeBase):
         return {"id_telephone": self.id_telephone, "id_telephone_type": self.id_telephone_type, "description": self.description, "id_voter": self.id_voter  };
     def to_dict(self):
         return {"id_telephone": self.id_telephone, "id_telephone_type": self.id_telephone_type, "description": self.description, "id_voter": self.id_voter  };
+    
+    @classmethod
+    def getId(cls,id):
+        return DBSession.query(cls).get(id);
+    
+class Address(MasterBase, DeclarativeBase):
 
-class Address(DeclarativeBase):
-
-    __tablename__ = 'sur_address'
+    __tablename__ = 'sur_voter_address'
 
     id_address =  Column(BigInteger, autoincrement=True, primary_key=True)
     
     id_address_type = Column(   BigInteger,ForeignKey('sur_m_address_type.id_address_type'), nullable=False, index=True) ;
     addresstype = relation('AddressType', backref='sur_address_id_address_type');
-    
-    description = Column(String(255) ) 
-    
+  
     id_voter = Column(   BigInteger,ForeignKey('sur_voter.id_voter'), nullable=False, index=True) ;
     
+    country  = Column(String(255) ) 
+    province  = Column(String(255) ) 
+    city  = Column(String(255) ) 
+    county  = Column(String(255) ) 
     
-    def __init__(self):
-        pass;
+    
+    def __init__(self,id_address=None,id_address_type=None,description=None,id_voter=None,country=None,province=None,city=None,county=None ):
+        
+        super(Address, self).__init__(DBSession)
+        
+        self.id_address = id_address
+        self.id_address_type = id_address_type
+        self.description = description
+        self.id_voter = id_voter
+        self.country = country
+        self.province = province
+        self.city = city
+        self.county = county
         
     def __str__(self):
-        return '"%s"' % (self.position )
+        return '"%s"' % (self.country )
     
     @classmethod
     def getById(cls,id):
@@ -313,13 +570,17 @@ class Address(DeclarativeBase):
             #return DBSession.query(cls).get(act); 
         else:
             return DBSession.query(cls) .all();
+    
+    @classmethod
+    def getId(cls,id):
+        return DBSession.query(cls).get(id);
         
     def to_json(self):
         return {"id_address": self.id_address, "id_address_type": self.id_address_type, "description": self.description, "id_voter": self.id_voter  };
     def to_dict(self):
         return {"id_address": self.id_address, "id_address_type": self.id_address_type, "description": self.description, "id_voter": self.id_voter  };
      
-class Voter(DeclarativeBase):
+class Voter(MasterBase, DeclarativeBase):
 
     __tablename__ = 'sur_voter'
 
@@ -347,13 +608,72 @@ class Voter(DeclarativeBase):
     
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     
+    id_living_condition = Column(   BigInteger,ForeignKey('sur_fix_living_condition.id_living_condition')) ;                                                          
+    size_family  = Column(Integer) ;
+    id_language = Column(   BigInteger,ForeignKey('sur_m_language.id_language')) ;
+    id_religion = Column(   BigInteger,ForeignKey('sur_fix_religion.id_religion')) ;
+    id_nationality = Column(   BigInteger,ForeignKey('sur_fix_nationality.id_nationality')) ;
+    id_race = Column(   BigInteger,ForeignKey('sur_fix_race.id_race')) ;    
+    salary = Column(Integer) ;
+    id_education = Column(   BigInteger,ForeignKey('sur_fix_education.id_education')) ;
+    
     active  = Column(BIT, nullable=True, default=1);
+    
     respondents = relation('Respondents')  ; 
+    
     maptype = relation('VoterMapType');
     
+    telephone = relation('Telephone')
+    address = relation('Address')
+    employmentDetail = relation('EmploymentDetail')
+   
     
-    def __init__(self):
-        pass;
+    
+    def __init__(self, 
+                id_voter=None, 
+                email=None,
+                prefix=None,
+                firstname=None,
+                lastname=None,
+                timezone=None,
+                user_id_owner  =None,   
+                id_marriage_status  =None,
+                birthdate=None,
+                id_gender=None,
+                create_date=None,
+                id_living_condition=None,                                                         
+                size_family=None,  
+                id_language =None,
+                id_religion =None,
+                id_nationality=None,
+                id_race=None,
+                salary=None,
+                id_education=None,
+                active=1):
+        
+                super(Voter, self).__init__(DBSession)
+                
+                self.id_voter = id_voter
+                self.email = email
+                self.prefix = prefix
+                self.firstname = firstname
+                self.lastname = lastname
+                self.timezone = timezone
+                self.user_id_owner = user_id_owner
+                self.id_marriage_status = id_marriage_status
+                self.birthdate = birthdate
+                self.id_gender = id_gender
+                self.create_date = create_date
+                self.id_living_condition  = id_living_condition                                                      
+                self.size_family = size_family
+                self.id_language = id_language
+                self.id_religion = id_religion
+                self.id_nationality = id_nationality
+                self.id_race = id_race
+                self.salary = salary
+                self.id_education = id_education
+                self.active = active
+        
         
     def __str__(self):
         return '"%s"' % (self.email )
@@ -460,9 +780,13 @@ class Voter(DeclarativeBase):
         values = None;
         return data;
     
-     
+    def updateall(self):
+        print "update voter"
+        
          
-class VoterMapType(DeclarativeBase):
+        return DBSession.merge(self,load=True) 
+         
+class VoterMapType(MasterBase, DeclarativeBase):
     
     __tablename__ = 'sur_voter_map_type';
 
@@ -479,8 +803,14 @@ class VoterMapType(DeclarativeBase):
     create_date =  Column(DateTime, nullable=False, default=datetime.now); 
     update_date =  Column(DateTime, nullable=False ); 
     
-    def __init__(self):
-        pass;
+    def __init__(self,id_voter_map_type=None,id_voter=None,id_voter_type=None,is_send=1):
+        
+        super(VoterMapType, self).__init__(DBSession)
+        
+        self.id_voter_map_type = id_voter_map_type
+        self.id_voter = id_voter
+        self.id_voter_type = id_voter_type
+        self.is_send = is_send
         
     def __str__(self):
         return '"%s"' % (self.id_voter )
@@ -489,7 +819,9 @@ class VoterMapType(DeclarativeBase):
         DBSession.add(self); 
         DBSession.flush() ;
     
-    
+    @classmethod
+    def getId(cls,id):
+        return DBSession.query(cls).get(id);
                 
 class MemberUser(DeclarativeBase):
 
