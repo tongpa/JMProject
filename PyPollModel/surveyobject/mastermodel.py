@@ -16,7 +16,7 @@ class MasterBase(object):
     
     def updateall(self):
         print "update"
-        self.DBSession.merge(self,load=True)
+        return self.DBSession.merge(self,load=True)
         #DBSession.update(self);
         
     def remove(self):
